@@ -221,7 +221,7 @@ def send2wechat(AgentId, Secret, CompanyId, message):
     # 要发送的信息格式
     data = f'{{"touser":"@all","msgtype":"markdown","agentid":"{AgentId}","markown":{{"content":"{message1}"}}}}'
     # 发送消息
-    rd = requests.post(f'https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token={ACCESS_TOKEN}&debug=1', json=json.dumps(data, strict=False), timeout=300)
+    rd = requests.post(f'https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token={ACCESS_TOKEN}&debug=1', json=json.dumps(data), timeout=300)
     print(rd.json())
     return rd.text
 
