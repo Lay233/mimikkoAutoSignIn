@@ -219,14 +219,10 @@ def send2wechat(AgentId, Secret, CompanyId, message1, message2, message3):
     # print(ACCESS_TOKEN)
     # 要发送的信息格式
     data1 = f'{{"touser":"@all","msgtype":"markdown","agentid":"{AgentId}","markown":{{"content":"{message1}"}}}}'
-    data2 = f'{{"touser":"@all","msgtype":"markdown","agentid":"{AgentId}","markown":{{"content":"{message2}"}}}}'
-    data3 = f'{{"touser":"@all","msgtype":"markdown","agentid":"{AgentId}","markown":{{"content":"{message3}"}}}}'
     # 发送消息
-    rd1 = requests.post(f'https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token={ACCESS_TOKEN}&debug=1', json=json.loads(data1, strict=False), timeout=300)
-    rd2 = requests.post(f'https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token={ACCESS_TOKEN}&debug=1', json=json.loads(data2, strict=False), timeout=300)
-    rd3 = requests.post(f'https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token={ACCESS_TOKEN}&debug=1', json=json.loads(data3, strict=False), timeout=300)
+    rd = requests.post(f'https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token={ACCESS_TOKEN}&debug=1', json=json.dumps(data, strict=False), timeout=300)
     print(rd.json())
-    return rd1.text
+    return rd.text
 
 def mimikko():
     global Authorization
@@ -448,9 +444,8 @@ try:
         #print("有DDTOKEN和DDSECRET")
         if title_post and now_time and sign_result_post and vip_roll_post and energy_reward_post:
             print("运行成功，正在推送到企业微信")
-            post_text1 = re.sub('\\n', '  \n', f'现在是：{now_time}\n{sign_result_post}')
-            post_text2 = re.sub('\\n', '  \n', f'{vip_roll_post}\n{energy_reward_post}')
-            post_data = send2wechat(wxAgentId, wxSecret, wxCompanyId, f'# {title_post}', f'{post_text1}', f'{post_text2}')
+            post_text = re.sub('\\n', '  \n', f'现在是：{now_time}\n{sign_result_post}\n{vip_roll_post}\n{energy_reward_post}')
+            post_data = send2wechat(wxAgentId, wxSecret, wxCompanyId, f'# {title_post}  \n{post_text}')
             print('企业微信 errcode:', post_data)
     else:
         print("运行成功，且没有wxAgentId, wxSecret或wxCompanyId，未推送")
