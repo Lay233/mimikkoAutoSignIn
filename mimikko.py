@@ -204,7 +204,6 @@ def scpost(sc_api, SCKEY, title_post, post_text):
     post_data = requests.post(url, headers=headers_post, data=post_info, timeout=300)
     return post_data.json()["errno"]
 # 企业微信推送
-'''
 def send2wechat(AgentId, Secret, CompanyId, message):
     """
     # 此段修改自https://www.jianshu.com/p/99f706f1e943
@@ -229,9 +228,9 @@ def send2wechat(AgentId, Secret, CompanyId, message):
     data = json.dumps(data)
     # 发送消息
     rd = requests.post(f'https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token={ACCESS_TOKEN}', data=data, timeout=300)
-    # print(rd.json())
-    return rd
-'''
+    print(rd.json())
+    return rd.text
+
 def mimikko():
     global Authorization
     #登录
@@ -408,9 +407,9 @@ try:
             print("运行成功，正在推送到微信")
             post_text = re.sub('\\n', '  \n', f'现在是：{now_time}\n{sign_result_post}\n{vip_roll_post}\n{energy_reward_post}')
             post_data_a = scpost(sc_api, SCKEY, title_post, post_text)
-            print('server酱 errcode：', post_data_a)
+            print('server酱 errcode:', post_data_a)
             #post_data_b = scpost(sct_api, SCKEY, title_post, post_text)
-            #print('server酱Turbo版 errcode：', post_data_b)
+            #print('server酱Turbo版 errcode:', post_data_b)
     else:
         print("运行成功，且没有SCKEY，未推送")
     rs1 = False
@@ -419,9 +418,9 @@ except Exception as es:
     if SCKEY:
         print("数据异常，正在推送到微信")
         post_data_a = scpost(sc_api, SCKEY, "兽耳助手签到数据异常", "兽耳助手签到数据异常，请访问GitHub检查")
-        print('server酱 errcode：', post_data_a)
+        print('server酱 errcode:', post_data_a)
         #post_data_b = scpost(sct_api, SCKEY, "兽耳助手签到数据异常", "兽耳助手签到数据异常，请访问GitHub检查")
-        #print('server酱Turbo版 errcode：', post_data_b)
+        #print('server酱Turbo版 errcode:', post_data_b)
     else:
         print("数据异常，且没有SCKEY，未推送")
     print('sc', es)
@@ -433,7 +432,7 @@ try:
             print("运行成功，正在推送到钉钉")
             post_text = re.sub('\\n', '  \n', f'现在是：{now_time}\n{sign_result_post}\n{vip_roll_post}\n{energy_reward_post}')
             post_data = ddpost(ding_api, DDTOKEN, DDSECRET, title_post, post_text)
-            print('钉钉 errcode：', post_data)
+            print('钉钉 errcode:', post_data)
     else:
         print("运行成功，且没有DDTOKEN或DDSECRET，未推送")
     rs2 = False
@@ -442,11 +441,10 @@ except Exception as ed:
     if DDTOKEN and DDSECRET:
         print("数据异常，正在推送到钉钉")
         post_data = ddpost(ding_api, DDTOKEN, DDSECRET, "兽耳助手签到数据异常", "兽耳助手签到数据异常，请访问GitHub检查")
-        print('钉钉 errcode：', post_data)
+        print('钉钉 errcode:', post_data)
     else:
         print("数据异常，且没有DDTOKEN或DDSECRET，未推送")
     print('dd', ed)
-'''
 try:
     # print(len(sys.argv))
     if wxAgentId and wxSecret and wxCompanyId:
@@ -455,19 +453,18 @@ try:
             print("运行成功，正在推送到企业微信")
             post_text = re.sub('\\n', '  \n', f'现在是：{now_time}\n{sign_result_post}\n{vip_roll_post}\n{energy_reward_post}')
             post_data = send2wechat(wxAgentId, wxSecret, wxCompanyId, message):
-            print('企业微信 errcode：', post_data)
+            print('企业微信 errcode:', post_data)
     else:
         print("运行成功，且没有wxAgentId, wxSecret或wxCompanyId，未推送")
     rs3 = False
-except Exception as ed:
+except Exception as ew:
     rs3 = True
     if wxAgentId and wxSecret and wxCompanyId:
         print("数据异常，正在推送到企业微信")
         post_data = send2wechat(wxAgentId, wxSecret, wxCompanyId, message):
-        print('企业微信 errcode：', post_data)
+        print('企业微信 errcode:', post_data)
     else:
         print("数据异常，且没有wxAgentId, wxSecret或wxCompanyId，未推送")
-    print('wx', ed)
-'''
-if rs1 or rs2:# or rs3:
+    print('wx', ew)
+if rs1 or rs2 or rs3:
     sys.exit('推送异常，请检查')
