@@ -204,7 +204,7 @@ def scpost(sc_api, SCKEY, title_post, post_text):
     post_data = requests.post(url, headers=headers_post, data=post_info, timeout=300)
     return post_data.json()["errno"]
 # 企业微信推送
-def send2wechat(AgentId, Secret, CompanyId, message1, message2, message3):
+def send2wechat(AgentId, Secret, CompanyId, message):
     """
     # 此段修改自https://www.jianshu.com/p/99f706f1e943
     :param AgentId: 应用ID
