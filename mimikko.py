@@ -206,7 +206,7 @@ def scpost(sc_api, SCKEY, title_post, post_text):
 # 企业微信推送
 def send2wechat(AgentId, Secret, CompanyId, message):
     """
-    # 此段修改自https://www.jianshu.com/p/99f706f1e943 
+    # 此段修改自https://www.jianshu.com/p/99f706f1e943
     :param AgentId: 应用ID
     :param Secret: 应用Secret
     :param CompanyId: 企业ID
@@ -214,9 +214,9 @@ def send2wechat(AgentId, Secret, CompanyId, message):
     # 通行密钥
     ACCESS_TOKEN = None
     # 通过企业ID和应用Secret获取本地通行密钥
-        r = requests.get(f'https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid={CompanyId}&corpsecret={Secret}', timeout=300).json()
-        ACCESS_TOKEN = r["access_token"]
-        # print(ACCESS_TOKEN)
+    r = requests.get(f'https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid={CompanyId}&corpsecret={Secret}', timeout=300).json()
+    ACCESS_TOKEN = r["access_token"]
+    # print(ACCESS_TOKEN)
     # 要发送的信息格式
     data = {
         "touser": "@all",
