@@ -80,6 +80,9 @@ try:
             if a.strip() in ['1', '2', '3', '4', '5', '6', '7']:
                 resign = a.strip()
                 print("resign开启")
+            elif a.strip() > 7:
+                resign = 7
+                print("resign开启")
             else:
                 print("resign关闭")
         if o == '-l':
