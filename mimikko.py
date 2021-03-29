@@ -228,7 +228,7 @@ def send2wechat(AgentId, Secret, CompanyId, message):
     # 字典转成json，不然会报错
     data = json.dumps(data)
     # 发送消息
-    rd = requests.post(f'https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token={ACCESS_TOKEN}&debug=1', json=data, timeout=300)
+    rd = requests.post(f'https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token={ACCESS_TOKEN}&debug=1', data=data, timeout=300)
     print(rd.json())
     return rd.text
 
