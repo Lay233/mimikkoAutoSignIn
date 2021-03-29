@@ -59,7 +59,7 @@
 
 #### 4. 修改自动运行时间：
 > - 打开`mimikkoAutoSignIn/.github/workflows/auto_sign_in.yml`
-> - 在`第12行`修改`cron表达式`，默认北京时间每天`3:30`,`17:30`执行
+> - 在`第12行`修改`cron表达式`，默认北京时间每天凌晨`3:30`执行
 > - cron表达式怎么改？请去看[GitHub官方文档](https://docs.github.com/cn/actions/reference/workflow-syntax-for-github-actions#onschedule)
 
 #### 5. (可选)使用server酱推送到微信：
