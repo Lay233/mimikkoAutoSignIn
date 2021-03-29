@@ -228,7 +228,7 @@ def send2wechat(AgentId, Secret, CompanyId, message):
     # 字典转成json，不然会报错
     data = json.dumps(data)
     # 发送消息
-    rd = requests.post(f'https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token={ACCESS_TOKEN}&debug=1', data=data, timeout=300)
+    rd = requests.post(f'https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token={ACCESS_TOKEN}', data=data, timeout=300)
     # print(rd.json())
     return rd.json()["errcode"]
 
@@ -457,7 +457,7 @@ try:
         if title_post and now_time and sign_result_post and vip_roll_post and energy_reward_post:
             print("运行成功，正在推送到企业微信")
             post_text = re.sub('\\n', '  \n', f'现在是：{now_time}\n{sign_result_post}\n{vip_roll_post}\n{energy_reward_post}')
-            post_data = send2wechat(wxAgentId, wxSecret, wxCompanyId, f'# {title_post}  \n{post_text}')
+            post_data = send2wechat(wxAgentId, wxSecret, wxCompanyId, f'{title_post}\n\n{post_text}')
             print('企业微信 errcode:', post_data)
     else:
         print("运行成功，且没有wxAgentId, wxSecret或wxCompanyId，未推送")
@@ -466,7 +466,7 @@ except Exception as ew:
     rs3 = True
     if wxAgentId and wxSecret and wxCompanyId:
         print("数据异常，正在推送到企业微信")
-        post_data = send2wechat(wxAgentId, wxSecret, wxCompanyId, "# 兽耳助手签到数据异常  \n兽耳助手签到数据异常，请访问GitHub检查")
+        post_data = send2wechat(wxAgentId, wxSecret, wxCompanyId, "兽耳助手签到数据异常\n\n兽耳助手签到数据异常，请访问GitHub检查")
         print('企业微信 errcode:', post_data)
     else:
         print("数据异常，且没有wxAgentId, wxSecret或wxCompanyId，未推送")
