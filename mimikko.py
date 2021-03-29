@@ -389,7 +389,7 @@ try:
     # # sign_info
     # # sign_history
     print(sign_history)
-    print(f'\n\n现在是：{now_time}\n{sign_result_post}\n{vip_roll_post}\n{energy_reward_post}')  
+    print(f'\n\n现在是：{now_time}\n{sign_result_post}\n{vip_roll_post}\n{energy_reward_post}\n')  
 except Exception as em:
     print('mimikko', em)
 
@@ -405,7 +405,8 @@ try:
             #post_data_b = scpost(sct_api, SCKEY, title_post, post_text)
             #print('server酱Turbo版 errcode:', post_data_b)
     else:
-        print("运行成功，且没有SCKEY，未推送")
+        if title_post and now_time and sign_result_post and vip_roll_post and energy_reward_post:
+            print("运行成功，且没有SCKEY，未推送")
     rs1 = False
 except Exception as es:
     rs1 = True
@@ -416,7 +417,8 @@ except Exception as es:
         #post_data_b = scpost(sct_api, SCKEY, "兽耳助手签到数据异常", "兽耳助手签到数据异常，请访问GitHub检查")
         #print('server酱Turbo版 errcode:', post_data_b)
     else:
-        print("数据异常，且没有SCKEY，未推送")
+        if title_post and now_time and sign_result_post and vip_roll_post and energy_reward_post:
+            print("数据异常，且没有SCKEY，未推送")
     print('sc', es)
 try:
     # print(len(sys.argv))
@@ -428,7 +430,8 @@ try:
             post_data = ddpost(ding_api, DDTOKEN, DDSECRET, title_post, post_text)
             print('钉钉 errcode:', post_data)
     else:
-        print("运行成功，且没有DDTOKEN或DDSECRET，未推送")
+        if title_post and now_time and sign_result_post and vip_roll_post and energy_reward_post:
+            print("运行成功，且没有DDTOKEN或DDSECRET，未推送")
     rs2 = False
 except Exception as ed:
     rs2 = True
@@ -437,7 +440,8 @@ except Exception as ed:
         post_data = ddpost(ding_api, DDTOKEN, DDSECRET, "兽耳助手签到数据异常", "兽耳助手签到数据异常，请访问GitHub检查")
         print('钉钉 errcode:', post_data)
     else:
-        print("数据异常，且没有DDTOKEN或DDSECRET，未推送")
+        if title_post and now_time and sign_result_post and vip_roll_post and energy_reward_post:
+            print("数据异常，且没有DDTOKEN或DDSECRET，未推送")
     print('dd', ed)
 try:
     # print(len(sys.argv))
