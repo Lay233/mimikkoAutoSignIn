@@ -80,7 +80,7 @@ try:
             if a.strip() in ['1', '2', '3', '4', '5', '6', '7']:
                 resign = a.strip()
                 print("resign开启")
-            elif int(a.strip()) > 7:
+            elif a.strip() > '7':
                 resign = 7
                 print("resign开启")
             else:
@@ -192,7 +192,7 @@ def ddpost(ding_api, DDTOKEN, DDSECRET, title_post, post_text):
     }
     url = f'{ding_api}access_token={DDTOKEN}&timestamp={timestamp}&sign={sign}'
     post_info = f'{{"msgtype":"markdown","markdown":{{"title":"{title_post}", "text":"{post_text}"}}}}'
-    post_data = requests.post(url, headers=headers_post, json=json.loads(post_info, strict=False))
+    post_data = requests.post(url, headers=headers_post, json=json.loads(post_info, strict=False), timeout=300)
     return post_data.json()["errcode"]
 # server酱post
 def scpost(sc_api, SCKEY, title_post, post_text):
@@ -201,7 +201,7 @@ def scpost(sc_api, SCKEY, title_post, post_text):
     }
     post_info = {'text': title_post, 'desp': post_text}
     url = f'{sc_api}{SCKEY}.send'
-    post_data = requests.post(url, headers=headers_post, data=post_info)
+    post_data = requests.post(url, headers=headers_post, data=post_info, timeout=300)
     return post_data.json()["errno"]
 # 企业微信推送
 '''
@@ -215,7 +215,7 @@ def send2wechat(AgentId, Secret, CompanyId, message):
     # 通行密钥
     ACCESS_TOKEN = None
     # 通过企业ID和应用Secret获取本地通行密钥
-        r = requests.post(f'https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid={CompanyId}&corpsecret={Secret}').json()
+        r = requests.get(f'https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid={CompanyId}&corpsecret={Secret}', timeout=300).json()
         ACCESS_TOKEN = r["access_token"]
         # print(ACCESS_TOKEN)
     # 要发送的信息格式
@@ -228,7 +228,7 @@ def send2wechat(AgentId, Secret, CompanyId, message):
     # 字典转成json，不然会报错
     data = json.dumps(data)
     # 发送消息
-    rd = requests.post(f'https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token={ACCESS_TOKEN}', data=data)
+    rd = requests.post(f'https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token={ACCESS_TOKEN}', data=data, timeout=300)
     # print(rd.json())
     return rd
 '''
