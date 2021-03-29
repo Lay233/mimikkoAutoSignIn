@@ -229,8 +229,8 @@ def send2wechat(AgentId, Secret, CompanyId, message):
     data = json.dumps(data)
     # 发送消息
     rd = requests.post(f'https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token={ACCESS_TOKEN}&debug=1', data=data, timeout=300)
-    print(rd.json())
-    return rd.text
+    # print(rd.json())
+    return rd.json()["errcode"]
 
 def mimikko():
     global Authorization
@@ -396,7 +396,7 @@ try:
     # # sign_info
     # # sign_history
     print(sign_history)
-    print(f'\n\n现在是：{now_time}\n{sign_result_post}\n{vip_roll_post}\n{energy_reward_post}\n\n')  
+    print(f'\n\n现在是：{now_time}\n{sign_result_post}\n{vip_roll_post}\n{energy_reward_post}\n')  
 except Exception as em:
     print('mimikko', em)
 
