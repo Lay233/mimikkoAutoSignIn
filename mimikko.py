@@ -45,7 +45,6 @@ try:
             print("user_password不存在")
         if o == '-s' and a.strip() != '':
             SCKEY = a.strip()
-            SCKEY = False
             print("SCKEY存在")
         elif o == '-s':
             print("SCKEY不存在")
