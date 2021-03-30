@@ -391,7 +391,7 @@ def mimikko():
 try:
     sign_data, vip_info_data, vip_roll_data, energy_info_data, energy_reward_data, sign_info, sign_history, sign_result_post, title_post, vip_roll_post, energy_reward_post = mimikko()
     varErr = True
-    for i in ['sign_data', 'vip_info_data', 'vip_roll_data', 'energy_info_data', 'energy_reward_data', 'sign_info', 'sign_history', 'sign_result_post', 'title_post, vip_roll_post', 'energy_reward_post']:
+    for i in ['sign_data', 'vip_info_data', 'vip_roll_data', 'energy_info_data', 'energy_reward_data', 'sign_info', 'sign_history', 'sign_result_post', 'title_post', 'vip_roll_post', 'energy_reward_post']:
         if not i in locals():
             varErr = False
             print('mimikko 函数返回值', i, '缺失')
