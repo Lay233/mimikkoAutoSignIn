@@ -376,11 +376,12 @@ def mimikko():
 try:
     sign_data, vip_info_data, vip_roll_data, energy_info_data, energy_reward_data, sign_info, sign_history, sign_result_post, title_post, vip_roll_post, energy_reward_post = mimikko()
     varErr = True
+    varErrText = ''
     for i in ['sign_data', 'vip_info_data', 'vip_roll_data', 'energy_info_data', 'energy_reward_data', 'sign_info', 'sign_history', 'sign_result_post', 'title_post', 'vip_roll_post', 'energy_reward_post']:
         if not i in locals():
             varErr = False
             print('mimikko 函数返回值', i, '缺失')
-            varErrText = i
+            varErrText = f'{varErrText},{i}'
     if varErr:
         now_date, now_time = timeStamp2time(time.time()+28800)
         #print(time.time())
@@ -396,6 +397,8 @@ try:
         # # sign_history
         print(sign_history)
         print(f'\n\n现在是：{now_time}\n{sign_result_post}\n{vip_roll_post}\n{energy_reward_post}\n')
+    else:
+        varErrText = varErrText[1:]
 except Exception as em:
     varErr = False
     print('mimikko', em)
