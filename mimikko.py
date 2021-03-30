@@ -194,7 +194,7 @@ def ddpost(ding_api, DDTOKEN, DDSECRET, title_post, post_text):
     post_info = f'{{"msgtype":"text","text":{{"content":{title_post}\n\n{post_text}}}}}'
     post_info = json.dumps(post_info)
     post_data = requests.post(url, headers=headers_post, data=post_info, timeout=300)
-    if 'errcode' in post_data.json():
+    if post_data.json().has_key("errcode"):
         return post_data.json()["errcode"]
     else:
         return post_data.text
@@ -206,7 +206,7 @@ def scpost(sc_api, SCKEY, title_post, post_text):
     post_info = {'text': title_post, 'desp': post_text}
     url = f'{sc_api}{SCKEY}.send'
     post_data = requests.post(url, headers=headers_post, data=post_info, timeout=300)
-    if 'errno' in post_data.json():
+    if post_data.json().has_key("errno"):
         return post_data.json()["errno"]
     else:
         return post_data.text
@@ -236,7 +236,7 @@ def send2wechat(AgentId, Secret, CompanyId, message):
     # 发送消息
     rd = requests.post(f'https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token={ACCESS_TOKEN}', data=data, timeout=300)
     # print(rd.json())
-    if 'errcode' in post_data.json():
+    if post_data.json().has_key("errcode"):
         return post_data.json()["errcode"]
     else:
         return post_data.text
