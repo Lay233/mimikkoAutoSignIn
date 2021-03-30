@@ -17,10 +17,9 @@ from requests.packages.urllib3.exceptions import InsecureRequestWarning
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 try:
-    login = True
     Authorization = user_id = user_password = resign = SCKEY = DDTOKEN = DDSECRET = wxAgentId = wxSecret = wxCompanyId= False
     Energy_code = 'momona'
-    optlist, args = getopt.getopt(sys.argv[1:], 'e:l:a:u:p:s:r:d:c:w:x:i:')
+    optlist, args = getopt.getopt(sys.argv[1:], 'e:a:u:p:s:r:d:c:w:x:i:')
     print('正在获取secret参数')
     for o, a in optlist:
         if o == '-e' and a.strip() != '':
@@ -85,12 +84,6 @@ try:
                 print("resign开启")
             else:
                 print("resign关闭")
-        if o == '-l':
-            if a.strip().upper() == 'FALSE':
-                login = False
-                print("login关闭")
-            else:
-                print("login开启")
     print('获取参数结束')
 except Exception as e:
     print('获取参数错误：', e)
@@ -245,7 +238,7 @@ def mimikko():
     global Authorization
     #登录
     print('开始登录')
-    if login and user_id and user_password:
+    if user_id and user_password:
         print("使用ID密码登录")
         user_password_sha = hashlib.sha256(user_password.encode('utf-8')).hexdigest()
         login_data = loginRequest_post(login_path, app_id, app_Version, f'{{"password":"{user_password_sha}", "id":"{user_id}"}}')
@@ -269,23 +262,6 @@ def mimikko():
                     post_data = send2wechat(wxAgentId, wxSecret, wxCompanyId, "兽耳助手签到登录错误\n\n登录错误，且未找到Authorization，请访问GitHub检查")
                     print('企业微信 errcode:', post_data)
                 sys.exit('登录错误，且未找到Authorization！！！')
-    elif login:
-        if Authorization:
-            print("未找到登录ID或密码，尝试使用保存的Authorization")
-        else:
-            if SCKEY:
-                print("登录错误，正在推送到Server酱")
-                post_data = scpost(sc_api, SCKEY, "兽耳助手签到登录错误", "登录错误，未找到登录ID、密码或Authorization，请访问GitHub检查")
-                print('server酱 errcode:', post_data)
-            if DDTOKEN and DDSECRET:
-                print("登录错误，正在推送到钉钉")
-                post_data = ddpost(ding_api, DDTOKEN, DDSECRET, "兽耳助手签到登录错误", "登录错误，未找到登录ID、密码或Authorization，请访问GitHub检查")
-                print('钉钉 errcode:', post_data)
-            if wxAgentId and wxSecret and wxCompanyId:
-                print("登录错误，正在推送到企业微信")
-                post_data = send2wechat(wxAgentId, wxSecret, wxCompanyId, "兽耳助手签到登录错误\n\n登录错误，未找到登录ID、密码或Authorization，请访问GitHub检查")
-                print('企业微信 errcode:', post_data)
-            sys.exit('请在Secret中保存登录ID和密码或Authorization！！！')
     else:
         if Authorization:
             print("使用Authorization验证")
