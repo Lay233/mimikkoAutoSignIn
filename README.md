@@ -20,10 +20,9 @@
 
 > |secret名称|必要条件|说明|  
 > |-----|-----|-----|  
-> |`LOGIN`|非必要|值非`False`时均为`True`，为`True`时使用ID和密码进行登录，否则使用AUTHORIZATION进行验证|  
-> |`ID`,  `PASSWORD`|`LOGIN`==`True`|登录账号(邮箱或手机号)和登录密码|  
-> |`ENERGY`|非必要|详见下个表格|  
-> |`AUTHORIZATION`|`LOGIN`==`False`|验证账号用，可由抓包获取|  
+> |`ID`,  `PASSWORD`|`AUTHORIZATION`不存在时|登录账号(邮箱或手机号)和登录密码|  
+> |`AUTHORIZATION`|`ID`,  `PASSWORD`不存在时|验证账号用，可由抓包获取|  
+> |`ENERGY`|非必要|详见下个表格|
 > |`RESIGN`|非必要|补签最近x天，可选数字1~7|  
 > |`SCKEY`|非必要|微信推送，server酱密钥，详见步骤5|  
 > |`DDTOKEN`,  `DDSECRET`|非必要|钉钉推送，钉钉机器人`token`和安全设置`加签`的`secret`，可参考步骤5微信推送及[钉钉API文档](https://developers.dingtalk.com/document/app/custom-robot-access#topic-2026027)|  
