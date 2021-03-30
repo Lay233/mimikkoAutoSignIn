@@ -80,8 +80,8 @@ try:
             if a.strip() in ['1', '2', '3', '4', '5', '6', '7']:
                 resign = a.strip()
                 print("resign开启")
-            elif a.strip() > '7':
-                resign = 7
+            elif int(a.strip()) > 7:
+                resign = '7'
                 print("resign开启")
             else:
                 print("resign关闭")
@@ -248,43 +248,50 @@ def mimikko():
                 print("登录错误，尝试使用保存的Authorization")
             else:
                 if SCKEY:
-                    print("登录错误，正在推送到微信")
-                    post_data_a = scpost(sc_api, SCKEY, "兽耳助手签到登录错误", "登录错误，且未找到Authorization，请访问GitHub检查")
-                    print(post_data_a)
-                    #post_data_b = scpost(sct_api, SCKEY, "兽耳助手签到登录错误", "登录错误，且未找到Authorization，请访问GitHub检查")
-                    #print(post_data_b)
+                    print("登录错误，正在推送到Server酱")
+                    post_data = scpost(sc_api, SCKEY, "兽耳助手签到登录错误", "登录错误，且未找到Authorization，请访问GitHub检查")
+                    print('server酱 errcode:', post_data)
                 if DDTOKEN and DDSECRET:
+                    print("登录错误，正在推送到钉钉")
                     post_data = ddpost(ding_api, DDTOKEN, DDSECRET, "兽耳助手签到登录错误", "登录错误，且未找到Authorization，请访问GitHub检查")
-                    print(post_data)
+                    print('钉钉 errcode:', post_data)
+                if wxAgentId and wxSecret and wxCompanyId:
+                    print("登录错误，正在推送到企业微信")
+                    post_data = send2wechat(wxAgentId, wxSecret, wxCompanyId, "兽耳助手签到登录错误\n\n登录错误，且未找到Authorization，请访问GitHub检查")
+                    print('企业微信 errcode:', post_data)
                 sys.exit('登录错误，且未找到Authorization！！！')
     elif login:
         if Authorization:
             print("未找到登录ID或密码，尝试使用保存的Authorization")
         else:
             if SCKEY:
-                print("登录错误，正在推送到微信")
-                post_data_a = scpost(sc_api, SCKEY, "兽耳助手签到登录错误", "登录错误，未找到登录ID、密码或Authorization，请访问GitHub检查")
-                print(post_data_a)
-                #post_data_b = scpost(sct_api, SCKEY, "兽耳助手签到登录错误", "登录错误，未找到登录ID、密码或Authorization，请访问GitHub检查")
-                #print(post_data_b)
+                print("登录错误，正在推送到Server酱")
+                post_data = scpost(sc_api, SCKEY, "兽耳助手签到登录错误", "登录错误，未找到登录ID、密码或Authorization，请访问GitHub检查")
+                print('server酱 errcode:', post_data)
             if DDTOKEN and DDSECRET:
                 print("登录错误，正在推送到钉钉")
                 post_data = ddpost(ding_api, DDTOKEN, DDSECRET, "兽耳助手签到登录错误", "登录错误，未找到登录ID、密码或Authorization，请访问GitHub检查")
-                print(post_data)
+                print('钉钉 errcode:', post_data)
+            if wxAgentId and wxSecret and wxCompanyId:
+                print("登录错误，正在推送到企业微信")
+                post_data = send2wechat(wxAgentId, wxSecret, wxCompanyId, "兽耳助手签到登录错误\n\n登录错误，未找到登录ID、密码或Authorization，请访问GitHub检查")
+                print('企业微信 errcode:', post_data)
             sys.exit('请在Secret中保存登录ID和密码或Authorization！！！')
     else:
         if Authorization:
             print("使用Authorization验证")
         else:
             if SCKEY:
-                print("登录错误，正在推送到微信")
-                post_data_a = scpost(sc_api, SCKEY, "兽耳助手签到登录错误", "登录错误，未找到Authorization，请访问GitHub检查")
-                print(post_data_a)
-                #post_data_b = scpost(sct_api, SCKEY, "兽耳助手签到登录错误", "登录错误，未找到Authorization，请访问GitHub检查")
-                #print(post_data_b)
+                print("登录错误，正在推送到server酱")
+                post_data = scpost(sc_api, SCKEY, "兽耳助手签到登录错误", "登录错误，未找到Authorization，请访问GitHub检查")
+                print('server酱 errcode:', post_data)
             if DDTOKEN and DDSECRET:
                 post_data = ddpost(ding_api, DDTOKEN, DDSECRET, "兽耳助手签到登录错误", "登录错误，未找到Authorization，请访问GitHub检查")
-                print(post_data)
+                print('钉钉 errcode:', post_data)
+            if wxAgentId and wxSecret and wxCompanyId:
+                print("登录错误，正在推送到企业微信")
+                post_data = send2wechat(wxAgentId, wxSecret, wxCompanyId, "兽耳助手签到登录错误\n\n登录错误，未找到Authorization，请访问GitHub检查")
+                print('企业微信 errcode:', post_data)
             sys.exit('请在Secret中保存登录ID和密码或Authorization！！！')
     #设置默认助手
     print('设置默认助手')
@@ -308,7 +315,7 @@ def mimikko():
             cansign_before_time = False
         print(cansign_before_time)
         for i in ['1', '2', '3', '4', '5', '6', '7']:
-            if not i>resign:
+            if not int(i)>int(resign):
                 print('round ', str(i))
                 resign_time = int(time.time())-86400*int(i)
                 r_date, r_time = timeStamp2time(resign_time)
@@ -383,62 +390,78 @@ def mimikko():
 
 try:
     sign_data, vip_info_data, vip_roll_data, energy_info_data, energy_reward_data, sign_info, sign_history, sign_result_post, title_post, vip_roll_post, energy_reward_post = mimikko()
-    now_date, now_time = timeStamp2time(time.time()+28800)
-    #print(time.time())
-    # # sign_data
-    print('sign_data', sign_data)
-    # # roll info
-    print('vip_roll_data', vip_roll_data)
-    # # Energy info
-    print('energy_info_data', energy_info_data)
-    # # Energy reward
-    print(energy_reward_data)
-    # # sign_info
-    # # sign_history
-    print(sign_history)
-    print(f'\n\n现在是：{now_time}\n{sign_result_post}\n{vip_roll_post}\n{energy_reward_post}\n')  
+    varErr = True
+    for i in ['sign_data', 'vip_info_data', 'vip_roll_data', 'energy_info_data', 'energy_reward_data', 'sign_info', 'sign_history', 'sign_result_post', 'title_post, vip_roll_post', 'energy_reward_post']:
+        if not i in locals():
+            varErr = False
+            print('返回值', i, '缺失')
+    if varErr:
+        now_date, now_time = timeStamp2time(time.time()+28800)
+        #print(time.time())
+        # # sign_data
+        print('sign_data', sign_data)
+        # # roll info
+        print('vip_roll_data', vip_roll_data)
+        # # Energy info
+        print('energy_info_data', energy_info_data)
+        # # Energy reward
+        print(energy_reward_data)
+        # # sign_info
+        # # sign_history
+        print(sign_history)
+        print(f'\n\n现在是：{now_time}\n{sign_result_post}\n{vip_roll_post}\n{energy_reward_post}\n')
+    else:
+        print('mimikko', '返回值缺失')
 except Exception as em:
+    varErr = False
     print('mimikko', em)
 
 try:
     # print(len(sys.argv))
     if SCKEY:
         # print("有SCKEY")
-        if title_post and now_time and sign_result_post and vip_roll_post and energy_reward_post:
-            print("运行成功，正在推送到微信")
+        if varErr:
+            print("运行成功，正在推送到Server酱")
             post_text = re.sub('\\n', '  \n', f'现在是：{now_time}\n{sign_result_post}\n{vip_roll_post}\n{energy_reward_post}')
-            post_data_a = scpost(sc_api, SCKEY, title_post, post_text)
-            print('server酱 errcode:', post_data_a)
-            #post_data_b = scpost(sct_api, SCKEY, title_post, post_text)
-            #print('server酱Turbo版 errcode:', post_data_b)
+            post_data = scpost(sc_api, SCKEY, title_post, post_text)
+            print('server酱 errcode:', post_data)
+        else:
+            print("运行失败，正在推送到Server酱")
+            post_data = scpost(sc_api, SCKEY, "兽耳助手签到数据异常", "兽耳助手签到数据异常，请访问GitHub检查")
+            print('server酱 errcode:', post_data)
     else:
-        if title_post and now_time and sign_result_post and vip_roll_post and energy_reward_post:
+        if varErr:
             print("运行成功，且没有SCKEY，未推送")
+        else:
+            print("运行失败，且没有SCKEY，未推送")
     rs1 = False
 except Exception as es:
     rs1 = True
     if SCKEY:
-        print("数据异常，正在推送到微信")
-        post_data_a = scpost(sc_api, SCKEY, "兽耳助手签到数据异常", "兽耳助手签到数据异常，请访问GitHub检查")
-        print('server酱 errcode:', post_data_a)
-        #post_data_b = scpost(sct_api, SCKEY, "兽耳助手签到数据异常", "兽耳助手签到数据异常，请访问GitHub检查")
-        #print('server酱Turbo版 errcode:', post_data_b)
+        print("数据异常，正在推送到Server酱")
+        post_data = scpost(sc_api, SCKEY, "兽耳助手签到数据异常", "兽耳助手签到数据异常，请访问GitHub检查")
+        print('server酱 errcode:', post_data)
     else:
-        if title_post and now_time and sign_result_post and vip_roll_post and energy_reward_post:
-            print("数据异常，且没有SCKEY，未推送")
+        print("数据异常，且没有SCKEY，未推送")
     print('sc', es)
 try:
     # print(len(sys.argv))
     if DDTOKEN and DDSECRET:
         #print("有DDTOKEN和DDSECRET")
-        if title_post and now_time and sign_result_post and vip_roll_post and energy_reward_post:
+        if varErr:
             print("运行成功，正在推送到钉钉")
             post_text = re.sub('\\n', '  \n', f'现在是：{now_time}\n{sign_result_post}\n{vip_roll_post}\n{energy_reward_post}')
             post_data = ddpost(ding_api, DDTOKEN, DDSECRET, title_post, post_text)
             print('钉钉 errcode:', post_data)
+        else:
+            print("运行失败，正在推送到钉钉")
+            post_data = ddpost(ding_api, DDTOKEN, DDSECRET, "兽耳助手签到数据异常", "兽耳助手签到数据异常，请访问GitHub检查")
+            print('钉钉 errcode:', post_data)
     else:
-        if title_post and now_time and sign_result_post and vip_roll_post and energy_reward_post:
+        if varErr:
             print("运行成功，且没有DDTOKEN或DDSECRET，未推送")
+        else:
+            print("运行失败，且没有DDTOKEN或DDSECRET，未推送")
     rs2 = False
 except Exception as ed:
     rs2 = True
@@ -447,20 +470,26 @@ except Exception as ed:
         post_data = ddpost(ding_api, DDTOKEN, DDSECRET, "兽耳助手签到数据异常", "兽耳助手签到数据异常，请访问GitHub检查")
         print('钉钉 errcode:', post_data)
     else:
-        if title_post and now_time and sign_result_post and vip_roll_post and energy_reward_post:
-            print("数据异常，且没有DDTOKEN或DDSECRET，未推送")
+        print("数据异常，且没有DDTOKEN或DDSECRET，未推送")
     print('dd', ed)
 try:
     # print(len(sys.argv))
     if wxAgentId and wxSecret and wxCompanyId:
-        #print("有DDTOKEN和DDSECRET")
-        if title_post and now_time and sign_result_post and vip_roll_post and energy_reward_post:
+        #print("有wxAgentId, wxSecret和wxCompanyId")
+        if varErr:
             print("运行成功，正在推送到企业微信")
             post_text = re.sub('\\n', '  \n', f'现在是：{now_time}\n{sign_result_post}\n{vip_roll_post}\n{energy_reward_post}')
             post_data = send2wechat(wxAgentId, wxSecret, wxCompanyId, f'{title_post}\n\n{post_text}')
             print('企业微信 errcode:', post_data)
+        else:
+            print("运行失败，正在推送到企业微信")
+            post_data = send2wechat(wxAgentId, wxSecret, wxCompanyId, '兽耳助手签到数据异常\n\n兽耳助手签到数据异常，请访问GitHub检查')
+            print('企业微信 errcode:', post_data)
     else:
-        print("运行成功，且没有wxAgentId, wxSecret或wxCompanyId，未推送")
+        if varErr:
+            print("运行成功，且没有wxAgentId, wxSecret或wxCompanyId，未推送")
+        else:
+            print("运行失败，且没有wxAgentId, wxSecret或wxCompanyId，未推送")
     rs3 = False
 except Exception as ew:
     rs3 = True
