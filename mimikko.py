@@ -394,7 +394,8 @@ try:
     for i in ['sign_data', 'vip_info_data', 'vip_roll_data', 'energy_info_data', 'energy_reward_data', 'sign_info', 'sign_history', 'sign_result_post', 'title_post, vip_roll_post', 'energy_reward_post']:
         if not i in locals():
             varErr = False
-            print('返回值', i, '缺失')
+            print('mimikko 函数返回值', i, '缺失')
+            varErrText = i
     if varErr:
         now_date, now_time = timeStamp2time(time.time()+28800)
         #print(time.time())
@@ -410,8 +411,6 @@ try:
         # # sign_history
         print(sign_history)
         print(f'\n\n现在是：{now_time}\n{sign_result_post}\n{vip_roll_post}\n{energy_reward_post}\n')
-    else:
-        print('mimikko', '返回值缺失')
 except Exception as em:
     varErr = False
     print('mimikko', em)
@@ -427,13 +426,13 @@ try:
             print('server酱 errcode:', post_data)
         else:
             print("运行失败，正在推送到Server酱")
-            post_data = scpost(sc_api, SCKEY, "兽耳助手签到数据异常", "兽耳助手签到数据异常，请访问GitHub检查")
+            post_data = scpost(sc_api, SCKEY, "兽耳助手签到数据异常", f'兽耳助手签到数据异常，请访问GitHub检查：函数返回值{varErrText}缺失')
             print('server酱 errcode:', post_data)
     else:
         if varErr:
             print("运行成功，且没有SCKEY，未推送")
         else:
-            print("运行失败，且没有SCKEY，未推送")
+            print(f"运行失败：兽耳助手签到数据异常，请访问GitHub检查：函数返回值{varErrText}缺失，且没有SCKEY，未推送")
     rs1 = False
 except Exception as es:
     rs1 = True
@@ -455,13 +454,13 @@ try:
             print('钉钉 errcode:', post_data)
         else:
             print("运行失败，正在推送到钉钉")
-            post_data = ddpost(ding_api, DDTOKEN, DDSECRET, "兽耳助手签到数据异常", "兽耳助手签到数据异常，请访问GitHub检查")
+            post_data = ddpost(ding_api, DDTOKEN, DDSECRET, "兽耳助手签到数据异常", f"兽耳助手签到数据异常，请访问GitHub检查：函数返回值{varErrText}缺失")
             print('钉钉 errcode:', post_data)
     else:
         if varErr:
             print("运行成功，且没有DDTOKEN或DDSECRET，未推送")
         else:
-            print("运行失败，且没有DDTOKEN或DDSECRET，未推送")
+            print(f"运行失败：函数返回值{varErrText}缺失，且没有DDTOKEN或DDSECRET，未推送")
     rs2 = False
 except Exception as ed:
     rs2 = True
@@ -483,13 +482,13 @@ try:
             print('企业微信 errcode:', post_data)
         else:
             print("运行失败，正在推送到企业微信")
-            post_data = send2wechat(wxAgentId, wxSecret, wxCompanyId, '兽耳助手签到数据异常\n\n兽耳助手签到数据异常，请访问GitHub检查')
+            post_data = send2wechat(wxAgentId, wxSecret, wxCompanyId, f'兽耳助手签到数据异常\n\n兽耳助手签到数据异常，请访问GitHub检查：函数返回值{varErrText}缺失')
             print('企业微信 errcode:', post_data)
     else:
         if varErr:
             print("运行成功，且没有wxAgentId, wxSecret或wxCompanyId，未推送")
         else:
-            print("运行失败，且没有wxAgentId, wxSecret或wxCompanyId，未推送")
+            print(f"运行失败：函数返回值{varErrText}缺失，且没有wxAgentId, wxSecret或wxCompanyId，未推送")
     rs3 = False
 except Exception as ew:
     rs3 = True
