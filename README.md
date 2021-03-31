@@ -2,7 +2,7 @@
 
 本项目地址：[cyb233/mimikkoAutoSignIn](https://github.com/cyb233/mimikkoAutoSignIn)
 
-[本项目](https://github.com/cyb233/mimikkoAutoSignIn)使用GitHub Actions，用于[兽耳助手](https://www.mimikko.cn/)定时`每日签到/补签`/`兑换能量`/`VIP每日抽奖`，并可选`推送到微信/钉钉`  
+[本项目](https://github.com/cyb233/mimikkoAutoSignIn)使用GitHub Actions，用于[兽耳助手](https://www.mimikko.cn/)定时`每日签到/补签`/`兑换能量`/`VIP每日抽奖`，并可选`推送到企业微信/钉钉/Server酱`  
 [![GitHub Workflow Status](https://img.shields.io/github/workflow/status/cyb233/mimikkoAutoSignIn/CI)](https://github.com/cyb233/mimikkoAutoSignIn/actions)
 >[keylol帖子](https://keylol.com/t675496-1-1)
 ## 使用效果：
@@ -20,16 +20,15 @@
 
 > |secret名称|必要条件|说明|  
 > |-----|-----|-----|  
-> |`ID`,  `PASSWORD`|`AUTHORIZATION`不存在时|登录账号(邮箱或手机号)和登录密码|  
-> |`AUTHORIZATION`|`ID`,  `PASSWORD`不存在时|验证账号用，可由抓包获取|  
-> |`ENERGY`|非必要|详见下个表格|
+> |`ID`,  `PASSWORD`|`AUTHORIZATION`不存在时|登录账号(邮箱或手机号)和登录密码(优先使用此登录方式，参见注1)|  
+> |`AUTHORIZATION`|`ID`,  `PASSWORD`不存在时|验证账号用，可由抓包获取(参见注2)|  
+> |`ENERGY`|非必要|ENERGY参数用于签到及兑换能量，使用的code值为助手代码，下张表是已知的code值|
 > |`RESIGN`|非必要|补签最近x天，可选数字1~7|  
 > |`SCKEY`|非必要|微信推送，server酱密钥，详见步骤5|  
 > |`DDTOKEN`,  `DDSECRET`|非必要|钉钉推送，钉钉机器人`token`和安全设置`加签`的`secret`，可参考步骤5微信推送及[钉钉API文档](https://developers.dingtalk.com/document/app/custom-robot-access#topic-2026027)|  
 > |`wxAgentId`,  `wxSecret`,  `wxCompanyId`|非必要|企业微信推送，可参考[server酱Turbo版说明](https://sct.ftqq.com)|
-> - 建议使用ID密码登录，无技术要求，但可能会将其他设备挤下线
-> - AUTHORIZATION值为抓包获取，需要会使用抓包软件，但不会影响其他设备
-> - ENERGY参数用于签到及兑换能量，使用的code值为助手代码，下表是已知的code值
+> - 注1：建议使用ID密码登录，无技术要求，但每次执行可能会将其他设备挤下线
+> - 注2：AUTHORIZATION值为抓包获取，需要会使用抓包软件，但不会影响其他设备，新的登录会使旧的AUTHORIZATION失效
 
 > |code|ServantName|  
 > |-----|-----|  
