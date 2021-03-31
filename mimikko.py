@@ -85,8 +85,8 @@ try:
             else:
                 print("resign关闭")
     print('获取参数结束')
-except Exception as e:
-    print('获取参数错误：', e)
+except Exception as es:
+    print('获取参数错误：', es)
     sys.exit(1)
 
 login_path = 'https://api1.mimikko.cn/client/user/LoginWithPayload' # 登录(post)
@@ -124,8 +124,8 @@ def loginRequest_post(url, app_id, app_Version, params):
         with requests.post(url, headers=headers_post, data=params_post, verify=False, timeout=300) as resp:
             res = resp.json()
             return res
-    except Exception as ex:
-        print(ex)
+    except Exception as exl:
+        print(exl)
 # get请求
 def apiRequest_get(url, app_id, app_Version, Authorization, params):
     params_get = params
@@ -143,8 +143,8 @@ def apiRequest_get(url, app_id, app_Version, Authorization, params):
         with requests.get(url, headers=headers_get, params=params_get, verify=False, timeout=300) as resp:
             res = resp.json()
             return res
-    except Exception as ex:
-        print(ex)
+    except Exception as exg:
+        print(exg)
 # post请求
 def apiRequest_post(url, app_id, app_Version, Authorization, params):
     params_post = params
@@ -164,8 +164,8 @@ def apiRequest_post(url, app_id, app_Version, Authorization, params):
         with requests.post(url, headers=headers_post, data=params_post, verify=False, timeout=300) as resp:
             res = resp.json()
             return res
-    except Exception as ex:
-        print(ex)
+    except Exception as exp:
+        print(exp)
 # 时间格式化
 def timeStamp2time(timeStamp):
     timeArray = time.localtime(timeStamp)
@@ -401,6 +401,7 @@ try:
         varErrText = varErrText[1:]
 except Exception as em:
     varErr = False
+    varErrText = f'mimikko{em}'
     print('mimikko', em)
 
 try:
