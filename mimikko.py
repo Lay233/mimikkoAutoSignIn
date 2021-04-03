@@ -200,12 +200,8 @@ def ddpost(ding_api, DDTOKEN, DDSECRET, title_post, post_text):
         'Content-Type': 'application/json; charset=UTF-8',
     }
     url = f'{ding_api}access_token={DDTOKEN}&timestamp={timestamp}&sign={sign}'
-    post_info = f'''{{
-        "msgtype":"text",
-        "text":{{
-            "content":{title_post}\n\n{post_text}
-        }}
-    }}'''
+    post_info = f'''{{"msgtype":"text","text":{{"content":{title_post}\n\n{post_text}}}}}'''
+    post_info = re.sub(' ','',post_info)
     post_info = json.dumps(post_info)
     post_data = requests.post(url, headers=headers_post, json=post_info, timeout=300)
     if 'errcode' in post_data.json() and post_data.json()["errcode"] == 0:
