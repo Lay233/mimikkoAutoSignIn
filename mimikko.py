@@ -85,9 +85,10 @@ try:
             print("wxCompanyId存在")
         elif o == '-i':
             print("wxCompanyId不存在")
-    if not (Authorization and user_id and user_password):
+    if Authorization or (user_id and user_password):
+        print('获取参数结束')
+    else:
         sys.exit('获取参数错误：请在Secret中保存 登录ID和密码 或 Authorization ！！！')
-    print('获取参数结束')
 except Exception as es:
     print('获取参数错误：', es)
     sys.exit(1)
