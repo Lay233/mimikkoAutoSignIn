@@ -200,9 +200,14 @@ def ddpost(ding_api, DDTOKEN, DDSECRET, title_post, post_text):
         'Content-Type': 'application/json; charset=UTF-8',
     }
     url = f'{ding_api}access_token={DDTOKEN}&timestamp={timestamp}&sign={sign}'
-    post_info = f'{{"msgtype":"text","text":{{"content":"{title_post}\n\n{post_text}"}}}}'
+    post_info = f'''{{
+        "msgtype":"text",
+        "text":{{
+            "content":{title_post}\n\n{post_text}
+        }}
+    }}'''
     post_info = json.dumps(post_info)
-    post_data = requests.post(url, headers=headers_post, data=post_info, timeout=300)
+    post_data = requests.post(url, headers=headers_post, json=post_info, timeout=300)
     if 'errcode' in post_data.json() and post_data.json()["errcode"] == 0:
         return post_data.json()["errcode"]
     else:
@@ -375,7 +380,7 @@ def mimikko():
         if energy_info_data['body']['Energy'] > 0:
             energy_reward_data = apiRequest_get(f'{energy_reward_path}?code={Energy_code}', app_id, app_Version, Authorization, "")
             title_post = f'''{title_ahead}{servant_name[energy_reward_data['body']['code']]}好感度{str(energy_reward_data['body']['Favorability'])}'''
-            gethgd = int(energy_info_data['body']['Favorability'])-int(original_energy_post)
+            gethgd = int(energy_reward_data['body']['Favorability'])-int(original_energy_post)
             energy_reward_post = f'''能量值：{str(energy_info_data['body']['Energy'])}/{str(energy_info_data['body']['MaxEnergy'])}\n好感度兑换成功\n助手：{servant_name[energy_reward_data['body']['code']]} LV{str(energy_reward_data['body']['Level'])} +{gethgd}({original_energy_post}→{str(energy_reward_data['body']['Favorability'])}/{str(energy_info_data['body']['MaxFavorability'])})'''
         else:
             energy_reward_data = "您的能量值不足，无法兑换"
