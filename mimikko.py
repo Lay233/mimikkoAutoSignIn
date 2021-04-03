@@ -375,11 +375,13 @@ def mimikko():
         if energy_info_data['body']['Energy'] > 0:
             energy_reward_data = apiRequest_get(f'{energy_reward_path}?code={Energy_code}', app_id, app_Version, Authorization, "")
             title_post = f'''{title_ahead}{servant_name[energy_reward_data['body']['code']]}好感度{str(energy_reward_data['body']['Favorability'])}'''
-            energy_reward_post = f'''能量值：{str(energy_info_data['body']['Energy'])}/{str(energy_info_data['body']['MaxEnergy'])}\n好感度兑换成功\n助手：{servant_name[energy_reward_data['body']['code']]} LV{str(energy_reward_data['body']['Level'])} ({original_energy_post}→{str(energy_reward_data['body']['Favorability'])}/{str(energy_info_data['body']['MaxFavorability'])})'''
+            gethgd = int(energy_info_data['body']['Favorability'])-int(original_energy_post)
+            energy_reward_post = f'''能量值：{str(energy_info_data['body']['Energy'])}/{str(energy_info_data['body']['MaxEnergy'])}\n好感度兑换成功\n助手：{servant_name[energy_reward_data['body']['code']]} LV{str(energy_reward_data['body']['Level'])} +{gethgd}({original_energy_post}→{str(energy_reward_data['body']['Favorability'])}/{str(energy_info_data['body']['MaxFavorability'])})'''
         else:
             energy_reward_data = "您的能量值不足，无法兑换"
             title_post = f'''{title_ahead}{servant_name[energy_info_data['body']['code']]}好感度{str(energy_info_data['body']['Favorability'])}'''
-            energy_reward_post = f'''能量值：{str(energy_info_data['body']['Energy'])}/{str(energy_info_data['body']['MaxEnergy'])}\n好感度兑换失败：当前没有能量\n助手：{servant_name[energy_info_data['body']['code']]} LV{str(energy_info_data['body']['Level'])} ({original_energy_post}→{str(energy_info_data['body']['Favorability'])}/{str(energy_info_data['body']['MaxFavorability'])})'''
+            gethgd = int(energy_info_data['body']['Favorability'])-int(original_energy_post)
+            energy_reward_post = f'''能量值：{str(energy_info_data['body']['Energy'])}/{str(energy_info_data['body']['MaxEnergy'])}\n好感度兑换失败：当前没有能量\n助手：{servant_name[energy_info_data['body']['code']]} LV{str(energy_info_data['body']['Level'])} +{gethgd}({original_energy_post}→{str(energy_info_data['body']['Favorability'])}/{str(energy_info_data['body']['MaxFavorability'])})'''
     else:
         energy_reward_data = "您的能量值不足，无法兑换"
         title_post = title_ahead
