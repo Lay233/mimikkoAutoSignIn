@@ -439,9 +439,9 @@ try:
             print('server酱 errcode:', post_data)
     else:
         if varErr:
-            print("运行成功，且没有SCKEY，未推送")
+            print("运行成功，且没有SCKEY，Server酱未推送")
         else:
-            print(f"运行失败：兽耳助手签到数据异常，请访问GitHub检查：{varErrText}，且没有SCKEY，未推送")
+            print(f"运行失败：\n兽耳助手签到数据异常，请访问GitHub检查：{varErrText}，且没有SCKEY，Server酱未推送")
     rs1 = False
 except Exception as es:
     rs1 = True
@@ -450,7 +450,7 @@ except Exception as es:
         post_data = scpost(sc_api, SCKEY, "兽耳助手签到数据异常", f"兽耳助手签到数据异常，请访问GitHub检查：{es}")
         print('server酱 errcode:', post_data)
     else:
-        print("数据异常，且没有SCKEY，未推送")
+        print("数据异常，且没有SCKEY，Server酱未推送")
     print('sc', es)
 try:
     # print(len(sys.argv))
@@ -467,9 +467,9 @@ try:
             print('钉钉 errcode:', post_data)
     else:
         if varErr:
-            print("运行成功，且没有DDTOKEN或DDSECRET，未推送")
+            print("运行成功，且没有DDTOKEN或DDSECRET，钉钉未推送")
         else:
-            print(f"运行失败：{varErrText}，且没有DDTOKEN或DDSECRET，未推送")
+            print(f"运行失败：\n兽耳助手签到数据异常，请访问GitHub检查：{varErrText}，且没有DDTOKEN或DDSECRET，钉钉未推送")
     rs2 = False
 except Exception as ed:
     rs2 = True
@@ -478,7 +478,7 @@ except Exception as ed:
         post_data = ddpost(ding_api, DDTOKEN, DDSECRET, "兽耳助手签到数据异常", f"兽耳助手签到数据异常，请访问GitHub检查：{ed}")
         print('钉钉 errcode:', post_data)
     else:
-        print("数据异常，且没有DDTOKEN或DDSECRET，未推送")
+        print("数据异常，且没有DDTOKEN或DDSECRET，钉钉未推送")
     print('dd', ed)
 try:
     # print(len(sys.argv))
@@ -495,9 +495,9 @@ try:
             print('企业微信 errcode:', post_data)
     else:
         if varErr:
-            print("运行成功，且没有wxAgentId, wxSecret或wxCompanyId，未推送")
+            print("运行成功，且没有wxAgentId, wxSecret或wxCompanyId，企业微信未推送")
         else:
-            print(f"运行失败：{varErrText}，且没有wxAgentId, wxSecret或wxCompanyId，未推送")
+            print(f"运行失败：\n兽耳助手签到数据异常，请访问GitHub检查：{varErrText}，且没有wxAgentId, wxSecret或wxCompanyId，企业微信未推送")
     rs3 = False
 except Exception as ew:
     rs3 = True
@@ -506,7 +506,7 @@ except Exception as ew:
         post_data = send2wechat(wxAgentId, wxSecret, wxCompanyId, f"兽耳助手签到数据异常\n\n兽耳助手签到数据异常，请访问GitHub检查：{ew}")
         print('企业微信 errcode:', post_data)
     else:
-        print("数据异常，且没有wxAgentId, wxSecret或wxCompanyId，未推送")
+        print("数据异常，且没有wxAgentId, wxSecret或wxCompanyId，企业微信未推送")
     print('wx', ew)
 if rs1 or rs2 or rs3:
     sys.exit('推送异常，请检查')
