@@ -243,7 +243,7 @@ def send2wechat(AgentId, Secret, CompanyId, message):
         r = requests.get(f'https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid={CompanyId}&corpsecret={Secret}', timeout=300).json()
         ACCESS_TOKEN = r["access_token"]
     except Exception as exp:
-        print(exp)
+        print('wxtoken', exp)
     # print(ACCESS_TOKEN)
     # 要发送的信息格式
     data = {
@@ -266,7 +266,7 @@ def send2wechat(AgentId, Secret, CompanyId, message):
         else:
             return None
     except Exception as exp:
-        print(exp)
+        print('wxpost', exp)
 
 def mimikko():
     global Authorization
