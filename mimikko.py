@@ -481,7 +481,7 @@ try:
             print("运行失败，正在推送到Server酱")
             post_data = scpost(sc_api, SCKEY, "兽耳助手签到数据异常", f'兽耳助手签到数据异常，请访问GitHub检查：{varErrText}')
             print('server酱 errcode:', post_data)
-        if post_data:
+        if post_data == 0:
             rs1 = False
         else:
             rs1 = True
@@ -513,7 +513,7 @@ try:
             print("运行失败，正在推送到钉钉")
             post_data = ddpost(ding_api, DDTOKEN, DDSECRET, "兽耳助手签到数据异常", f"兽耳助手签到数据异常，请访问GitHub检查：{varErrText}")
             print('钉钉 errcode:', post_data)
-        if post_data:
+        if post_data == 0:
             rs2 = False
         else:
             rs2 = True
@@ -545,7 +545,7 @@ try:
             print("运行失败，正在推送到企业微信")
             post_data = send2wechat(wxAgentId, wxSecret, wxCompanyId, f'兽耳助手签到数据异常\n\n兽耳助手签到数据异常，请访问GitHub检查：{varErrText}')
             print('企业微信 errcode:', post_data)
-        if post_data:
+        if post_data == 0:
             rs3 = False
         else:
             rs3 = True
