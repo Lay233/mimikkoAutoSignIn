@@ -8,7 +8,7 @@ import time
 import requests
 import re
 import json
-import getopt
+import argparse
 import hashlib
 import hmac
 import base64
@@ -17,105 +17,77 @@ from requests.packages.urllib3.exceptions import InsecureRequestWarning
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 try:
-    mimikko_help = Authorization = user_id = user_password = resign = SCKEY = DDTOKEN = DDSECRET = wxAgentId = wxSecret = wxCompanyId = False
-    Energy_code = 'momona'
-    help_text = '''
-使用说明：
-usage: Python mimikko.py [-h] [-u "ID"] [-p "PASSWORD"] [-a "AUTHORIZATION"] [-e "ENERGY"] [-r "RESIGN"] [-s "SCKEY"] [-d "DDTOKEN"] [-c "DDSECRET"] [-i "wxCompanyId"] [-x "wxSecret"] [-w "wxAgentId"]
-    -h    非必要                存在-h参数或不带任何参数时显示此帮助
-    -u    -a不存在时必要        登录账号(邮箱或手机号)
-    -p    -a不存在时必要        登录密码
-    -a    -u及-p不存在时必要    AUTHORIZATION验证，抓包获取
-    -e    非必要                助手代码，选择助手
-    -r    非必要                补签最近x天，可选数字1~7
-    -s    非必要                server酱推送密钥
-    -d    非必要                钉钉机器人token
-    -c    非必要                钉钉机器人安全设置加签的secret
-    -i    非必要                企业微信推送CompanyId
-    -x    非必要                企业微信推送Secret
-    -w    非必要                企业微信推送AgentId
-'''
-    #print(sys.argv)
-    #print(len(sys.argv))
-    optlist, args = getopt.getopt(sys.argv[1:], 'hu:p:a:e:r:s:d:c:w:x:i:')
-    for o, a in optlist:
-        if o == '-h':#登录ID
-            mimikko_help = True
-    if mimikko_help or len(sys.argv) == 1:
-        print(help_text)
-        sys.exit(0)
+    parser = argparse.ArgumentParser(description='请从 登录账号(-u)和密码(-p) 或 AUTHORIZATION验证(-a) 中选择一种登录方式')
+
+    parser.add_argument('-u', default=False, metavar='ID', help='登录账号(邮箱或手机号)')
+    parser.add_argument('-p', default=False, metavar='password', help='登录密码')
+    parser.add_argument('-a', default=False, metavar='Token', help='AUTHORIZATION验证，抓包获取')
+    parser.add_argument('-e', default='momona', metavar='code', help='助手代码，选择助手')
+    parser.add_argument('-r', default=False, metavar='resign', type=int, help='补签最近x天，可选数字1~7')
+    parser.add_argument('-s', default=False, metavar='sckey', help='server酱推送密钥')
+    parser.add_argument('-d', default=False, metavar='token', help='钉钉机器人token')
+    parser.add_argument('-c', default=False, metavar='secret', help='钉钉机器人安全设置加签的secret')
+    parser.add_argument('-i', default=False, metavar='CompanyId', help='企业微信推送CompanyId')
+    parser.add_argument('-x', default=False, metavar='Secret', help='企业微信推送Secret')
+    parser.add_argument('-w', default=False, metavar='AgentId', help='企业微信推送AgentId')
+
+    args =  parser.parse_args()
+
     print('正在获取secret参数')
-    #print(optlist, args)
-    for o, a in optlist:
-        if o == '-u' and a.strip() != '':#登录ID
-            user_id = a.strip()
-            print("user_id存在")
-        elif o == '-u':
-            print("user_id不存在")
-        if o == '-p' and a.strip() != '':#登录密码
-            user_password = a.strip()
-            print("user_password存在")
-        elif o == '-p':
-            print("user_password不存在")
-        if o == '-a' and a.strip() != '':#账号Authorization
-            Authorization = a.strip()
-            print("Authorization存在")
-        elif o == '-a':
-            print("Authorization不存在")
-        if o == '-e' and a.strip() != '':#助手代码
-            Energy_code = a.strip()
-            print("Energy_code存在")
-        elif o == '-e':
-            print("Energy_code不存在，默认'momona'")
-        if o == '-r' and re.sub('\\D', '',a.strip()):#补签天数
-            if a.strip() in ['1', '2', '3', '4', '5', '6', '7']:
-                resign = a.strip()
-                print("resign开启")
-            elif int(re.sub('\\D', '',a.strip())) > 7:
-                resign = '7'
-                print("resign开启")
-        elif o == '-r' :
-            print("resign关闭")
-        if o == '-s' and a.strip() != '':#Server酱推送
-            SCKEY = a.strip()
-            print("SCKEY存在")
-        elif o == '-s':
-            print("SCKEY不存在")
-        if o == '-d' and a.strip() != '':#钉钉推送TOKEN
-            if a.strip().find('access_token=') == -1:
-                DDTOKEN = a.strip()
-            else:
-                DDTOKEN = a.strip()[a.strip().find('access_token=')+13:]
-            print("DDTOKEN存在")
-        elif o == '-d':
-            print("DDTOKEN不存在")
-        if o == '-c' and a.strip() != '':#钉钉推送SECRET
-            DDSECRET = a.strip()
-            print("DDSECRET存在")
-        elif o == '-c':
-            print("DDSECRET不存在")
-        if o == '-w' and a.strip() != '':#企业微信推送AgentId
-            wxAgentId = a.strip()
-            print("wxAgentId存在")
-        elif o == '-w':
-            print("wxAgentId不存在")
-        if o == '-x' and a.strip() != '':#企业微信推送Secret
-            wxSecret = a.strip()
-            print("wxSecret存在")
-        elif o == '-x':
-            print("wxSecret不存在")
-        if o == '-i' and a.strip() != '':#企业微信推送CompanyId
-            wxCompanyId = a.strip()
-            print("wxCompanyId存在")
-        elif o == '-i':
-            print("wxCompanyId不存在")
-    if Authorization or (user_id and user_password):
-        print('获取参数结束')
-    else:
-        print(help_text)
+    user_id = args.u
+    user_password = args.p
+    Authorization = args.a
+    Energy_code = args.e
+    resign = args.r
+    if resign > 7:
+        resign = 7
+    elif resign < 1:
+        resign = False
+    SCKEY = args.s
+    DDTOKEN = args.d
+    if DDTOKEN and DDTOKEN.find('access_token=') != -1:
+        DDTOKEN = DDTOKEN[DDTOKEN.find('access_token=')+13:]
+    DDSECRET = args.c
+    wxAgentId = args.i
+    wxSecret = args.x
+    wxCompanyId = args.w
+    
+    if user_id:
+        user_id = user_id.strip()
+        print('user_id 存在')
+    if user_password:
+        user_password = user_password.strip()
+        print('user_password 存在')
+    if Authorization:
+        Authorization = Authorization.strip()
+        print('Authorization 存在')
+    if not Authorization and not (user_id and user_password):
         sys.exit('获取参数错误：请在Secret中保存 登录ID和密码 或 Authorization ！！！')
+    if Energy_code:
+        Energy_code = Energy_code.strip()
+        print('Energy_code 存在')
+    if resign:
+        print('resign 存在')
+    if SCKEY:
+        SCKEY = SCKEY.strip()
+        print('SCKEY 存在')
+    if DDTOKEN:
+        DDTOKEN = DDTOKEN.strip()
+        print('DDTOKEN 存在')
+    if DDSECRET:
+        DDSECRET = DDSECRET.strip()
+        print('DDSECRET 存在')
+    if wxAgentId:
+        wxAgentId = wxAgentId.strip()
+        print('wxAgentId 存在')
+    if wxSecret:
+        wxSecret = wxSecret.strip()
+        print('wxSecret 存在')
+    if wxCompanyId:
+        wxCompanyId = wxCompanyId.strip()
+        print('wxCompanyId 存在')
+    print('获取参数结束')
 except Exception as es:
-    print(help_text)
     print('获取参数错误：', es)
     sys.exit(1)
 
@@ -321,7 +293,6 @@ def mimikko():
                 print("登录错误，正在推送到企业微信")
                 post_data = send2wechat(wxAgentId, wxSecret, wxCompanyId, "兽耳助手签到登录错误\n\n兽耳助手登录错误，请访问GitHub检查")
                 print('企业微信 errcode:', post_data)
-            print(help_text)
             sys.exit('兽耳助手登录错误！！！')
     else:
         if Authorization:
@@ -338,7 +309,6 @@ def mimikko():
                 print("登录错误，正在推送到企业微信")
                 post_data = send2wechat(wxAgentId, wxSecret, wxCompanyId, "兽耳助手签到登录错误\n\n登录错误，未找到 Authorization ，请访问GitHub检查")
                 print('企业微信 errcode:', post_data)
-            print(help_text)
             sys.exit('请在Secret中保存 登录ID和密码 或 Authorization ！！！')
     #设置默认助手
     print('设置默认助手')
@@ -361,10 +331,10 @@ def mimikko():
         else:
             cansign_before_time = False
         print(cansign_before_time)
-        for i in ['1', '2', '3', '4', '5', '6', '7']:
-            if not int(i)>int(resign):
+        for i in [1, 2, 3, 4, 5, 6, 7]:
+            if not i>resign:
                 print('round ', str(i))
-                resign_time = int(time.time())-86400*int(i)
+                resign_time = int(time.time())-86400*i
                 r_date, r_time = timeStamp2time(resign_time)
                 resign_data = apiRequest_post(resign_path, app_id, app_Version, Authorization, f'["{r_date}T15:59:59+0800"]')
                 print(resign_data)
@@ -381,7 +351,7 @@ def mimikko():
         if cansign_before_time and cansign_after_time:
             times_resigned = cansign_after_time-cansign_before_time
         else:
-            times_resigned = 0
+            times_resigned = False
     else:
         times_resigned = False
     #签到
