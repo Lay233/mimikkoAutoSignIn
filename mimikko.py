@@ -243,7 +243,7 @@ def send2wechat(AgentId, Secret, CompanyId, message):
         r = requests.get(f'https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid={CompanyId}&corpsecret={Secret}', timeout=300).json()
         ACCESS_TOKEN = r["access_token"]
     except Exception as exp:
-        print('wxtoken', f'{exp}\n{r})
+        print('wxtoken', f'{exp}\n{r}')
     # print(ACCESS_TOKEN)
     # 要发送的信息格式
     data = {
