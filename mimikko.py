@@ -238,9 +238,12 @@ def send2wechat(AgentId, Secret, CompanyId, message):
     """
     # 通行密钥
     ACCESS_TOKEN = None
-    # 通过企业ID和应用Secret获取本地通行密钥
-    r = requests.get(f'https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid={CompanyId}&corpsecret={Secret}', timeout=300).json()
-    ACCESS_TOKEN = r["access_token"]
+    try:
+        # 通过企业ID和应用Secret获取本地通行密钥
+        r = requests.get(f'https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid={CompanyId}&corpsecret={Secret}', timeout=300).json()
+        ACCESS_TOKEN = r["access_token"]
+    except Exception as exp:
+        print('wxtoken', exp)
     # print(ACCESS_TOKEN)
     # 要发送的信息格式
     data = {
@@ -252,15 +255,18 @@ def send2wechat(AgentId, Secret, CompanyId, message):
     # 字典转成json，不然会报错
     data = json.dumps(data)
     try:
-        # 发送消息
-        post_data = requests.post(f'https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token={ACCESS_TOKEN}', data=data, timeout=300)
-        # print(post_data.json())
-        if 'errcode' in post_data.json() and post_data.json()["errcode"] == 0:
-            return post_data.json()["errcode"]
+        if ACCESS_TOKEN:
+            # 发送消息
+            post_data = requests.post(f'https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token={ACCESS_TOKEN}', data=data, timeout=300)
+            # print(post_data.json())
+            if 'errcode' in post_data.json() and post_data.json()["errcode"] == 0:
+                return post_data.json()["errcode"]
+            else:
+                return post_data.text
         else:
-            return post_data.text
+            return 'ACCESS_TOKEN获取失败，发送未成功'
     except Exception as exp:
-        print(exp)
+        print('wxpost', exp)
 
 def mimikko():
     global Authorization
