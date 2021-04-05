@@ -48,9 +48,9 @@ try:
     if DDTOKEN and DDTOKEN.find('access_token=') != -1:
         DDTOKEN = DDTOKEN[DDTOKEN.find('access_token=')+13:]
     DDSECRET = args.c
-    wxAgentId = args.i
+    wxAgentId = args.w
     wxSecret = args.x
-    wxCompanyId = args.w
+    wxCompanyId = args.i
     
     if user_id:
         user_id = user_id.strip()
@@ -243,7 +243,7 @@ def send2wechat(AgentId, Secret, CompanyId, message):
         r = requests.get(f'https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid={CompanyId}&corpsecret={Secret}&debug=1', timeout=300).json()
         ACCESS_TOKEN = r["access_token"]
     except Exception as exp:
-        print('wxtoken', f'{exp}\n{r}')
+        print('wxtoken', exp)
     # print(ACCESS_TOKEN)
     # 要发送的信息格式
     data = {
