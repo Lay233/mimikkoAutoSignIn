@@ -53,7 +53,7 @@
 > - **请勿滥用GitHub Actions！**  
 > - 如图点击`I understand my workflows, go ahead and enable them`，并手动执行一次  
 > ![actions](/pic/actions.jpg)  
-> ![run](https://ghproxy.com/https://user-images.githubusercontent.com/35195193/104328725-13405200-5527-11eb-8540-c804a6d1142e.png)  
+> ![run](https://user-images.githubusercontent.com/35195193/104328725-13405200-5527-11eb-8540-c804a6d1142e.png)  
   
 #### 4. 修改自动运行时间：  
 > - 打开`mimikkoAutoSignIn/.github/workflows/auto_sign_in.yml`  
