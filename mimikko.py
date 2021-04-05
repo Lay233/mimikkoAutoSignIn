@@ -240,7 +240,7 @@ def send2wechat(AgentId, Secret, CompanyId, message):
     ACCESS_TOKEN = None
     try:
         # 通过企业ID和应用Secret获取本地通行密钥
-        r = requests.get(f'https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid={CompanyId}&corpsecret={Secret}&debug=1', timeout=300).json()
+        r = requests.get(f'https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid={CompanyId}&corpsecret={Secret}', timeout=300).json()
         ACCESS_TOKEN = r["access_token"]
     except Exception as exp:
         print('wxtoken', exp)
