@@ -6,7 +6,8 @@
 [![GitHub Workflow Status](https://img.shields.io/github/workflow/status/cyb233/mimikkoAutoSignIn/CI)](https://github.com/cyb233/mimikkoAutoSignIn/actions)  
 >[keylol帖子](https://keylol.com/t675496-1-1)  
 ## 使用效果：  
-![result](/pic/result.png)  
+![result](/pic/result.png) [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fcyb233%2FmimikkoAutoSignIn.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fcyb233%2FmimikkoAutoSignIn?ref=badge_shield)
+ 
   
 ## 使用说明  
 <details markdown='1'><summary>点击查看使用说明</summary>  
@@ -88,3 +89,7 @@ mimikko.py [-h] [-u "ID"] [-p "PASSWORD"] [-a "AUTHORIZATION"] [-e "ENERGY"] [-r
 - 使用本项目请遵守兽耳助手《用户服务协议》，请勿使用本项目进行任何违法行为以及任何有害行为  
 - 本项目不对任何不可抗力负责，包括但不限于 官方回收奖励，封号，罢工，自然和人为灾害，战争，网络攻击，拿服务器CPU烧烤，第三次世界大战，G胖数3，圣杯战争导致的煤气爆炸，没交网费，二哈拆房，生化危机，总是单身，异形入侵，考试挂科，三体来袭 等各种软件服务协议会写的东西  
 - 欢迎[afdian赞助](https://afdian.net/@Schwi)  
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fcyb233%2FmimikkoAutoSignIn.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fcyb233%2FmimikkoAutoSignIn?ref=badge_large)
