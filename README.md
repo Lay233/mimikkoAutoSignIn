@@ -6,7 +6,7 @@
 [![GitHub Workflow Status](https://img.shields.io/github/workflow/status/cyb233/mimikkoAutoSignIn/CI)](https://github.com/cyb233/mimikkoAutoSignIn/actions)  
 >[keylol帖子](https://keylol.com/t675496-1-1)  
 ## 使用效果：  
-![result](/pic/result.png) [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fcyb233%2FmimikkoAutoSignIn.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fcyb233%2FmimikkoAutoSignIn?ref=badge_shield)
+![result](/pic/result.png)  
  
   
 ## 使用说明  
@@ -92,4 +92,5 @@ mimikko.py [-h] [-u "ID"] [-p "PASSWORD"] [-a "AUTHORIZATION"] [-e "ENERGY"] [-r
 
 
 ## License
+<!---[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fcyb233%2FmimikkoAutoSignIn.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fcyb233%2FmimikkoAutoSignIn?ref=badge_shield)--->
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fcyb233%2FmimikkoAutoSignIn.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fcyb233%2FmimikkoAutoSignIn?ref=badge_large)
