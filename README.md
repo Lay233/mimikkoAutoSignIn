@@ -51,6 +51,7 @@
   
 #### 3. 在actions中开启  
 > - **请勿滥用GitHub Actions！**  
+> - **如果您的库60天内没有任何操作，将会被暂停GitHub Actions，请及时更新fork库，或任意编辑一次readme等**  
 > - 如图点击`I understand my workflows, go ahead and enable them`，并手动执行一次  
 > ![actions](/pic/actions.jpg)  
 > ![run](https://user-images.githubusercontent.com/35195193/104328725-13405200-5527-11eb-8540-c804a6d1142e.png)  
@@ -82,6 +83,7 @@ mimikko.py [-h] [-u "ID"] [-p "PASSWORD"] [-a "AUTHORIZATION"] [-e "ENERGY"] [-r
 - 您保证是因为各种无法解决的原因无法自行签到而使用本项目的(如作者本人航海专业无信号，或没有手机的学生党等)  
 - 本项目完全开源，使用时如有任何不放心请自行检阅代码（或提issues也行）  
 - 本项目使用的Secrets均保存于GitHub服务器中，且一旦保存，即使是用户自己也无法再次查看  
+- 如果您的库60天内没有任何操作，将会被暂停GitHub Actions，请及时更新fork库，或任意编辑一次readme等  
 - 本项目均使用GitHub Actions定时运行，可以下载并本地定时运行，方法参见上面的内容  
 - 使用本项目请遵守兽耳助手《用户服务协议》，请勿使用本项目进行任何违法行为以及任何有害行为  
 - 本项目不对任何不可抗力负责，包括但不限于 官方回收奖励，封号，罢工，自然和人为灾害，战争，网络攻击，拿服务器CPU烧烤，第三次世界大战，G胖数3，圣杯战争导致的煤气爆炸，没交网费，二哈拆房，生化危机，总是单身，异形入侵，考试挂科，三体来袭 等各种软件服务协议会写的东西  
