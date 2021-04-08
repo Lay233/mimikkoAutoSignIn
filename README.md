@@ -74,7 +74,7 @@
 </details>  
   
 ## 本地运行  
-使用参数`-h`或`--help`启动脚本可以查看内置的简单帮助  
+使用参数`-h`|`--help`或不带参数启动脚本可以查看内置的简单帮助  
 ```python
 mimikko.py [-h|--help] [-u "ID"] [-p "PASSWORD"] [-a "AUTHORIZATION"] [-e "ENERGY"] [-r "RESIGN"] [-s "SCKEY"] [-d "DDTOKEN"] [-c "DDSECRET"] [-i "wxCompanyId"] [-x "wxSecret"] [-w "wxAgentId"]
 ```
