@@ -32,7 +32,9 @@ try:
     parser.add_argument('-w', default=False, metavar='AgentId', help='企业微信推送AgentId')
 
     args =  parser.parse_args()
-
+    if len(sys.argv)<2:
+        parser.print_help()
+        sys.exit(1)
     print('正在获取secret参数')
     user_id = args.u
     user_password = args.p
