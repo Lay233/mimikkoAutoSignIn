@@ -353,7 +353,7 @@ def mimikko():
                 resign_time = int(time.time())-86400*i
                 r_date= timeStamp1time(resign_time)
                 resign_data = mimikko_post(resign_path, app_id, app_Version, Authorization, f'["{r_date}T15:59:59+0800"]')
-                if resign_data[""]==0:
+                if resign_data["code"]==0:
                     print("补签成功")
                 else:
                     print("未补签")
