@@ -15,8 +15,8 @@ import urllib.parse
 
 import requests
 
-#from requests.packages.urllib3.exceptions import InsecureRequestWarning
-#requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
+requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 try:
     parser = argparse.ArgumentParser(description='请从 登录账号(-u)和密码(-p) 或 AUTHORIZATION验证(-a) 中选择一种登录方式')
