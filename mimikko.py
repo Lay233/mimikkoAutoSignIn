@@ -346,10 +346,10 @@ def mimikko():
             cansign_before_time = cansign_before['body']['Value']
         else:
             cansign_before_time = False
-        print(cansign_before_time)
+        print(f'补签前的补签卡：{cansign_before_time}')
         for i in [1, 2, 3, 4, 5, 6, 7]:
             if not i>resign:
-                print(f'前 {i} 天')
+                print(f'前第 {i} 天')
                 resign_time = int(time.time())-86400*i
                 r_date= timeStamp1time(resign_time)
                 resign_data = mimikko_post(resign_path, app_id, app_Version, Authorization, f'["{r_date}T15:59:59+0800"]')
@@ -365,7 +365,7 @@ def mimikko():
             cansign_after_time = cansign_after['body']['Value']
         else:
             cansign_after_time = False
-        print(cansign_after_time)
+        print(f'补签后的补签卡：{cansign_after_time}')
         #使用的补签卡
         if cansign_before_time and cansign_after_time:
             times_resigned = cansign_after_time-cansign_before_time
@@ -439,7 +439,7 @@ try:
     if varErr:
         now_time = timeStamp2time(time.time()+28800)
         post_text = re.sub('\\n', '  \n', f'现在是：{now_time}\n{sign_result_post}\n{vip_roll_post}\n{energy_reward_post}')
-        print(f'\n\n{title_post}\n\n{post_text}\n')
+        print(f'\n\n{post_text}\n')
     else:
         varErrText = f'函数返回值 {varErrText[1:]} 缺失'
 except Exception as em:
