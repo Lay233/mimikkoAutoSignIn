@@ -44,14 +44,8 @@ try:
     Authorization = args.a
     Energy_code = args.e
     resign = args.r
-    if resign > 7:
-        resign = 7
-    elif resign < 1:
-        resign = False
     SCKEY = args.s
     DDTOKEN = args.d
-    if DDTOKEN and DDTOKEN.find('access_token=') != -1:
-        DDTOKEN = DDTOKEN[DDTOKEN.find('access_token=')+13:]
     DDSECRET = args.c
     wxAgentId = args.w
     wxSecret = args.x
@@ -81,11 +75,18 @@ try:
         Energy_code = 'momona'
     if resign:
         resign = int(resign)
-        print('resign 存在')
+        if resign > 7:
+            resign = 7
+        elif resign < 1:
+            resign = False
+        if resign:
+            print('resign 存在')
     if SCKEY:
         SCKEY = SCKEY.strip()
         print('SCKEY 存在')
     if DDTOKEN:
+        if DDTOKEN and DDTOKEN.find('access_token=') != -1:
+            DDTOKEN = DDTOKEN[DDTOKEN.find('access_token=')+13:]
         DDTOKEN = DDTOKEN.strip()
         print('DDTOKEN 存在')
     if DDSECRET:
