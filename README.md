@@ -78,7 +78,7 @@
 </details>  
   
 ## 本地运行  
-使用参数`-h`/`--help`或`不带参数`启动脚本可以查看内置的简单帮助：[usage](usage.md)  
+使用参数`-h`/`--help`或`不带参数`启动脚本可以查看内置的简单帮助：[usage](md/usage.md)  
 ```python
 #基础格式
 mimikko.py [-h] [-u "ID"] [-p "password"] [-a "Token"] [-e "code"] [-r "resign"] [-s "SCKEY"] [-d "token"] [-c "secret"] [-i "CompanyId"] [-x "Secret"] [-w "AgentId"]
