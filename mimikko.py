@@ -535,7 +535,7 @@ try:
         now_time = timeStamp2time(time.time()+28800)
         post_text = re.sub(
             '\\n', '  \n', f'现在是：{now_time}\n{sign_result_post}\n{vip_roll_post}\n{energy_reward_post}')
-        print(f'\n\n推送信息：\n{title_post}\n{post_text}\n')
+        print(f'\n\n推送信息：\n\n{title_post}\n{post_text}')
     else:
         varErrText = f'函数返回值 {varErrText[1:]} 缺失'
 except Exception as em:
