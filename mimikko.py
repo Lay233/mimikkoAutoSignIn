@@ -8,37 +8,53 @@ import base64
 import hashlib
 import hmac
 import json
+import logging
 import re
 import sys
 import time
 import urllib.parse
 
 import requests
-
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
+
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
+LOG_FORMAT = "%(asctime)s - %(levelname)s - %(funcName)s - L:%(lineno)s - %(message)s"
+DATE_FORMAT = "%Y/%m/%d %H:%M:%S %p"
+logging.basicConfig(level=logging.INFO, format=LOG_FORMAT, datefmt=DATE_FORMAT)
+logging.debug('DEBUG 开启')
+
 try:
-    parser = argparse.ArgumentParser(description='请从 登录账号(-u)和密码(-p) 或 AUTHORIZATION验证(-a) 中选择一种登录方式')
+    parser = argparse.ArgumentParser(
+        description='请从 登录账号(-u)和密码(-p) 或 AUTHORIZATION验证(-a) 中选择一种登录方式')
 
     parser.add_argument('-u', default=False, metavar='ID', help='登录账号(邮箱或手机号)')
     parser.add_argument('-p', default=False, metavar='password', help='登录密码')
-    parser.add_argument('-a', default=False, metavar='Token', help='AUTHORIZATION验证，抓包获取')
+    parser.add_argument('-a', default=False, metavar='Token',
+                        help='AUTHORIZATION验证，抓包获取')
     parser.add_argument('-e', default=False, metavar='code', help='助手代码，选择助手')
-    parser.add_argument('-r', default=False, metavar='resign', help='补签最近x天，可选数字1~7')
-    parser.add_argument('-s', default=False, metavar='SCKEY', help='server酱推送密钥')
-    parser.add_argument('-d', default=False, metavar='token', help='钉钉机器人token')
-    parser.add_argument('-c', default=False, metavar='secret', help='钉钉机器人安全设置加签的secret')
-    parser.add_argument('-i', default=False, metavar='CompanyId', help='企业微信推送CompanyId')
-    parser.add_argument('-x', default=False, metavar='Secret', help='企业微信推送Secret')
-    parser.add_argument('-w', default=False, metavar='AgentId', help='企业微信推送AgentId')
+    parser.add_argument('-r', default=False,
+                        metavar='resign', help='补签最近x天，可选数字1~7')
+    parser.add_argument('-s', default=False,
+                        metavar='SCKEY', help='server酱推送密钥')
+    parser.add_argument('-d', default=False,
+                        metavar='token', help='钉钉机器人token')
+    parser.add_argument('-c', default=False,
+                        metavar='secret', help='钉钉机器人安全设置加签的secret')
+    parser.add_argument('-i', default=False,
+                        metavar='CompanyId', help='企业微信推送CompanyId')
+    parser.add_argument('-x', default=False,
+                        metavar='Secret', help='企业微信推送Secret')
+    parser.add_argument('-w', default=False,
+                        metavar='AgentId', help='企业微信推送AgentId')
 
-    args =  parser.parse_args()
+    args = parser.parse_args()
+
     # 如果不带参数启动
-    if len(sys.argv)<2:
+    if len(sys.argv) < 2:
         parser.print_help()
         sys.exit(1)
-    print('正在获取secret参数')
+    logging.info('正在获取secret参数')
     user_id = args.u
     user_password = args.p
     Authorization = args.a
@@ -50,29 +66,35 @@ try:
     wxAgentId = args.w
     wxSecret = args.x
     wxCompanyId = args.i
-    
+
     if user_id:
         user_id = user_id.strip()
-        print('user_id 存在')
+        logging.info('user_id 存在')
+        logging.debug(user_id)
     else:
-        print('user_id 不存在')
+        logging.info('user_id 不存在')
     if user_password:
         user_password = user_password.strip()
-        print('user_password 存在')
+        logging.info('user_password 存在')
+        logging.debug(user_password)
     else:
-        print('user_password 不存在')
+        logging.info('user_password 不存在')
     if Authorization:
         Authorization = Authorization.strip()
-        print('Authorization 存在')
+        logging.info('Authorization 存在')
+        logging.debug(Authorization)
     elif not (user_id and user_password):
-        print('Authorization 不存在')
+        logging.info('Authorization 不存在')
     if not ((user_id and user_password) or Authorization):
-        sys.exit('获取参数错误：请在Secret中保存 登录ID和密码 或 Authorization ！！！')
+        logging.critical('获取参数错误：请在Secret中保存 登录ID和密码 或 Authorization ！！！')
+        sys.exit(1)
     if Energy_code:
         Energy_code = Energy_code.strip()
-        print('Energy_code 存在')
+        logging.info('Energy_code 存在')
+        logging.debug(Energy_code)
     else:
         Energy_code = 'momona'
+        logging.debug(f'user_id: {user_id}')
     if resign:
         resign = int(resign)
         if resign > 7:
@@ -80,63 +102,73 @@ try:
         elif resign < 1:
             resign = False
         if resign:
-            print('resign 存在')
+            logging.info('resign 存在')
+            logging.debug(f'user_id: {user_id}')
     if SCKEY:
         SCKEY = SCKEY.strip()
-        print('SCKEY 存在')
+        logging.info('SCKEY 存在')
+        logging.debug(SCKEY)
     if DDTOKEN:
         if DDTOKEN and DDTOKEN.find('access_token=') != -1:
             DDTOKEN = DDTOKEN[DDTOKEN.find('access_token=')+13:]
         DDTOKEN = DDTOKEN.strip()
-        print('DDTOKEN 存在')
+        logging.info('DDTOKEN 存在')
+        logging.debug(DDTOKEN)
     if DDSECRET:
         DDSECRET = DDSECRET.strip()
-        print('DDSECRET 存在')
+        logging.info('DDSECRET 存在')
+        logging.debug(DDSECRET)
     if wxAgentId:
         wxAgentId = wxAgentId.strip()
-        print('wxAgentId 存在')
+        logging.info('wxAgentId 存在')
+        logging.debug(wxAgentId)
     if wxSecret:
         wxSecret = wxSecret.strip()
-        print('wxSecret 存在')
+        logging.info('wxSecret 存在')
+        logging.debug(wxSecret)
     if wxCompanyId:
         wxCompanyId = wxCompanyId.strip()
-        print('wxCompanyId 存在')
-    print('获取参数结束')
+        logging.info('wxCompanyId 存在')
+        logging.debug(wxCompanyId)
+    logging.info('获取参数结束')
 except Exception as es:
-    print('获取参数错误：', es)
+    logging.critical(es)
     sys.exit(1)
 
-login_path = 'https://api1.mimikko.cn/client/user/LoginWithPayload' # 登录(post)
-is_sign = 'https://api1.mimikko.cn/client/user/GetUserSignedInformation' # 今天是否签到
-history_path = 'https://api1.mimikko.cn/client/dailysignin/log/30/0' # 签到历史
-can_resign = 'https://api1.mimikko.cn/client/love/getcanresigntimes' # 补签卡数量
-defeat_set = 'https://api1.mimikko.cn/client/Servant/SetDefaultServant' # 设置默认助手
-resign_path = 'https://api1.mimikko.cn/client/love/resign?servantId=' # 补签(post)
-sign_path = 'https://api1.mimikko.cn/client/RewardRuleInfo/SignAndSignInformationV3' # 签到
-energy_info_path = 'https://api1.mimikko.cn/client/love/GetUserServantInstance' # 获取助手状态
-energy_reward_path = 'https://api1.mimikko.cn/client/love/ExchangeReward' # 兑换助手能量
-vip_info = 'https://api1.mimikko.cn/client/user/GetUserVipInfo' # 获取会员状态
-vip_roll = 'https://api1.mimikko.cn/client/roll/RollReward' # 会员抽奖(post)
-#sc_api = 'https://sc.ftqq.com/' #Server酱推送
-#sct_api = 'https://sctapi.ftqq.com/' #Server酱推送Turbo版
-#ding_api = 'https://oapi.dingtalk.com/robot/send?' # 钉钉推送
+login_path = 'https://api1.mimikko.cn/client/user/LoginWithPayload'  # 登录(post)
+is_sign = 'https://api1.mimikko.cn/client/user/GetUserSignedInformation'  # 今天是否签到
+history_path = 'https://api1.mimikko.cn/client/dailysignin/log/30/0'  # 签到历史
+can_resign = 'https://api1.mimikko.cn/client/love/getcanresigntimes'  # 补签卡数量
+defeat_set = 'https://api1.mimikko.cn/client/Servant/SetDefaultServant'  # 设置默认助手
+# 补签(post)
+resign_path = 'https://api1.mimikko.cn/client/love/resign?servantId='
+sign_path = 'https://api1.mimikko.cn/client/RewardRuleInfo/SignAndSignInformationV3'  # 签到
+energy_info_path = 'https://api1.mimikko.cn/client/love/GetUserServantInstance'  # 获取助手状态
+energy_reward_path = 'https://api1.mimikko.cn/client/love/ExchangeReward'  # 兑换助手能量
+vip_info = 'https://api1.mimikko.cn/client/user/GetUserVipInfo'  # 获取会员状态
+vip_roll = 'https://api1.mimikko.cn/client/roll/RollReward'  # 会员抽奖(post)
+# sc_api = 'https://sc.ftqq.com/' #Server酱推送
+# sct_api = 'https://sctapi.ftqq.com/' #Server酱推送Turbo版
+# ding_api = 'https://oapi.dingtalk.com/robot/send?' # 钉钉推送
 app_Version = '3.1.6'
 app_id = 'wjB7LOP2sYkaMGLC'
 servant_name = {
-    'nonona':'诺诺纳',
-    'momona':'梦梦奈',
-    'ariana':'爱莉安娜',
-    'miruku':'米璐库',
-    'nemuri':'奈姆利',
-    'ruri':'琉璃',
-    'alpha0':'阿尔法零',
-    'miruku2':'米露可',
-    'ulrica':'优莉卡',
-    'giwa':'羲和',
-    'maya':'摩耶'
+    'nonona': '诺诺纳',
+    'momona': '梦梦奈',
+    'ariana': '爱莉安娜',
+    'miruku': '米璐库',
+    'nemuri': '奈姆利',
+    'ruri': '琉璃',
+    'alpha0': '阿尔法零',
+    'miruku2': '米露可',
+    'ulrica': '优莉卡',
+    'giwa': '羲和',
+    'maya': '摩耶'
 }
 
 # 登录post
+
+
 def mimikko_login(url, app_id, app_Version, params):
     headers = {
         'Accept': 'application/json',
@@ -152,11 +184,14 @@ def mimikko_login(url, app_id, app_Version, params):
     try:
         with requests.post(url, headers=headers, data=params, verify=False, timeout=300) as resp:
             res = resp.json()
+            #logging.debug(f'{res}')  # 请务必谨慎开启，因为包含 Authorization 参数！！！
             return res
     except Exception as exl:
-        print('mimikko_login', exl)
+        logging.error(exl)
         return False
 # get请求
+
+
 def mimikko_get(url, app_id, app_Version, Authorization, params):
     headers = {
         'Cache-Control': 'Cache-Control:public,no-cache',
@@ -171,10 +206,13 @@ def mimikko_get(url, app_id, app_Version, Authorization, params):
     try:
         with requests.get(url, headers=headers, params=params, verify=False, timeout=300) as resp:
             res = resp.json()
+            logging.debug(f'{res}')
             return res
     except Exception as exg:
-        print('mimikko_get', exg)
+        logging.error(exg)
 # post请求
+
+
 def mimikko_post(url, app_id, app_Version, Authorization, params):
     headers = {
         'Accept': 'application/json',
@@ -191,25 +229,33 @@ def mimikko_post(url, app_id, app_Version, Authorization, params):
     try:
         with requests.post(url, headers=headers, data=params, verify=False, timeout=300) as resp:
             res = resp.json()
+            logging.debug(f'{res}')
             return res
     except Exception as exp:
-        print('mimikko_post', exp)
+        logging.error(exp)
 # 时间格式化
+
+
 def timeStamp1time(timeStamp):
     timeArray = time.localtime(timeStamp)
     StyleTime = time.strftime('%Y-%m-%d', timeArray)
     return StyleTime
+
+
 def timeStamp2time(timeStamp):
     timeArray = time.localtime(timeStamp)
     StyleTime = time.strftime('%Y年%m月%d日 %H:%M:%S', timeArray)
     return StyleTime
 # 钉钉post
+
+
 def ddpost(DDTOKEN, DDSECRET, title_post, post_text):
     timestamp = str(round(time.time() * 1000))
     secret_enc = DDSECRET.encode('utf-8')
     string_to_sign = '{}\n{}'.format(timestamp, DDSECRET)
     string_to_sign_enc = string_to_sign.encode('utf-8')
-    hmac_code = hmac.new(secret_enc, string_to_sign_enc, digestmod=hashlib.sha256).digest()
+    hmac_code = hmac.new(secret_enc, string_to_sign_enc,
+                         digestmod=hashlib.sha256).digest()
     sign = urllib.parse.quote_plus(base64.b64encode(hmac_code))
     headers_post = {
         'Content-Type': 'application/json; charset=UTF-8',
@@ -223,14 +269,18 @@ def ddpost(DDTOKEN, DDSECRET, title_post, post_text):
     }
     post_info = json.dumps(post_info)
     try:
-        post_data = requests.post(url, headers=headers_post, data=post_info, timeout=300)
+        post_data = requests.post(
+            url, headers=headers_post, data=post_info, timeout=300)
+        logging.debug(post_data.text)
         if 'errcode' in post_data.json() and post_data.json()["errcode"] == 0:
             return post_data.json()["errcode"]
         else:
             return post_data.text
     except Exception as exp:
-        print('ddpost', exp)
+        logging.error(exp)
 # server酱post
+
+
 def scpost(SCKEY, title_post, post_text):
     headers_post = {
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -238,14 +288,18 @@ def scpost(SCKEY, title_post, post_text):
     post_info = {'text': title_post, 'desp': post_text}
     url = f'https://sc.ftqq.com/{SCKEY}.send'
     try:
-        post_data = requests.post(url, headers=headers_post, data=post_info, timeout=300)
+        post_data = requests.post(
+            url, headers=headers_post, data=post_info, timeout=300)
+        logging.debug(post_data.text)
         if 'errno' in post_data.json() and post_data.json()["errno"] == 0:
             return post_data.json()["errno"]
         else:
             return post_data.text
     except Exception as exp:
-        print('scpost', exp)
+        logging.error(exp)
 # 企业微信推送
+
+
 def send2wechat(AgentId, Secret, CompanyId, title_post, post_text):
     """
     # 此段修改自https://www.jianshu.com/p/99f706f1e943
@@ -257,11 +311,14 @@ def send2wechat(AgentId, Secret, CompanyId, title_post, post_text):
     ACCESS_TOKEN = None
     try:
         # 通过企业ID和应用Secret获取本地通行密钥
-        r = requests.get(f'https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid={CompanyId}&corpsecret={Secret}', timeout=300).json()
+        r = requests.get(
+            f'https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid={CompanyId}&corpsecret={Secret}', timeout=300)
+        logging.debug(r.text)
+        r = r.json()
         ACCESS_TOKEN = r["access_token"]
     except Exception as exp:
-        print('wxtoken', exp)
-    # print(ACCESS_TOKEN)
+        logging.error(exp)
+    # logging.info(ACCESS_TOKEN)
     # 要发送的信息格式
     data = {
         "touser": "@all",
@@ -274,8 +331,9 @@ def send2wechat(AgentId, Secret, CompanyId, title_post, post_text):
     try:
         if ACCESS_TOKEN:
             # 发送消息
-            post_data = requests.post(f'https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token={ACCESS_TOKEN}', data=data, timeout=300)
-            # print(post_data.json())
+            post_data = requests.post(
+                f'https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token={ACCESS_TOKEN}', data=data, timeout=300)
+            logging.debug(post_data.text)
             if 'errcode' in post_data.json() and post_data.json()["errcode"] == 0:
                 return post_data.json()["errcode"]
             else:
@@ -283,106 +341,128 @@ def send2wechat(AgentId, Secret, CompanyId, title_post, post_text):
         else:
             return 'ACCESS_TOKEN获取失败，发送未成功'
     except Exception as exp:
-        print('wxpost', exp)
+        logging.error(exp)
+
 
 def mimikko():
-    print('脚本开始')
+    logging.info('脚本开始')
     global Authorization
-    #登录
-    print('开始登录')
+    # 登录
+    logging.info('开始登录')
     if user_id and user_password:
-        print("使用 ID密码 登录")
-        user_password_sha = hashlib.sha256(user_password.encode('utf-8')).hexdigest()
-        login_data = mimikko_login(login_path, app_id, app_Version, f'{{"password":"{user_password_sha}", "id":"{user_id}"}}')
+        logging.info("使用 ID密码 登录")
+        user_password_sha = hashlib.sha256(
+            user_password.encode('utf-8')).hexdigest()
+        login_data = mimikko_login(login_path, app_id, app_Version,
+                                   f'{{"password":"{user_password_sha}", "id":"{user_id}"}}')
         if login_data and login_data.get('body'):
             Authorization = login_data['body']['Token']
         if Authorization:
-            print("登录成功！")
+            logging.info("登录成功！")
         else:
             if SCKEY:
-                print("登录错误，正在推送到Server酱")
+                logging.error("登录错误，正在推送到Server酱")
                 post_data = scpost(SCKEY, "兽耳助手签到登录错误", "兽耳助手登录错误，请访问GitHub检查")
-                print('server酱 errcode:', post_data)
+                logging.error(post_data)
             if DDTOKEN and DDSECRET:
-                print("登录错误，正在推送到钉钉")
-                post_data = ddpost(DDTOKEN, DDSECRET, "兽耳助手签到登录错误", "兽耳助手登录错误，请访问GitHub检查")
-                print('钉钉 errcode:', post_data)
+                logging.error("登录错误，正在推送到钉钉")
+                post_data = ddpost(DDTOKEN, DDSECRET,
+                                   "兽耳助手签到登录错误", "兽耳助手登录错误，请访问GitHub检查")
+                logging.error(post_data)
             if wxAgentId and wxSecret and wxCompanyId:
-                print("登录错误，正在推送到企业微信")
-                post_data = send2wechat(wxAgentId, wxSecret, wxCompanyId, "兽耳助手签到登录错误", "兽耳助手登录错误，请访问GitHub检查")
-                print('企业微信 errcode:', post_data)
-            sys.exit('兽耳助手登录错误！！！')
+                logging.error("登录错误，正在推送到企业微信")
+                post_data = send2wechat(
+                    wxAgentId, wxSecret, wxCompanyId, "兽耳助手签到登录错误", "兽耳助手登录错误，请访问GitHub检查")
+                logging.error(post_data)
+            logging.critical('兽耳助手登录错误！！！')
+            sys.exit(1)
     else:
         if Authorization:
-            print("使用 Authorization 验证")
+            logging.info("使用 Authorization 验证")
         else:
             if SCKEY:
-                print("登录错误，正在推送到server酱")
-                post_data = scpost(SCKEY, "兽耳助手签到登录错误", "登录错误，未找到 Authorization ，请访问GitHub检查")
-                print('server酱 errcode:', post_data)
+                logging.error("Authorization错误，正在推送到server酱")
+                post_data = scpost(SCKEY, "兽耳助手签到登录错误",
+                                   "登录错误，未找到 Authorization ，请访问GitHub检查")
+                logging.error(post_data)
             if DDTOKEN and DDSECRET:
-                post_data = ddpost(DDTOKEN, DDSECRET, "兽耳助手签到登录错误", "登录错误，未找到 Authorization ，请访问GitHub检查")
-                print('钉钉 errcode:', post_data)
+                logging.error("Authorization错误，正在推送到钉钉")
+                post_data = ddpost(DDTOKEN, DDSECRET, "兽耳助手签到登录错误",
+                                   "登录错误，未找到 Authorization ，请访问GitHub检查")
+                logging.error(post_data)
             if wxAgentId and wxSecret and wxCompanyId:
-                print("登录错误，正在推送到企业微信")
-                post_data = send2wechat(wxAgentId, wxSecret, wxCompanyId, "兽耳助手签到登录错误", "登录错误，未找到 Authorization ，请访问GitHub检查")
-                print('企业微信 errcode:', post_data)
-            sys.exit('请在Secret中保存 登录ID和密码 或 Authorization ！！！')
-    #设置默认助手
-    print('设置默认助手')
-    _ = mimikko_get(f'{defeat_set}?code={Energy_code}', app_id, app_Version, Authorization, "")
-    #执行前的好感度
-    original_energy_data = mimikko_get(f'{energy_info_path}?code={Energy_code}', app_id, app_Version, Authorization, "")
+                logging.error("Authorization错误，正在推送到企业微信")
+                post_data = send2wechat(
+                    wxAgentId, wxSecret, wxCompanyId, "兽耳助手签到登录错误", "登录错误，未找到 Authorization ，请访问GitHub检查")
+                logging.error(post_data)
+            logging.critical('请在Secret中保存 登录ID和密码 或 Authorization ！！！')
+            sys.exit(1)
+    # 设置默认助手
+    logging.info(f'设置默认助手{Energy_code}')
+    _ = mimikko_get(f'{defeat_set}?code={Energy_code}',
+                    app_id, app_Version, Authorization, "")
+    # 执行前的好感度
+    original_energy_data = mimikko_get(
+        f'{energy_info_path}?code={Energy_code}', app_id, app_Version, Authorization, "")
     if original_energy_data and original_energy_data.get('body'):
-        original_energy_post = str(original_energy_data['body']['Favorability'])
+        original_energy_post = str(
+            original_energy_data['body']['Favorability'])
     else:
-        energy_reward_post = "*"
-    #签到历史
-    sign_history = mimikko_get(history_path, app_id, app_Version, Authorization, "")
-    #补签
+        original_energy_post = "*"
+    logging.info(f'执行前的好感度{original_energy_post}')
+    # 签到历史
+    logging.info('正在获取签到历史')
+    sign_history = mimikko_get(
+        history_path, app_id, app_Version, Authorization, "")
+    # 补签
     if resign:
-        print("正在尝试补签")
-        #补签前的补签卡
-        cansign_before = mimikko_get(can_resign, app_id, app_Version, Authorization, "")
+        logging.info("正在尝试补签")
+        # 补签前的补签卡
+        cansign_before = mimikko_get(
+            can_resign, app_id, app_Version, Authorization, "")
         if cansign_before and cansign_before.get('body'):
             cansign_before_time = cansign_before['body']['Value']
         else:
             cansign_before_time = False
-        print(f'补签前的补签卡：{cansign_before_time}')
+        logging.info(f'补签前的补签卡：{cansign_before_time}')
         for i in [1, 2, 3, 4, 5, 6, 7]:
-            if not i>resign:
-                print(f'前第 {i} 天')
+            if not i > resign:
+                logging.info(f'向前第 {i} 天')
                 resign_time = int(time.time())-86400*i
-                r_date= timeStamp1time(resign_time)
-                resign_data = mimikko_post(resign_path, app_id, app_Version, Authorization, f'["{r_date}T15:59:59+0800"]')
-                if resign_data["code"]==0:
-                    print("补签成功")
+                r_date = timeStamp1time(resign_time)
+                resign_data = mimikko_post(
+                    resign_path, app_id, app_Version, Authorization, f'["{r_date}T15:59:59+0800"]')
+                if resign_data["code"] == 0:
+                    logging.info("补签成功")
                 else:
-                    print("未补签")
+                    logging.info("未补签")
             else:
                 break
-        #补签后的补签卡
-        cansign_after = mimikko_get(can_resign, app_id, app_Version, Authorization, "")
+        # 补签后的补签卡
+        cansign_after = mimikko_get(
+            can_resign, app_id, app_Version, Authorization, "")
         if cansign_after and cansign_after.get('body'):
             cansign_after_time = cansign_after['body']['Value']
         else:
             cansign_after_time = False
-        print(f'补签后的补签卡：{cansign_after_time}')
-        #使用的补签卡
+        logging.info(f'补签后的补签卡：{cansign_after_time}')
+        # 使用的补签卡
         if cansign_before_time and cansign_after_time:
             times_resigned = cansign_after_time-cansign_before_time
         else:
             times_resigned = False
+        logging.info(times_resigned)
     else:
         times_resigned = False
-    #签到
-    print('正在尝试签到')
+    # 签到
+    logging.info('正在尝试签到')
     sign_data = mimikko_get(sign_path, app_id, app_Version, Authorization, "")
     if sign_data and sign_data.get('body'):
-        sign_info = mimikko_get(is_sign, app_id, app_Version, Authorization, "")
+        sign_info = mimikko_get(
+            is_sign, app_id, app_Version, Authorization, "")
         if sign_data['body']['GetExp']:
             if times_resigned:
-                sign_result_post =f'''补签成功{str(times_resigned)}/{str(resign)}天\n签到成功：{str(sign_info['body']['ContinuousSignDays'])}天\n好感度：{str(sign_data['body']['Reward'])}\n硬币：{str(sign_data['body']['GetCoin'])}\n经验值：{str(sign_data['body']['GetExp'])}\n签到卡片：{sign_data['body']['Description']}{sign_data['body']['Name']}\n{sign_data['body']['PictureUrl']}'''
+                sign_result_post = f'''补签成功{str(times_resigned)}/{str(resign)}天\n签到成功：{str(sign_info['body']['ContinuousSignDays'])}天\n好感度：{str(sign_data['body']['Reward'])}\n硬币：{str(sign_data['body']['GetCoin'])}\n经验值：{str(sign_data['body']['GetExp'])}\n签到卡片：{sign_data['body']['Description']}{sign_data['body']['Name']}\n{sign_data['body']['PictureUrl']}'''
             else:
                 sign_result_post = f'''签到成功：{str(sign_info['body']['ContinuousSignDays'])}天\n好感度：{str(sign_data['body']['Reward'])}\n硬币：{str(sign_data['body']['GetCoin'])}\n经验值：{str(sign_data['body']['GetExp'])}\n签到卡片：{sign_data['body']['Description']}{sign_data['body']['Name']}\n{sign_data['body']['PictureUrl']}'''
             title_ahead = f'''兽耳助手签到{str(sign_info['body']['ContinuousSignDays'])}'''
@@ -392,12 +472,15 @@ def mimikko():
     else:
         sign_result_post = '签到失败'
         title_ahead = '兽耳助手签到'
-    #VIP抽奖
-    print('正在尝试VIP抽奖')
-    vip_info_data = mimikko_get(vip_info, app_id, app_Version, Authorization, "")
+    logging.info(title_ahead)
+    # VIP抽奖
+    logging.info('正在尝试VIP抽奖')
+    vip_info_data = mimikko_get(
+        vip_info, app_id, app_Version, Authorization, "")
     if vip_info_data and vip_info_data.get('body'):
         if vip_info_data['body']['rollNum'] > 0:
-            vip_roll_data = mimikko_post(vip_roll, app_id, app_Version, Authorization, "")
+            vip_roll_data = mimikko_post(
+                vip_roll, app_id, app_Version, Authorization, "")
             vip_roll_post = f'''VIP抽奖成功：{vip_roll_data['body']['Value']['description']}'''
         else:
             vip_roll_data = "抽奖次数不足"
@@ -406,28 +489,38 @@ def mimikko():
             else:
                 vip_roll_post = "VIP抽奖失败：您还不是VIP"
     else:
-        vip_roll_data = "抽奖次数不足"
+        vip_roll_data = "VIP抽奖失败"
         vip_roll_post = "VIP抽奖失败"
-    #能量兑换好感度
-    print('正在尝试兑换能量')
-    energy_info_data = mimikko_get(f'{energy_info_path}?code={Energy_code}', app_id, app_Version, Authorization, "")
+    logging.info(vip_roll_post)
+    # 能量兑换好感度
+    logging.info('正在尝试兑换能量')
+    energy_info_data = mimikko_get(
+        f'{energy_info_path}?code={Energy_code}', app_id, app_Version, Authorization, "")
     if energy_info_data and energy_info_data.get('body'):
         if energy_info_data['body']['Energy'] > 0:
-            energy_reward_data = mimikko_get(f'{energy_reward_path}?code={Energy_code}', app_id, app_Version, Authorization, "")
+            energy_reward_data = mimikko_get(
+                f'{energy_reward_path}?code={Energy_code}', app_id, app_Version, Authorization, "")
             title_post = f'''{title_ahead}{servant_name[energy_reward_data['body']['code']]}好感度{str(energy_reward_data['body']['Favorability'])}'''
-            gethgd = int(energy_reward_data['body']['Favorability'])-int(original_energy_post)
+            gethgd = int(
+                energy_reward_data['body']['Favorability'])-int(original_energy_post)
             energy_reward_post = f'''能量值：{str(energy_info_data['body']['Energy'])}/{str(energy_info_data['body']['MaxEnergy'])}\n好感度兑换成功\n助手：{servant_name[energy_reward_data['body']['code']]} LV{str(energy_reward_data['body']['Level'])} +{gethgd}({original_energy_post}→{str(energy_reward_data['body']['Favorability'])}/{str(energy_info_data['body']['MaxFavorability'])})'''
+            logging.info('兑换成功')
         else:
             energy_reward_data = "您的能量值不足，无法兑换"
             title_post = f'''{title_ahead}{servant_name[energy_info_data['body']['code']]}好感度{str(energy_info_data['body']['Favorability'])}'''
-            gethgd = int(energy_info_data['body']['Favorability'])-int(original_energy_post)
+            gethgd = int(
+                energy_info_data['body']['Favorability'])-int(original_energy_post)
             energy_reward_post = f'''能量值：{str(energy_info_data['body']['Energy'])}/{str(energy_info_data['body']['MaxEnergy'])}\n好感度兑换失败：当前没有能量\n助手：{servant_name[energy_info_data['body']['code']]} LV{str(energy_info_data['body']['Level'])} +{gethgd}({original_energy_post}→{str(energy_info_data['body']['Favorability'])}/{str(energy_info_data['body']['MaxFavorability'])})'''
+            logging.info(energy_reward_data)
     else:
-        energy_reward_data = "您的能量值不足，无法兑换"
+        energy_reward_data = "能量兑换失败"
         title_post = title_ahead
+        gethgd = 0
         energy_reward_post = "能量兑换失败"
-    print('脚本结束')
+        logging.info(energy_reward_data)
+    logging.info('脚本结束')
     return sign_data, vip_info_data, vip_roll_data, energy_info_data, energy_reward_data, sign_info, sign_history, sign_result_post, title_post, vip_roll_post, energy_reward_post
+
 
 try:
     sign_data, vip_info_data, vip_roll_data, energy_info_data, energy_reward_data, sign_info, sign_history, sign_result_post, title_post, vip_roll_post, energy_reward_post = mimikko()
@@ -436,113 +529,124 @@ try:
     for i in ['sign_data', 'vip_info_data', 'vip_roll_data', 'energy_info_data', 'energy_reward_data', 'sign_info', 'sign_history', 'sign_result_post', 'title_post', 'vip_roll_post', 'energy_reward_post']:
         if not i in locals():
             varErr = False
-            print('mimikko 函数返回值', i, '缺失')
+            logging.error(f'{i} 缺失')
             varErrText = f'{varErrText},{i}'
     if varErr:
         now_time = timeStamp2time(time.time()+28800)
-        post_text = re.sub('\\n', '  \n', f'现在是：{now_time}\n{sign_result_post}\n{vip_roll_post}\n{energy_reward_post}')
+        post_text = re.sub(
+            '\\n', '  \n', f'现在是：{now_time}\n{sign_result_post}\n{vip_roll_post}\n{energy_reward_post}')
         print(f'\n\n{post_text}\n')
     else:
         varErrText = f'函数返回值 {varErrText[1:]} 缺失'
 except Exception as em:
     varErr = False
     varErrText = f'Error: {em}'
-    print('mimikko', em)
+    logging.error(em)
 
 try:
-    # print(len(sys.argv))
+    # logging.info(len(sys.argv))
     if SCKEY:
-        # print("有SCKEY")
+        # logging.info("有SCKEY")
         if varErr:
-            print("运行成功，正在推送到Server酱")
+            logging.info("运行成功，正在推送到Server酱")
             post_data = scpost(SCKEY, title_post, post_text)
-            print('server酱 errcode:', post_data)
+            logging.info(f'server酱 errcode: {post_data}')
         else:
-            print("运行失败，正在推送到Server酱")
-            post_data = scpost(SCKEY, "兽耳助手签到数据异常", f'兽耳助手签到数据异常，请访问GitHub检查：“{varErrText}”')
-            print('server酱 errcode:', post_data)
+            logging.error("运行失败，正在推送到Server酱")
+            post_data = scpost(SCKEY, "兽耳助手签到数据异常",
+                               f'兽耳助手签到数据异常，请访问GitHub检查：“{varErrText}”')
+            logging.error(post_data)
         if post_data == 0:
             rs1 = False
         else:
             rs1 = 'Server酱, '
     else:
         if varErr:
-            print("运行成功，且没有SCKEY，Server酱未推送")
+            logging.info("运行成功，且没有SCKEY，Server酱未推送")
         else:
-            print(f"运行失败：\n兽耳助手签到数据异常，请访问GitHub检查：“{varErrText}”，且没有SCKEY，Server酱未推送")
+            logging.error(
+                f"运行失败：\n兽耳助手签到数据异常，请访问GitHub检查：“{varErrText}”，且没有SCKEY，Server酱未推送")
         rs1 = False
 except Exception as es:
     rs1 = 'Server酱, '
     if SCKEY:
-        print("数据异常，正在推送到Server酱")
+        logging.error("数据异常，正在推送到Server酱")
         post_data = scpost(SCKEY, "兽耳助手签到数据异常", f"兽耳助手签到数据异常，请访问GitHub检查：{es}")
-        print('server酱 errcode:', post_data)
+        logging.error(post_data)
     else:
-        print("数据异常，且没有SCKEY，Server酱未推送")
-    print('sc', es)
+        logging.error("数据异常，且没有SCKEY，Server酱未推送")
+    logging.error(es)
 try:
-    # print(len(sys.argv))
+    # logging.info(len(sys.argv))
     if DDTOKEN and DDSECRET:
-        #print("有DDTOKEN和DDSECRET")
+        # logging.info("有DDTOKEN和DDSECRET")
         if varErr:
-            print("运行成功，正在推送到钉钉")
+            logging.info("运行成功，正在推送到钉钉")
             post_data = ddpost(DDTOKEN, DDSECRET, title_post, post_text)
-            print('钉钉 errcode:', post_data)
+            logging.info(f'钉钉 errcode: {post_data}')
         else:
-            print("运行失败，正在推送到钉钉")
-            post_data = ddpost(DDTOKEN, DDSECRET, "兽耳助手签到数据异常", f"兽耳助手签到数据异常，请访问GitHub检查：“{varErrText}”")
-            print('钉钉 errcode:', post_data)
+            logging.error("运行失败，正在推送到钉钉")
+            post_data = ddpost(DDTOKEN, DDSECRET, "兽耳助手签到数据异常",
+                               f"兽耳助手签到数据异常，请访问GitHub检查：“{varErrText}”")
+            logging.error(post_data)
         if post_data == 0:
             rs2 = False
         else:
             rs2 = '钉钉, '
     else:
         if varErr:
-            print("运行成功，且没有DDTOKEN或DDSECRET，钉钉未推送")
+            logging.info("运行成功，且没有DDTOKEN或DDSECRET，钉钉未推送")
         else:
-            print(f"运行失败：\n兽耳助手签到数据异常，请访问GitHub检查：“{varErrText}”，且没有DDTOKEN或DDSECRET，钉钉未推送")
+            logging.error(
+                f"运行失败：\n兽耳助手签到数据异常，请访问GitHub检查：“{varErrText}”，且没有DDTOKEN或DDSECRET，钉钉未推送")
         rs2 = False
 except Exception as ed:
     rs2 = '钉钉, '
     if DDTOKEN and DDSECRET:
-        print("数据异常，正在推送到钉钉")
-        post_data = ddpost(DDTOKEN, DDSECRET, "兽耳助手签到数据异常", f"兽耳助手签到数据异常，请访问GitHub检查：{ed}")
-        print('钉钉 errcode:', post_data)
+        logging.error("数据异常，正在推送到钉钉")
+        post_data = ddpost(DDTOKEN, DDSECRET, "兽耳助手签到数据异常",
+                           f"兽耳助手签到数据异常，请访问GitHub检查：{ed}")
+        logging.error(post_data)
     else:
-        print("数据异常，且没有DDTOKEN或DDSECRET，钉钉未推送")
-    print('dd', ed)
+        logging.error("数据异常，且没有DDTOKEN或DDSECRET，钉钉未推送")
+    logging.error(ed)
 try:
-    # print(len(sys.argv))
+    # logging.info(len(sys.argv))
     if wxAgentId and wxSecret and wxCompanyId:
-        #print("有wxAgentId, wxSecret和wxCompanyId")
+        # logging.info("有wxAgentId, wxSecret和wxCompanyId")
         if varErr:
-            print("运行成功，正在推送到企业微信")
-            post_data = send2wechat(wxAgentId, wxSecret, wxCompanyId, title_post, post_text)
-            print('企业微信 errcode:', post_data)
+            logging.info("运行成功，正在推送到企业微信")
+            post_data = send2wechat(
+                wxAgentId, wxSecret, wxCompanyId, title_post, post_text)
+            logging.info(f'企业微信 errcode: {post_data}')
         else:
-            print("运行失败，正在推送到企业微信")
-            post_data = send2wechat(wxAgentId, wxSecret, wxCompanyId, '兽耳助手签到数据异常', f'兽耳助手签到数据异常，请访问GitHub检查：“{varErrText}”')
-            print('企业微信 errcode:', post_data)
+            logging.error("运行失败，正在推送到企业微信")
+            post_data = send2wechat(wxAgentId, wxSecret, wxCompanyId,
+                                    '兽耳助手签到数据异常', f'兽耳助手签到数据异常，请访问GitHub检查：“{varErrText}”')
+            logging.error(post_data)
         if post_data == 0:
             rs3 = False
         else:
             rs3 = '企业微信, '
     else:
         if varErr:
-            print("运行成功，且没有wxAgentId, wxSecret或wxCompanyId，企业微信未推送")
+            logging.info("运行成功，且没有wxAgentId, wxSecret或wxCompanyId，企业微信未推送")
         else:
-            print(f"运行失败：\n兽耳助手签到数据异常，请访问GitHub检查：“{varErrText}”，且没有wxAgentId, wxSecret或wxCompanyId，企业微信未推送")
+            logging.error(
+                f"运行失败：\n兽耳助手签到数据异常，请访问GitHub检查：“{varErrText}”，且没有wxAgentId, wxSecret或wxCompanyId，企业微信未推送")
         rs3 = False
 except Exception as ew:
     rs3 = '企业微信, '
     if wxAgentId and wxSecret and wxCompanyId:
-        print("数据异常，正在推送到企业微信")
-        post_data = send2wechat(wxAgentId, wxSecret, wxCompanyId, '兽耳助手签到数据异常', f'兽耳助手签到数据异常，请访问GitHub检查：{ew}')
-        print('企业微信 errcode:', post_data)
+        logging.error("数据异常，正在推送到企业微信")
+        post_data = send2wechat(
+            wxAgentId, wxSecret, wxCompanyId, '兽耳助手签到数据异常', f'兽耳助手签到数据异常，请访问GitHub检查：{ew}')
+        logging.error(post_data)
     else:
-        print("数据异常，且没有wxAgentId, wxSecret或wxCompanyId，企业微信未推送")
-    print('wx', ew)
+        logging.error("数据异常，且没有wxAgentId, wxSecret或wxCompanyId，企业微信未推送")
+    logging.error(ew)
 
 if rs1 or rs2 or rs3:
-    print(re.sub(',  ', ' ', re.sub('False', '', f'{rs1}{rs2}{rs3} 推送异常，请检查')))
+    logging.error(re.sub(',  ', ' ', re.sub(
+        'False', '', f'{rs1}{rs2}{rs3} 推送异常，请检查')))
     sys.exit(1)
