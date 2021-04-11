@@ -11,12 +11,12 @@
 >[keylol帖子](https://keylol.com/t675496-1-1)  
 ## 使用效果：  
 ![result](/pic/result.png)  
- 
+  
   
 ## 使用说明  
 <details markdown='1'><summary>点击查看使用说明</summary>  
   
-> 除了本人写的以下教程，也可以去看由[@Amcc1860](https://github.com/Amcc1860)编写的[保姆级教程](https://github.com/cyb233/mimikkoAutoSignIn/issues/4)  
+> 除了本人写的以下教程，也可以去看由[@Amcc1860](https://github.com/Amcc1860)编写的[教程](https://github.com/cyb233/mimikkoAutoSignIn/issues/4)  
 #### 1. 先fork[本项目](https://github.com/cyb233/mimikkoAutoSignIn)  
 > 打开[本项目](https://github.com/cyb233/mimikkoAutoSignIn)，并点击如图fork按钮  
 > ![fork](/pic/fork.png)  
@@ -25,15 +25,15 @@
   
 > |secret名称|必要条件|说明|  
 > |-----|-----|-----|  
-> |`ID`,  `PASSWORD`|`AUTHORIZATION`不存在时|登录账号(邮箱或手机号)和登录密码(优先使用此登录方式，参见注1)|  
+> |`ID`,  `PASSWORD`|`AUTHORIZATION`不存在时|登录账号(邮箱或手机号)和登录密码 (优先使用此登录方式，参见注1)|  
 > |`AUTHORIZATION`|`ID`,  `PASSWORD`不存在时|验证账号用，可由抓包获取(参见注2)|  
 > |`ENERGY`|非必要|ENERGY参数用于签到及兑换能量，使用的code值为助手代码，下张表是已知的code值|
 > |`RESIGN`|非必要|补签最近x天，可选数字1~7|  
 > |`SCKEY`|非必要|server酱推送密钥，详见步骤5|  
 > |`DDTOKEN`,  `DDSECRET`|非必要|钉钉推送，钉钉机器人`token`和安全设置`加签`的`secret`，可参考步骤5微信推送及[钉钉API文档](https://developers.dingtalk.com/document/app/custom-robot-access#topic-2026027)|  
-> |`wxAgentId`,  `wxSecret`,  `wxCompanyId`|非必要|企业微信推送，可参考[server酱Turbo版说明](https://sct.ftqq.com)|  
+> |`wxAgentId`,  `wxSecret`,  `wxCompanyId`|非必要|企业微信推送，可参考[server酱Turbo版说明教程](https://sct.ftqq.com)|  
 > - 注1：建议使用ID密码登录，无技术要求，但每次执行可能会将其他设备挤下线  
-> - 注2：AUTHORIZATION值为抓包获取，需要会使用抓包软件，但不会影响其他设备，新的登录会使旧的AUTHORIZATION失效  
+> - 注2：AUTHORIZATION值为抓包获取，需要会使用抓包软件，但不会影响其他设备，新的登录行为会使旧的AUTHORIZATION失效  
   
 > |code|ServantName|  
 > |-----|-----|  
@@ -56,7 +56,7 @@
   
 #### 3. 在actions中开启  
 > - **请勿滥用GitHub Actions！**  
-> - **如果您的库60天内没有任何操作，将会被暂停GitHub Actions，请及时更新fork库，或任意编辑一次readme等**  
+> - __如果您的库60天内没有任何操作，将会被暂停GitHub Actions，请及时更新fork库，或任意编辑一次readme等__  
 > - 如图点击`I understand my workflows, go ahead and enable them`，并手动执行一次  
 > ![actions](/pic/actions.jpg)  
 > ![run](https://user-images.githubusercontent.com/35195193/104328725-13405200-5527-11eb-8540-c804a6d1142e.png)  
@@ -78,9 +78,10 @@
 </details>  
   
 ## 本地运行  
-使用参数`-h`|`--help`或不带参数启动脚本可以查看内置的简单帮助  
+使用参数`-h`/`--help`或`不带参数`启动脚本可以查看内置的简单帮助：[usage](usage.md)  
 ```python
-mimikko.py [-h|--help] [-u "ID"] [-p "PASSWORD"] [-a "AUTHORIZATION"] [-e "ENERGY"] [-r "RESIGN"] [-s "SCKEY"] [-d "DDTOKEN"] [-c "DDSECRET"] [-i "wxCompanyId"] [-x "wxSecret"] [-w "wxAgentId"]
+#基础格式
+mimikko.py [-h] [-u "ID"] [-p "password"] [-a "Token"] [-e "code"] [-r "resign"] [-s "SCKEY"] [-d "token"] [-c "secret"] [-i "CompanyId"] [-x "Secret"] [-w "AgentId"]
 ```
   
 ## 用前预知  
