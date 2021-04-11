@@ -25,7 +25,7 @@ try:
     parser.add_argument('-p', default=False, metavar='password', help='登录密码')
     parser.add_argument('-a', default=False, metavar='Token', help='AUTHORIZATION验证，抓包获取')
     parser.add_argument('-e', default=False, metavar='code', help='助手代码，选择助手')
-    parser.add_argument('-r', default=False, metavar='resign', type=int, help='补签最近x天，可选数字1~7')
+    parser.add_argument('-r', default=False, metavar='resign', help='补签最近x天，可选数字1~7')
     parser.add_argument('-s', default=False, metavar='SCKEY', help='server酱推送密钥')
     parser.add_argument('-d', default=False, metavar='token', help='钉钉机器人token')
     parser.add_argument('-c', default=False, metavar='secret', help='钉钉机器人安全设置加签的secret')
@@ -80,6 +80,7 @@ try:
     else:
         Energy_code = 'momona'
     if resign:
+        resign = int(resign)
         print('resign 存在')
     if SCKEY:
         SCKEY = SCKEY.strip()
