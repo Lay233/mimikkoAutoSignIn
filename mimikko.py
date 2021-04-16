@@ -268,8 +268,6 @@ def timeStamp2time(timeStamp):  # 时间格式化2
 
 
 def ddpost(DDTOKEN, DDSECRET, title_post, post_text):  # 钉钉推送
-    if not (DDTOKEN and DDSECRET):
-        return False
     timestamp = str(round(time.time() * 1000))
     secret_enc = DDSECRET.encode('utf-8')
     string_to_sign = f'{timestamp}\n{DDSECRET}'
@@ -301,8 +299,6 @@ def ddpost(DDTOKEN, DDSECRET, title_post, post_text):  # 钉钉推送
 
 
 def scpost(SCKEY, title_post, post_text):  # server酱推送
-    if not SCKEY:
-        return False
     headers_post = {
         'Content-Type': 'application/x-www-form-urlencoded',
     }
@@ -321,8 +317,6 @@ def scpost(SCKEY, title_post, post_text):  # server酱推送
 
 
 def send2wechat(wxAgentId, wxSecret, wxCompanyId, title_post, post_text):  # 企业微信推送
-    if not (wxAgentId and wxSecret and wxCompanyId):
-        return False
     """
     # 此段修改自https://www.jianshu.com/p/99f706f1e943
     :param AgentId: 应用ID
@@ -340,7 +334,7 @@ def send2wechat(wxAgentId, wxSecret, wxCompanyId, title_post, post_text):  # 企
             ACCESS_TOKEN = r["access_token"]
     except Exception as exp:
         logging.error(exp, exc_info=True)
-    # logging.info(ACCESS_TOKEN)
+    # logging.debug(ACCESS_TOKEN)  # 注意账号安全
     # 要发送的信息格式
     data = {
         "touser": "@all",
@@ -364,18 +358,24 @@ def send2wechat(wxAgentId, wxSecret, wxCompanyId, title_post, post_text):  # 企
             return 'ACCESS_TOKEN获取失败，未发送'
     except Exception as exp:
         logging.error(exp, exc_info=True)
-    return False
+        return False
 
 
 def AllPush(DDTOKEN, DDSECRET, wxAgentId, wxSecret, wxCompanyId, SCKEY, title_post, post_text):  # 全推送
     dddata = scdata = wxdata = False
     if SCKEY:
         dddata = ddpost(DDTOKEN, DDSECRET, title_post, post_text)  # 钉钉推送
+    else:
+        logging.info('DDTOKEN或DDSECRET不存在')
     if DDTOKEN and DDSECRET:
         scdata = scpost(SCKEY, title_post, post_text)  # server酱推送
+    else:
+        logging.info('SCKEY不存在')
     if wxAgentId and wxSecret and wxCompanyId:
         wxdata = send2wechat(wxAgentId, wxSecret, wxCompanyId,
                              title_post, post_text)  # 企业微信推送
+    else:
+        logging.info('wxAgentId, wxSecret或wxCompanyId不存在')
     return dddata, scdata, wxdata
 
 
