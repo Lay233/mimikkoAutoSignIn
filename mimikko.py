@@ -202,7 +202,7 @@ def mimikko_login(url, app_id, app_Version, params):  # 登录post
         'User-Agent': 'okhttp/3.12.1',
     }
     try:
-        with requests.post(url, headers=headers, data=params, verify=False, timeout=300) as resp:
+        with requests.post(url, headers=headers, data=params, timeout=300) as resp:
             # logging.debug(resp.text)  # 请务必谨慎开启，因为包含 Authorization 参数！！！
             res = resp.json()
             return res
@@ -223,7 +223,7 @@ def mimikko_get(url, app_id, app_Version, Authorization, params):  # get请求
         'Host': 'api1.mimikko.cn'
     }
     try:
-        with requests.get(url, headers=headers, params=params, verify=False, timeout=300) as resp:
+        with requests.get(url, headers=headers, params=params, timeout=300) as resp:
             logging.debug(resp.text)
             res = resp.json()
             return res
@@ -246,7 +246,7 @@ def mimikko_post(url, app_id, app_Version, Authorization, params):  # post请求
         'User-Agent': 'okhttp/3.12.1',
     }
     try:
-        with requests.post(url, headers=headers, data=params, verify=False, timeout=300) as resp:
+        with requests.post(url, headers=headers, data=params, timeout=300) as resp:
             logging.debug(resp.text)
             res = resp.json()
             return res
