@@ -562,7 +562,6 @@ try:
         now_time = timeStamp2time(time.time()+28800)
         post_text = re.sub(
             '\\n', '  \n', f'现在是：{now_time}\n{sign_result_post}\n{vip_roll_post}\n{energy_reward_post}')
-        print(f'\n\n推送信息：\n\n{title_post}\n{post_text}')
     else:
         varErrText = f'函数返回值 {varErrText[1:]} 缺失'
 except Exception as em:
@@ -587,41 +586,48 @@ try:
         logging.info("运行成功，正在推送")
         dddata, scdata, wxdata = AllPush(
             DDTOKEN, DDSECRET, wxAgentId, wxSecret, wxCompanyId, SCKEY, title_post, post_text)
-        if str(scdata) == '0':
-            rs1 = False
-            logging.info(f'server酱 errcode: {scdata}')
-        else:
-            logging.warning(f'server酱 error: {scdata}')
-        if str(dddata) == '0':
-            rs2 = False
-            logging.info(f'钉钉 errcode: {dddata}')
-        else:
-            logging.warning(f'钉钉 error: {dddata}')
-        if str(wxdata) == '0':
-            rs3 = False
-            logging.info(f'企业微信 errcode: {wxdata}')
-        else:
-            logging.warning(f'企业微信 error: {wxdata}')
+        if rs1:
+            if str(scdata) == '0':
+                rs1 = False
+                logging.info(f'server酱 errcode: {scdata}')
+            else:
+                logging.warning(f'server酱 error: {scdata}')
+        if rs2:
+            if str(dddata) == '0':
+                rs2 = False
+                logging.info(f'钉钉 errcode: {dddata}')
+            else:
+                logging.warning(f'钉钉 error: {dddata}')
+        if rs3:
+            if str(wxdata) == '0':
+                rs3 = False
+                logging.info(f'企业微信 errcode: {wxdata}')
+            else:
+                logging.warning(f'企业微信 error: {wxdata}')
+        print(f'\n\n推送信息：\n\n{title_post}\n{post_text}')
     else:
         logging.warning("运行失败，正在推送")
         logging.warning(f"兽耳助手签到数据异常，请访问GitHub检查：“{varErrText}”")
         dddata, scdata, wxdata = AllPush(DDTOKEN, DDSECRET, wxAgentId, wxSecret, wxCompanyId,
                                          SCKEY, "兽耳助手签到数据异常", f'兽耳助手签到数据异常，请访问GitHub检查：“{varErrText}”')
-        if str(scdata) == '0':
-            rs1 = False
-            logging.info(f'server酱 errcode: {scdata}')
-        else:
-            logging.warning(f'server酱 error: {scdata}')
-        if str(dddata) == '0':
-            rs2 = False
-            logging.info(f'钉钉 errcode: {dddata}')
-        else:
-            logging.warning(f'钉钉 error: {dddata}')
-        if str(wxdata) == '0':
-            rs3 = False
-            logging.info(f'企业微信 errcode: {wxdata}')
-        else:
-            logging.warning(f'企业微信 error: {wxdata}')
+        if rs1:
+            if str(scdata) == '0':
+                rs1 = False
+                logging.info(f'server酱 errcode: {scdata}')
+            else:
+                logging.warning(f'server酱 error: {scdata}')
+        if rs2:
+            if str(dddata) == '0':
+                rs2 = False
+                logging.info(f'钉钉 errcode: {dddata}')
+            else:
+                logging.warning(f'钉钉 error: {dddata}')
+        if rs3:
+            if str(wxdata) == '0':
+                rs3 = False
+                logging.info(f'企业微信 errcode: {wxdata}')
+            else:
+                logging.warning(f'企业微信 error: {wxdata}')
 except Exception as es:
     logging.warning("数据异常，尝试推送")
     if not rs1:
