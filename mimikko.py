@@ -364,13 +364,13 @@ def send2wechat(wxAgentId, wxSecret, wxCompanyId, title_post, post_text):  # 企
 def AllPush(DDTOKEN, DDSECRET, wxAgentId, wxSecret, wxCompanyId, SCKEY, title_post, post_text):  # 全推送
     dddata = scdata = wxdata = False
     if SCKEY:
-        dddata = ddpost(DDTOKEN, DDSECRET, title_post, post_text)  # 钉钉推送
-    else:
-        logging.info('DDTOKEN或DDSECRET不存在')
-    if DDTOKEN and DDSECRET:
         scdata = scpost(SCKEY, title_post, post_text)  # server酱推送
     else:
         logging.info('SCKEY不存在')
+    if DDTOKEN and DDSECRET:
+        dddata = ddpost(DDTOKEN, DDSECRET, title_post, post_text)  # 钉钉推送
+    else:
+        logging.info('DDTOKEN或DDSECRET不存在')
     if wxAgentId and wxSecret and wxCompanyId:
         wxdata = send2wechat(wxAgentId, wxSecret, wxCompanyId,
                              title_post, post_text)  # 企业微信推送
