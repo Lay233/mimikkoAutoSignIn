@@ -19,7 +19,7 @@ from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
-LOG_FORMAT = "%(asctime)s - %(levelname)s - %(funcName)s - %(filename)s:%(lineno)s - %(message)s"
+LOG_FORMAT = "%(asctime)s - %(levelname)s - %(filename)s:%(lineno)s - %(funcName)s - %(message)s"
 DATE_FORMAT = "%Y/%m/%d %H:%M:%S %p"
 logging.basicConfig(level=logging.INFO, format=LOG_FORMAT, datefmt=DATE_FORMAT)
 print()
@@ -295,7 +295,7 @@ def ddpost(DDTOKEN, DDSECRET, title_post, post_text):  # 钉钉推送
                 return post_data.text
     except Exception as exp:
         logging.error(exp, exc_info=True)
-        return False
+        return exp
 
 
 def scpost(SCKEY, title_post, post_text):  # server酱推送
@@ -313,7 +313,7 @@ def scpost(SCKEY, title_post, post_text):  # server酱推送
                 return post_data.text
     except Exception as exp:
         logging.error(exp, exc_info=True)
-        return False
+        return exp
 
 
 def send2wechat(wxAgentId, wxSecret, wxCompanyId, title_post, post_text):  # 企业微信推送
@@ -334,6 +334,7 @@ def send2wechat(wxAgentId, wxSecret, wxCompanyId, title_post, post_text):  # 企
             ACCESS_TOKEN = r["access_token"]
     except Exception as exp:
         logging.error(exp, exc_info=True)
+        return exp
     # logging.debug(ACCESS_TOKEN)  # 注意账号安全
     # 要发送的信息格式
     data = {
@@ -358,20 +359,23 @@ def send2wechat(wxAgentId, wxSecret, wxCompanyId, title_post, post_text):  # 企
             return 'ACCESS_TOKEN获取失败，未发送'
     except Exception as exp:
         logging.error(exp, exc_info=True)
-        return False
+        return exp
 
 
 def AllPush(DDTOKEN, DDSECRET, wxAgentId, wxSecret, wxCompanyId, SCKEY, title_post, post_text):  # 全推送
     dddata = scdata = wxdata = False
     if SCKEY:
+        logging.info("正在推送到Server酱")
         scdata = scpost(SCKEY, title_post, post_text)  # server酱推送
     else:
         logging.info('SCKEY不存在')
     if DDTOKEN and DDSECRET:
+        logging.info("正在推送到钉钉")
         dddata = ddpost(DDTOKEN, DDSECRET, title_post, post_text)  # 钉钉推送
     else:
         logging.info('DDTOKEN或DDSECRET不存在')
     if wxAgentId and wxSecret and wxCompanyId:
+        logging.info("正在推送到企业微信")
         wxdata = send2wechat(wxAgentId, wxSecret, wxCompanyId,
                              title_post, post_text)  # 企业微信推送
     else:
@@ -395,34 +399,29 @@ def mimikko():
         if Authorization:
             logging.info("登录成功！")
         else:
+            logging.warning("登录错误")
             dddata, scdata, wxdata = AllPush(
                 DDTOKEN, DDSECRET, wxAgentId, wxSecret, wxCompanyId, SCKEY, "兽耳助手签到登录错误", "兽耳助手登录错误，请访问GitHub检查")
-            if scdata == 0 or scdata:
-                logging.warning("登录错误，正在推送到Server酱")
-                logging.warning(scdata)
-            if dddata == 0 or dddata:
-                logging.warning("登录错误，正在推送到钉钉")
-                logging.warning(dddata)
-            if wxdata == 0 or wxdata:
-                logging.warning("登录错误，正在推送到企业微信")
-                logging.warning(wxdata)
+            if str(scdata) == '0' or scdata:
+                logging.warning(f'server酱 errcode: {scdata}')
+            if str(dddata) == '0' or dddata:
+                logging.warning(f'钉钉 errcode: {dddata}')
+            if str(wxdata) == '0' or wxdata:
+                logging.warning(f'企业微信 errcode: {wxdata}')
             logging.critical('兽耳助手登录错误！！！')
-            #sys.exit(1)
+            sys.exit(1)
     else:
         if Authorization:
             logging.info("使用 Authorization 验证")
         else:
             dddata, scdata, wxdata = AllPush(DDTOKEN, DDSECRET, wxAgentId, wxSecret,
                                              wxCompanyId, SCKEY, "兽耳助手签到登录错误", "登录错误，未找到 Authorization ，请访问GitHub检查")
-            if scdata == 0 or scdata:
-                logging.warning("Authorization错误，正在推送到Server酱")
-                logging.warning(scdata)
-            if dddata == 0 or dddata:
-                logging.warning("Authorization错误，正在推送到钉钉")
-                logging.warning(dddata)
-            if wxdata == 0 or wxdata:
-                logging.warning("Authorization错误，正在推送到企业微信")
-                logging.warning(wxdata)
+            if str(scdata) == '0' or scdata:
+                logging.warning(f'server酱 errcode: {scdata}')
+            if str(dddata) == '0' or dddata:
+                logging.warning(f'钉钉 errcode: {dddata}')
+            if str(wxdata) == '0' or wxdata:
+                logging.warning(f'企业微信 errcode: {wxdata}')
             logging.critical('请在Secret中保存 登录ID和密码 或 Authorization ！！！')
             sys.exit(1)
     # 设置默认助手
@@ -588,17 +587,17 @@ try:
         logging.info("运行成功，正在推送")
         dddata, scdata, wxdata = AllPush(
             DDTOKEN, DDSECRET, wxAgentId, wxSecret, wxCompanyId, SCKEY, title_post, post_text)
-        if scdata == 0:
+        if str(scdata) == '0':
             rs1 = False
             logging.info(f'server酱 errcode: {scdata}')
         else:
             logging.warning(f'server酱 error: {scdata}')
-        if dddata == 0:
+        if str(dddata) == '0':
             rs2 = False
             logging.info(f'钉钉 errcode: {dddata}')
         else:
             logging.warning(f'钉钉 error: {dddata}')
-        if wxdata == 0:
+        if str(wxdata) == '0':
             rs3 = False
             logging.info(f'企业微信 errcode: {wxdata}')
         else:
@@ -607,18 +606,18 @@ try:
         logging.warning("运行失败，正在推送")
         logging.warning(f"兽耳助手签到数据异常，请访问GitHub检查：“{varErrText}”")
         dddata, scdata, wxdata = AllPush(DDTOKEN, DDSECRET, wxAgentId, wxSecret, wxCompanyId,
-                                        SCKEY, "兽耳助手签到数据异常", f'兽耳助手签到数据异常，请访问GitHub检查：“{varErrText}”')
-        if scdata == 0:
+                                         SCKEY, "兽耳助手签到数据异常", f'兽耳助手签到数据异常，请访问GitHub检查：“{varErrText}”')
+        if str(scdata) == '0':
             rs1 = False
             logging.info(f'server酱 errcode: {scdata}')
         else:
             logging.warning(f'server酱 error: {scdata}')
-        if dddata == 0:
+        if str(dddata) == '0':
             rs2 = False
             logging.info(f'钉钉 errcode: {dddata}')
         else:
             logging.warning(f'钉钉 error: {dddata}')
-        if wxdata == 0:
+        if str(wxdata) == '0':
             rs3 = False
             logging.info(f'企业微信 errcode: {wxdata}')
         else:
@@ -632,21 +631,21 @@ except Exception as es:
     if not rs3:
         wxAgentId = wxSecret = wxCompanyId = False
     dddata, scdata, wxdata = AllPush(DDTOKEN, DDSECRET, wxAgentId, wxSecret,
-                                    wxCompanyId, SCKEY, "兽耳助手签到数据异常", f"兽耳助手签到数据异常，请访问GitHub检查：{es}")
+                                     wxCompanyId, SCKEY, "兽耳助手签到数据异常", f"兽耳助手签到数据异常，请访问GitHub检查：{es}")
     if rs1:
-        if scdata == 0:
+        if str(scdata) == '0':
             rs1 = False
             logging.info(f'server酱 errcode: {scdata}')
         else:
             logging.warning(f'server酱 error: {scdata}')
     if rs2:
-        if dddata == 0:
+        if str(dddata) == '0':
             rs2 = False
             logging.info(f'钉钉 errcode: {dddata}')
         else:
             logging.warning(f'钉钉 error: {dddata}')
     if rs3:
-        if wxdata == 0:
+        if str(wxdata) == '0':
             rs3 = False
             logging.info(f'企业微信 errcode: {wxdata}')
         else:
