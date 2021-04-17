@@ -152,6 +152,18 @@ try:
     else:
         wxCompanyId = False
     logging.info('获取参数结束')
+    if SCKEY:
+        rs1 = 'Server酱, '
+    else:
+        rs1 = False
+    if (DDTOKEN and DDSECRET):
+        rs2 = '钉钉, '
+    else:
+        rs2 = False
+    if (wxAgentId and wxSecret and wxCompanyId):
+        rs3 = '企业微信, '
+    else:
+        rs3 = False
 except Exception as es:
     logging.critical(es, exc_info=True)
     parser.print_usage()
@@ -402,12 +414,21 @@ def mimikko():
             logging.warning("登录错误")
             dddata, scdata, wxdata = AllPush(
                 DDTOKEN, DDSECRET, wxAgentId, wxSecret, wxCompanyId, SCKEY, "兽耳助手签到登录错误", "兽耳助手登录错误，请访问GitHub检查")
-            if str(scdata) == '0' or scdata:
-                logging.warning(f'server酱 errcode: {scdata}')
-            if str(dddata) == '0' or dddata:
-                logging.warning(f'钉钉 errcode: {dddata}')
-            if str(wxdata) == '0' or wxdata:
-                logging.warning(f'企业微信 errcode: {wxdata}')
+            if rs1:
+                if str(scdata) == '0':
+                    logging.info(f'server酱 errcode: {scdata}')
+                else:
+                    logging.warning(f'server酱 error: {scdata}')
+            if rs2:
+                if str(dddata) == '0':
+                    logging.info(f'钉钉 errcode: {dddata}')
+                else:
+                    logging.warning(f'钉钉 error: {dddata}')
+            if rs3:
+                if str(wxdata) == '0':
+                    logging.info(f'企业微信 errcode: {wxdata}')
+                else:
+                    logging.warning(f'企业微信 error: {wxdata}')
             logging.critical('兽耳助手登录错误！！！')
             sys.exit(1)
     else:
@@ -416,12 +437,21 @@ def mimikko():
         else:
             dddata, scdata, wxdata = AllPush(DDTOKEN, DDSECRET, wxAgentId, wxSecret,
                                              wxCompanyId, SCKEY, "兽耳助手签到登录错误", "登录错误，未找到 Authorization ，请访问GitHub检查")
-            if str(scdata) == '0' or scdata:
-                logging.warning(f'server酱 errcode: {scdata}')
-            if str(dddata) == '0' or dddata:
-                logging.warning(f'钉钉 errcode: {dddata}')
-            if str(wxdata) == '0' or wxdata:
-                logging.warning(f'企业微信 errcode: {wxdata}')
+            if rs1:
+                if str(scdata) == '0':
+                    logging.info(f'server酱 errcode: {scdata}')
+                else:
+                    logging.warning(f'server酱 error: {scdata}')
+            if rs2:
+                if str(dddata) == '0':
+                    logging.info(f'钉钉 errcode: {dddata}')
+                else:
+                    logging.warning(f'钉钉 error: {dddata}')
+            if rs3:
+                if str(wxdata) == '0':
+                    logging.info(f'企业微信 errcode: {wxdata}')
+                else:
+                    logging.warning(f'企业微信 error: {wxdata}')
             logging.critical('请在Secret中保存 登录ID和密码 或 Authorization ！！！')
             sys.exit(1)
     # 设置默认助手
@@ -570,18 +600,6 @@ except Exception as em:
     logging.critical(em, exc_info=True)
 
 try:
-    if SCKEY:
-        rs1 = 'Server酱, '
-    else:
-        rs1 = False
-    if (DDTOKEN and DDSECRET):
-        rs2 = '钉钉, '
-    else:
-        rs2 = False
-    if (wxAgentId and wxSecret and wxCompanyId):
-        rs3 = '企业微信, '
-    else:
-        rs3 = False
     if varErr:
         logging.info("运行成功，正在推送")
         dddata, scdata, wxdata = AllPush(
