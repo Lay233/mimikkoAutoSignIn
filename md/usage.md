@@ -1,21 +1,21 @@
 ```
 usage: mimikko.py [-h] [-u ID] [-p password] [-a Token] [-e code] [-r resign] [-s SCKEY] [-d token] [-c secret] [-i CompanyId] [-x Secret] [-w AgentId]
 
-ÊŞ¶úÖúÊÖ×Ô¶¯Ç©µ½ Ê¹ÓÃËµÃ÷£º
+å…½è€³åŠ©æ‰‹è‡ªåŠ¨ç­¾åˆ° ä½¿ç”¨è¯´æ˜ï¼š
 
 optional arguments:
   -h, --help    show this help message and exit
-  -u ID         µÇÂ¼ÕËºÅ(ÓÊÏä»òÊÖ»úºÅ)
-  -p password   µÇÂ¼ÃÜÂë
-  -a Token      AUTHORIZATIONÑéÖ¤£¬×¥°ü»ñÈ¡
-  -e code       ÖúÊÖ´úÂë
-  -r resign     ²¹Ç©×î½ü1~7Ìì
-  -s SCKEY      server½´ÍÆËÍÃÜÔ¿
-  -d token      ¶¤¶¤»úÆ÷ÈËtoken
-  -c secret     ¶¤¶¤»úÆ÷ÈË°²È«ÉèÖÃ¼ÓÇ©µÄsecret
-  -i CompanyId  ÆóÒµÎ¢ĞÅÍÆËÍCompanyId
-  -x Secret     ÆóÒµÎ¢ĞÅÍÆËÍSecret
-  -w AgentId    ÆóÒµÎ¢ĞÅÍÆËÍAgentId
+  -u ID         ç™»å½•è´¦å·(é‚®ç®±æˆ–æ‰‹æœºå·)
+  -p password   ç™»å½•å¯†ç 
+  -a Token      AUTHORIZATIONéªŒè¯ï¼ŒæŠ“åŒ…è·å–
+  -e code       åŠ©æ‰‹ä»£ç 
+  -r resign     è¡¥ç­¾æœ€è¿‘1~7å¤©
+  -s SCKEY      serveré…±æ¨é€å¯†é’¥
+  -d token      é’‰é’‰æœºå™¨äººtoken
+  -c secret     é’‰é’‰æœºå™¨äººå®‰å…¨è®¾ç½®åŠ ç­¾çš„secret
+  -i CompanyId  ä¼ä¸šå¾®ä¿¡æ¨é€CompanyId
+  -x Secret     ä¼ä¸šå¾®ä¿¡æ¨é€Secret
+  -w AgentId    ä¼ä¸šå¾®ä¿¡æ¨é€AgentId
 
-Çë´Ó µÇÂ¼ÕËºÅ(-u)ºÍÃÜÂë(-p) »ò AUTHORIZATIONÑéÖ¤(-a) ÖĞÑ¡ÔñÒ»ÖÖµÇÂ¼·½Ê½
+è¯·ä» ç™»å½•è´¦å·(-u)å’Œå¯†ç (-p) æˆ– AUTHORIZATIONéªŒè¯(-a) ä¸­é€‰æ‹©ä¸€ç§ç™»å½•æ–¹å¼
 ```
