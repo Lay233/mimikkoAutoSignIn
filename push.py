@@ -204,8 +204,36 @@ def dcpost(dcwebhook, title_post, post_text):  # Discord推送
         return exp
 
 
+""" def tgpost(tg, title_post, post_text):  # Telegram推送
+    url = tg
+    headers = {"Content-Type": "application/json"}
+    data = {"content": f'{title_post}\n\n{post_text}'}
+    try:
+        # 发送消息
+        with requests.post(url, headers=headers, data=json.dumps(data), timeout=300) as post_data:
+            logging.debug(post_data.text)
+            return post_data
+    except Exception as exp:
+        logging.error(exp, exc_info=True)
+        return exp
+
+
+def pppost(pp, title_post, post_text):  # PushPlus推送
+    url = pp
+    headers = {"Content-Type": "application/json"}
+    data = {"content": f'{title_post}\n\n{post_text}'}
+    try:
+        # 发送消息
+        with requests.post(url, headers=headers, data=json.dumps(data), timeout=300) as post_data:
+            logging.debug(post_data.text)
+            return post_data
+    except Exception as exp:
+        logging.error(exp, exc_info=True)
+        return exp """
+
+
 def AllPush(DDTOKEN, DDSECRET, wxAgentId, wxSecret, wxCompanyId, SCKEY, dcwebhook, title_post, post_text):  # 全推送
-    dddata = scdata = wxdata = dcdata = False
+    dddata = scdata = wxdata = dcdata = tgdata = ppdata = False
     if SCKEY:
         logging.info("正在推送到Server酱")
         scdata = scpost(SCKEY, title_post, post_text)  # server酱推送
@@ -226,5 +254,17 @@ def AllPush(DDTOKEN, DDSECRET, wxAgentId, wxSecret, wxCompanyId, SCKEY, dcwebhoo
         logging.info("正在推送到Discord")
         dcdata = dcpost(dcwebhook, title_post, post_text)  # Discord推送
     else:
-        logging.info('dcappid或dckey不存在')
-    return dddata, scdata, wxdata, dcdata
+        logging.info('dcwebhook不存在')
+
+
+"""     if tg:
+        logging.info("正在推送到Telegram")
+        tgdata = tgpost(tg, title_post, post_text)  # Telegram推送
+    else:
+        logging.info('tg不存在')
+    if pp:
+        logging.info("正在推送到PushPlus")
+        ppdata = pppost(pp, title_post, post_text)  # PushPlus推送
+    else:
+        logging.info('pp不存在') """
+return dddata, scdata, wxdata, dcdata  # , tgdata, ppdata

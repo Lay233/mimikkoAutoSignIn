@@ -6,13 +6,13 @@
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fcyb233%2FmimikkoAutoSignIn.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fcyb233%2FmimikkoAutoSignIn?ref=badge_shield)  
 本项目地址：[cyb233/mimikkoAutoSignIn](https://github.com/cyb233/mimikkoAutoSignIn)  
   
-[本项目](https://github.com/cyb233/mimikkoAutoSignIn)使用GitHub Actions，用于[兽耳助手](https://www.mimikko.cn/)定时`每日签到/补签`/`兑换能量`/`VIP每日抽奖`，并可选`推送到企业微信/钉钉/Server酱`  
+[本项目](https://github.com/cyb233/mimikkoAutoSignIn)使用GitHub Actions，用于[兽耳助手](https://www.mimikko.cn/)定时`每日签到/补签`/`兑换能量`/`VIP每日抽奖`，并可选`推送到多个平台`  
 
-## 完整的项目说明/简介等请访问[https://cyb233.github.io/mimikkoAutoSignIn/](https://cyb233.github.io/mimikkoAutoSignIn/)查看
-
+- ## 完整的项目说明/简介等请访问[https://cyb233.github.io/mimikkoAutoSignIn](https://cyb233.github.io/mimikkoAutoSignIn)查看
+  
 >[keylol帖子](https://keylol.com/t675496-1-1)  
-## 使用效果：  
-![result](/pic/result.png)  
+## 使用效果  
+![result](https://cyb233.github.io/mimikkoAutoSignIn/pic/result.png)  
   
 ## 用前预知  
 使用本项目(mimikkoAutoSignIn)即表明，您知情并同意：  
