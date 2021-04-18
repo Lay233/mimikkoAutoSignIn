@@ -528,7 +528,7 @@ except Exception as es:
             logging.warning(f'Discord error: {dcdata}')
     logging.error(es, exc_info=True)
 
-if rs1 or rs2 or rs3:
+if rs1 or rs2 or rs3 or rs4:
     logging.warning(re.sub(',  ', ' ', re.sub(
         'False', '', f'{rs1}{rs2}{rs3}{rs4} 推送异常，请检查')))
     sys.exit(2)
