@@ -339,7 +339,7 @@ def mimikko():
             times_resigned = cansign_after_time-cansign_before_time
         else:
             times_resigned = False
-        logging.info(times_resigned)
+        logging.info(f'消耗 {times_resigned} 张')
     else:
         times_resigned = False
     # 签到
