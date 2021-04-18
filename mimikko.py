@@ -520,8 +520,8 @@ except Exception as es:
             logging.warning(f'企业微信 error: {wxdata}')
     if rs4:
         if str(dcdata) == '0':
-        rs4 = False
-        logging.info(f'Discord errcode: {dcdata}')
+            rs4 = False
+            logging.info(f'Discord errcode: {dcdata}')
         else:
             logging.warning(f'Discord error: {dcdata}')
     logging.error(es, exc_info=True)
