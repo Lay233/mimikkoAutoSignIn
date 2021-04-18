@@ -23,7 +23,7 @@ requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 LOG_FORMAT = "%(asctime)s - %(levelname)s - %(filename)s:%(lineno)s - %(funcName)s - %(message)s"
 DATE_FORMAT = "%Y/%m/%d %H:%M:%S %p"
-logging.basicConfig(level=logging.INFO, format=LOG_FORMAT, datefmt=DATE_FORMAT)
+logging.basicConfig(level=logging.DEBUG, format=LOG_FORMAT, datefmt=DATE_FORMAT)
 print()
 logging.debug('DEBUG 开启')
 
@@ -498,6 +498,8 @@ except Exception as es:
         DDTOKEN = DDSECRET = False
     if not rs3:
         wxAgentId = wxSecret = wxCompanyId = False
+    if not rs4:
+        dcwebhook = False
     dddata, scdata, wxdata, dcdata = AllPush(
         DDTOKEN, DDSECRET, wxAgentId, wxSecret, wxCompanyId, SCKEY, dcwebhook, "兽耳助手签到数据异常", f"兽耳助手签到数据异常，请访问GitHub检查：{es}")
     if rs1:
@@ -528,5 +530,5 @@ except Exception as es:
 
 if rs1 or rs2 or rs3:
     logging.warning(re.sub(',  ', ' ', re.sub(
-        'False', '', f'{rs1}{rs2}{rs3} 推送异常，请检查')))
+        'False', '', f'{rs1}{rs2}{rs3}{rs4} 推送异常，请检查')))
     sys.exit(2)
