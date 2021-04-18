@@ -251,8 +251,8 @@ def mimikko():
                 else:
                     logging.warning(f'企业微信 error: {wxdata}')
             if rs4:
-                if not dcdata:
-                    logging.info(f'Discord errcode: {dcdata}')
+                if not str(dcdata) == 'False':
+                    logging.info(f'Discord: {dcdata}')
                 else:
                     logging.warning(f'Discord error: {dcdata}')
             logging.critical('兽耳助手登录错误！！！')
@@ -279,8 +279,8 @@ def mimikko():
                 else:
                     logging.warning(f'企业微信 error: {wxdata}')
             if rs4:
-                if not dcdata:
-                    logging.info(f'Discord errcode: {dcdata}')
+                if not str(dcdata) == 'False':
+                    logging.info(f'Discord: {dcdata}')
                 else:
                     logging.warning(f'Discord error: {dcdata}')
             logging.critical('请在Secret中保存 登录ID和密码 或 Authorization ！！！')
@@ -455,9 +455,9 @@ try:
             else:
                 logging.warning(f'企业微信 error: {wxdata}')
         if rs4:
-            if not dcdata:
+            if not str(dcdata) == 'False':
                 rs4 = False
-                logging.info(f'Discord errcode: {dcdata}')
+                logging.info(f'Discord: {dcdata}')
             else:
                 logging.warning(f'Discord error: {dcdata}')
         print(f'\n\n推送信息：\n\n{title_post}\n{post_text}')
@@ -485,9 +485,9 @@ try:
             else:
                 logging.warning(f'企业微信 error: {wxdata}')
         if rs4:
-            if not dcdata:
+            if not str(dcdata) == 'False':
                 rs4 = False
-                logging.info(f'Discord errcode: {dcdata}')
+                logging.info(f'Discord: {dcdata}')
             else:
                 logging.warning(f'Discord error: {dcdata}')
 except Exception as es:
@@ -521,9 +521,9 @@ except Exception as es:
         else:
             logging.warning(f'企业微信 error: {wxdata}')
     if rs4:
-        if not dcdata:
+        if not str(dcdata) == 'False':
             rs4 = False
-            logging.info(f'Discord errcode: {dcdata}')
+            logging.info(f'Discord: {dcdata}')
         else:
             logging.warning(f'Discord error: {dcdata}')
     logging.error(es, exc_info=True)
