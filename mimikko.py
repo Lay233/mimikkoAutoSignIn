@@ -460,7 +460,7 @@ try:
                 logging.info(f'Discord: {dcdata}')
             else:
                 logging.warning(f'Discord error: {dcdata}')
-        logging.info(f'\n\n推送信息：\n\n{title_post}\n{post_text}')
+        logging.info(f'All Finish!\n\n推送信息：\n\n{title_post}\n{post_text}')
     else:
         logging.warning("运行失败，正在推送")
         logging.warning(f"兽耳助手签到数据异常，请访问GitHub检查：“{varErrText}”")
