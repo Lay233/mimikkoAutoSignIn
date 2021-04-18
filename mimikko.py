@@ -23,7 +23,7 @@ requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 LOG_FORMAT = "%(asctime)s - %(levelname)s - %(filename)s:%(lineno)s - %(funcName)s - %(message)s"
 DATE_FORMAT = "%Y/%m/%d %H:%M:%S %p"
-logging.basicConfig(level=logging.DEBUG, format=LOG_FORMAT, datefmt=DATE_FORMAT)
+logging.basicConfig(level=logging.INFO, format=LOG_FORMAT, datefmt=DATE_FORMAT)
 print()
 logging.debug('DEBUG 开启')
 
@@ -251,7 +251,7 @@ def mimikko():
                 else:
                     logging.warning(f'企业微信 error: {wxdata}')
             if rs4:
-                if str(dcdata) == '0':
+                if not dcdata:
                     logging.info(f'Discord errcode: {dcdata}')
                 else:
                     logging.warning(f'Discord error: {dcdata}')
@@ -279,7 +279,7 @@ def mimikko():
                 else:
                     logging.warning(f'企业微信 error: {wxdata}')
             if rs4:
-                if str(dcdata) == '0':
+                if not dcdata:
                     logging.info(f'Discord errcode: {dcdata}')
                 else:
                     logging.warning(f'Discord error: {dcdata}')
@@ -455,7 +455,7 @@ try:
             else:
                 logging.warning(f'企业微信 error: {wxdata}')
         if rs4:
-            if str(dcdata) == '0':
+            if not dcdata:
                 rs4 = False
                 logging.info(f'Discord errcode: {dcdata}')
             else:
@@ -485,7 +485,7 @@ try:
             else:
                 logging.warning(f'企业微信 error: {wxdata}')
         if rs4:
-            if str(dcdata) == '0':
+            if not dcdata:
                 rs4 = False
                 logging.info(f'Discord errcode: {dcdata}')
             else:
@@ -521,7 +521,7 @@ except Exception as es:
         else:
             logging.warning(f'企业微信 error: {wxdata}')
     if rs4:
-        if str(dcdata) == '0':
+        if not dcdata:
             rs4 = False
             logging.info(f'Discord errcode: {dcdata}')
         else:

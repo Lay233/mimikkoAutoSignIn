@@ -198,10 +198,7 @@ def dcpost(dcwebhook, title_post, post_text):  # Discord推送
         # 发送消息
         with requests.post(url, headers=headers, data=json.dumps(data), timeout=300) as post_data:
             logging.debug(post_data.text)
-            if 'errcode' in post_data.json() and post_data.json()["errcode"] == 0:
-                return post_data.json()["errcode"]
-            else:
-                return post_data.text
+            return post_data
     except Exception as exp:
         logging.error(exp, exc_info=True)
         return exp
