@@ -190,12 +190,13 @@ def send2wechat(wxAgentId, wxSecret, wxCompanyId, title_post, post_text):  # 企
         return exp
 
 
-def dcpost(dcappid, dckey, title_post, post_text):  # Discord推送
-    data = f''
-    url = f''
+def dcpost(dcwebhook, title_post, post_text):  # Discord推送
+    url = dcwebhook
+    headers = {"Content-Type": "application/json"}
+    data = {"content": f'{title_post}\n\n{post_text}'}
     try:
         # 发送消息
-        with requests.post(url, data=data, timeout=300) as post_data:
+        with requests.post(url, headers=headers, data=data, timeout=300) as post_data:
             logging.debug(post_data.text)
             if 'errcode' in post_data.json() and post_data.json()["errcode"] == 0:
                 return post_data.json()["errcode"]
@@ -206,7 +207,7 @@ def dcpost(dcappid, dckey, title_post, post_text):  # Discord推送
         return exp
 
 
-def AllPush(DDTOKEN, DDSECRET, wxAgentId, wxSecret, wxCompanyId, SCKEY, dcappid, dckey, title_post, post_text):  # 全推送
+def AllPush(DDTOKEN, DDSECRET, wxAgentId, wxSecret, wxCompanyId, SCKEY, dcwebhook, title_post, post_text):  # 全推送
     dddata = scdata = wxdata = dcdata = False
     if SCKEY:
         logging.info("正在推送到Server酱")
@@ -224,9 +225,9 @@ def AllPush(DDTOKEN, DDSECRET, wxAgentId, wxSecret, wxCompanyId, SCKEY, dcappid,
                              title_post, post_text)  # 企业微信推送
     else:
         logging.info('wxAgentId, wxSecret或wxCompanyId不存在')
-    """ if dcappid and dckey:
+    if dcwebhook:
         logging.info("正在推送到Discord")
-        dcdata = dcpost(dcappid, dckey, title_post, post_text)  # Discord推送
+        dcdata = dcpost(dcwebhook, title_post, post_text)  # Discord推送
     else:
-        logging.info('dcappid或dckey不存在') """
-    return dddata, scdata, wxdata#, dcdata
+        logging.info('dcappid或dckey不存在')
+    return dddata, scdata, wxdata, dcdata

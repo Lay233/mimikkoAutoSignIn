@@ -50,6 +50,8 @@ try:
                         metavar='Secret', help='企业微信推送Secret')
     parser.add_argument('-w', default=False,
                         metavar='AgentId', help='企业微信推送AgentId')
+    parser.add_argument('-b', default=False,
+                        metavar='dcWebhook', help='Discord推送WebHook')
 
     args = parser.parse_args()
 
@@ -69,6 +71,7 @@ try:
     wxAgentId = args.w
     wxSecret = args.x
     wxCompanyId = args.i
+    dcwebhook = args.b
 
     if user_id and user_id.strip():
         user_id = user_id.strip()
@@ -153,6 +156,12 @@ try:
         logging.debug(wxCompanyId)
     else:
         wxCompanyId = False
+    if dcwebhook and dcwebhook.strip():
+        dcwebhook = dcwebhook.strip()
+        logging.info('dcwebhook 存在')
+        logging.debug(dcwebhook)
+    else:
+        dcwebhook = False
     logging.info('获取参数结束')
     if SCKEY:
         rs1 = 'Server酱, '
@@ -166,6 +175,10 @@ try:
         rs3 = '企业微信, '
     else:
         rs3 = False
+    if dcwebhook:
+        rs4 = 'Discord, '
+    else:
+        rs4 = False
 except Exception as es:
     logging.critical(es, exc_info=True)
     parser.print_usage()
@@ -220,8 +233,8 @@ def mimikko():
             logging.info("登录成功！")
         else:
             logging.warning("登录错误")
-            dddata, scdata, wxdata = AllPush(
-                DDTOKEN, DDSECRET, wxAgentId, wxSecret, wxCompanyId, SCKEY, "兽耳助手签到登录错误", "兽耳助手登录错误，请访问GitHub检查")
+            dddata, scdata, wxdata, dcdata = AllPush(
+                DDTOKEN, DDSECRET, wxAgentId, wxSecret, wxCompanyId, SCKEY, dcwebhook, "兽耳助手签到登录错误", "兽耳助手登录错误，请访问GitHub检查")
             if rs1:
                 if str(scdata) == '0':
                     logging.info(f'server酱 errcode: {scdata}')
@@ -237,14 +250,19 @@ def mimikko():
                     logging.info(f'企业微信 errcode: {wxdata}')
                 else:
                     logging.warning(f'企业微信 error: {wxdata}')
+            if rs4:
+                if str(dcdata) == '0':
+                    logging.info(f'Discord errcode: {dcdata}')
+                else:
+                    logging.warning(f'Discord error: {dcdata}')
             logging.critical('兽耳助手登录错误！！！')
             sys.exit(1)
     else:
         if Authorization:
             logging.info("使用 Authorization 验证")
         else:
-            dddata, scdata, wxdata = AllPush(DDTOKEN, DDSECRET, wxAgentId, wxSecret,
-                                             wxCompanyId, SCKEY, "兽耳助手签到登录错误", "登录错误，未找到 Authorization ，请访问GitHub检查")
+            dddata, scdata, wxdata, dcdata = AllPush(
+                DDTOKEN, DDSECRET, wxAgentId, wxSecret, wxCompanyId, SCKEY, dcwebhook, "兽耳助手签到登录错误", "登录错误，未找到 Authorization ，请访问GitHub检查")
             if rs1:
                 if str(scdata) == '0':
                     logging.info(f'server酱 errcode: {scdata}')
@@ -260,6 +278,11 @@ def mimikko():
                     logging.info(f'企业微信 errcode: {wxdata}')
                 else:
                     logging.warning(f'企业微信 error: {wxdata}')
+            if rs4:
+                if str(dcdata) == '0':
+                    logging.info(f'Discord errcode: {dcdata}')
+                else:
+                    logging.warning(f'Discord error: {dcdata}')
             logging.critical('请在Secret中保存 登录ID和密码 或 Authorization ！！！')
             sys.exit(1)
     # 设置默认助手
@@ -411,8 +434,8 @@ except Exception as em:
 try:
     if varErr:
         logging.info("运行成功，正在推送")
-        dddata, scdata, wxdata = AllPush(
-            DDTOKEN, DDSECRET, wxAgentId, wxSecret, wxCompanyId, SCKEY, title_post, post_text)
+        dddata, scdata, wxdata, dcdata = AllPush(
+            DDTOKEN, DDSECRET, wxAgentId, wxSecret, wxCompanyId, SCKEY, dcwebhook, title_post, post_text)
         if rs1:
             if str(scdata) == '0':
                 rs1 = False
@@ -431,12 +454,18 @@ try:
                 logging.info(f'企业微信 errcode: {wxdata}')
             else:
                 logging.warning(f'企业微信 error: {wxdata}')
+        if rs4:
+            if str(dcdata) == '0':
+                rs4 = False
+                logging.info(f'Discord errcode: {dcdata}')
+            else:
+                logging.warning(f'Discord error: {dcdata}')
         print(f'\n\n推送信息：\n\n{title_post}\n{post_text}')
     else:
         logging.warning("运行失败，正在推送")
         logging.warning(f"兽耳助手签到数据异常，请访问GitHub检查：“{varErrText}”")
-        dddata, scdata, wxdata = AllPush(DDTOKEN, DDSECRET, wxAgentId, wxSecret, wxCompanyId,
-                                         SCKEY, "兽耳助手签到数据异常", f'兽耳助手签到数据异常，请访问GitHub检查：“{varErrText}”')
+        dddata, scdata, wxdata, dcdata = AllPush(
+            DDTOKEN, DDSECRET, wxAgentId, wxSecret, wxCompanyId, SCKEY, dcwebhook, "兽耳助手签到数据异常", f'兽耳助手签到数据异常，请访问GitHub检查：“{varErrText}”')
         if rs1:
             if str(scdata) == '0':
                 rs1 = False
@@ -455,6 +484,12 @@ try:
                 logging.info(f'企业微信 errcode: {wxdata}')
             else:
                 logging.warning(f'企业微信 error: {wxdata}')
+        if rs4:
+            if str(dcdata) == '0':
+                rs4 = False
+                logging.info(f'Discord errcode: {dcdata}')
+            else:
+                logging.warning(f'Discord error: {dcdata}')
 except Exception as es:
     logging.warning("数据异常，尝试推送")
     if not rs1:
@@ -463,8 +498,8 @@ except Exception as es:
         DDTOKEN = DDSECRET = False
     if not rs3:
         wxAgentId = wxSecret = wxCompanyId = False
-    dddata, scdata, wxdata = AllPush(DDTOKEN, DDSECRET, wxAgentId, wxSecret,
-                                     wxCompanyId, SCKEY, "兽耳助手签到数据异常", f"兽耳助手签到数据异常，请访问GitHub检查：{es}")
+    dddata, scdata, wxdata, dcdata = AllPush(
+        DDTOKEN, DDSECRET, wxAgentId, wxSecret, wxCompanyId, SCKEY, dcwebhook, "兽耳助手签到数据异常", f"兽耳助手签到数据异常，请访问GitHub检查：{es}")
     if rs1:
         if str(scdata) == '0':
             rs1 = False
@@ -483,6 +518,12 @@ except Exception as es:
             logging.info(f'企业微信 errcode: {wxdata}')
         else:
             logging.warning(f'企业微信 error: {wxdata}')
+    if rs4:
+        if str(dcdata) == '0':
+        rs4 = False
+        logging.info(f'Discord errcode: {dcdata}')
+        else:
+            logging.warning(f'Discord error: {dcdata}')
     logging.error(es, exc_info=True)
 
 if rs1 or rs2 or rs3:
