@@ -255,9 +255,7 @@ def AllPush(DDTOKEN, DDSECRET, wxAgentId, wxSecret, wxCompanyId, SCKEY, dcwebhoo
         dcdata = dcpost(dcwebhook, title_post, post_text)  # Discord推送
     else:
         logging.info('dcwebhook不存在')
-
-
-"""     if tg:
+    """ if tg:
         logging.info("正在推送到Telegram")
         tgdata = tgpost(tg, title_post, post_text)  # Telegram推送
     else:
@@ -267,4 +265,4 @@ def AllPush(DDTOKEN, DDSECRET, wxAgentId, wxSecret, wxCompanyId, SCKEY, dcwebhoo
         ppdata = pppost(pp, title_post, post_text)  # PushPlus推送
     else:
         logging.info('pp不存在') """
-return dddata, scdata, wxdata, dcdata  # , tgdata, ppdata
+    return dddata, scdata, wxdata, dcdata#, tgdata, ppdata
