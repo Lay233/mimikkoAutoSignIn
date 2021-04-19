@@ -403,3 +403,4 @@ def rs_check(rs1, rs2, rs3, rs4, rs5, rs6, dddata, scdata, wxdata, dcdata, tgdat
         rs5 = False
     if rs6 and str(fsdata) == '0':
         rs6 = False
+    return rs1, rs2, rs3, rs4, rs5, rs6
