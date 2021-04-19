@@ -255,7 +255,7 @@ def tgpost(tgtoken, tgid, title_post, post_text):  # Telegram推送
     try:
         # 发送消息
         bot = telebot.TeleBot(tgtoken)
-        bot.send_message(tgid, text)
+        bot.send_message(tgid, f'{title_post}\n\n{post_text}')
         return 0
     except Exception as exp:
         logging.error(exp, exc_info=True)
