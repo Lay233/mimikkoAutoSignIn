@@ -59,9 +59,9 @@ try:
     parser.add_argument('-k', default=False,
                         metavar='pushplus', help='PushPlus推送Token')
     parser.add_argument('-f', default=False,
-                        metavar='token', help='飞书机器人token')
+                        metavar='fstoken', help='飞书机器人token')
     parser.add_argument('-j', default=False,
-                        metavar='secret', help='飞书机器人安全设置加签的secret')
+                        metavar='fssecret', help='飞书机器人安全设置加签的secret')
 
     args = parser.parse_args()
 
@@ -85,8 +85,8 @@ try:
     tgtoken = args.t
     tgid = args.g
     pushplus = args.k
-    DDTOKEN = args.f
-    DDSECRET = args.j
+    fstoken = args.f
+    fssecret = args.j
 
     if user_id and user_id.strip():
         user_id = user_id.strip()
@@ -288,7 +288,8 @@ def mimikko():
             logging.info("登录成功！")
         else:
             logging.warning("登录错误")
-            dddata, scdata, wxdata, dcdata, tgdata, ppdata, fsdata = AllPush(DDTOKEN, DDSECRET, wxAgentId, wxSecret, wxCompanyId, SCKEY, dcwebhook, tgtoken, tgid, pptoken, fstoken, fssecret, "兽耳助手签到登录错误", "兽耳助手登录错误，请访问GitHub检查")
+            dddata, scdata, wxdata, dcdata, tgdata, ppdata, fsdata = AllPush(
+                DDTOKEN, DDSECRET, wxAgentId, wxSecret, wxCompanyId, SCKEY, dcwebhook, tgtoken, tgid, pptoken, fstoken, fssecret, "兽耳助手签到登录错误", "兽耳助手登录错误，请访问GitHub检查")
             push_check()
             logging.critical('兽耳助手登录错误！！！')
             sys.exit(1)
@@ -296,7 +297,8 @@ def mimikko():
         if Authorization:
             logging.info("使用 Authorization 验证")
         else:
-            dddata, scdata, wxdata, dcdata, tgdata, ppdata, fsdata = AllPush(DDTOKEN, DDSECRET, wxAgentId, wxSecret, wxCompanyId, SCKEY, dcwebhook, tgtoken, tgid, pptoken, fstoken, fssecret, "兽耳助手签到登录错误", "登录错误，未找到 Authorization ，请访问GitHub检查")
+            dddata, scdata, wxdata, dcdata, tgdata, ppdata, fsdata = AllPush(
+                DDTOKEN, DDSECRET, wxAgentId, wxSecret, wxCompanyId, SCKEY, dcwebhook, tgtoken, tgid, pptoken, fstoken, fssecret, "兽耳助手签到登录错误", "登录错误，未找到 Authorization ，请访问GitHub检查")
             push_check()
             logging.critical('请在Secret中保存 登录ID和密码 或 Authorization ！！！')
             sys.exit(1)
@@ -449,14 +451,16 @@ except Exception as em:
 try:
     if varErr:
         logging.info("运行成功，正在推送")
-        dddata, scdata, wxdata, dcdata, tgdata, ppdata, fsdata = AllPush(DDTOKEN, DDSECRET, wxAgentId, wxSecret, wxCompanyId, SCKEY, dcwebhook, tgtoken, tgid, pptoken, fstoken, fssecret, title_post, post_text)
+        dddata, scdata, wxdata, dcdata, tgdata, ppdata, fsdata = AllPush(
+            DDTOKEN, DDSECRET, wxAgentId, wxSecret, wxCompanyId, SCKEY, dcwebhook, tgtoken, tgid, pptoken, fstoken, fssecret, title_post, post_text)
         push_check()
         rs_check()
         logging.info(f'All Finish!\n\n推送信息：\n\n{title_post}\n{post_text}')
     else:
         logging.warning("运行失败，正在推送")
         logging.warning(f"兽耳助手签到数据异常，请访问GitHub检查：“{varErrText}”")
-        dddata, scdata, wxdata, dcdata, tgdata, ppdata, fsdata = AllPush(DDTOKEN, DDSECRET, wxAgentId, wxSecret, wxCompanyId, SCKEY, dcwebhook, tgtoken, tgid, pptoken, fstoken, fssecret, "兽耳助手签到数据异常", f'兽耳助手签到数据异常，请访问GitHub检查：“{varErrText}”')
+        dddata, scdata, wxdata, dcdata, tgdata, ppdata, fsdata = AllPush(
+            DDTOKEN, DDSECRET, wxAgentId, wxSecret, wxCompanyId, SCKEY, dcwebhook, tgtoken, tgid, pptoken, fstoken, fssecret, "兽耳助手签到数据异常", f'兽耳助手签到数据异常，请访问GitHub检查：“{varErrText}”')
         push_check()
         rs_check()
 except Exception as es:
@@ -473,7 +477,8 @@ except Exception as es:
         pushplus = False
     if not rs6:
         fstoken = fssecret = False
-    dddata, scdata, wxdata, dcdata, tgdata, ppdata, fsdata = AllPush(DDTOKEN, DDSECRET, wxAgentId, wxSecret, wxCompanyId, SCKEY, dcwebhook, tgtoken, tgid, pptoken, fstoken, fssecret, "兽耳助手签到数据异常", f"兽耳助手签到数据异常，请访问GitHub检查：{es}")
+    dddata, scdata, wxdata, dcdata, tgdata, ppdata, fsdata = AllPush(
+        DDTOKEN, DDSECRET, wxAgentId, wxSecret, wxCompanyId, SCKEY, dcwebhook, tgtoken, tgid, pptoken, fstoken, fssecret, "兽耳助手签到数据异常", f"兽耳助手签到数据异常，请访问GitHub检查：{es}")
     push_check()
     rs_check()
     logging.error(es, exc_info=True)
