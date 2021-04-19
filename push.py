@@ -24,11 +24,13 @@ def mimikko_login(url, app_id, app_Version, params):      # 带尝试的登录po
     returnValue = False
     i = 1
     while True:
-        logging.info(f"第{i}次尝试登录")
+        logging.debug(f"第{i}次尝试登录")
         returnValue = mimikko_realLogin(url, app_id, app_Version, params)
         if returnValue != False:
+            logging.debug("SUCCESS")
             break
         if i == _MAX_TRIES:
+            logging.warning("5次请求失败，已跳过")
             break
 
     return returnValue
@@ -60,12 +62,14 @@ def mimikko_get(url, app_id, app_Version, Authorization, params):      # 带尝�
     returnValue = False
     i = 1
     while True:
-        logging.info(f"第{i}次尝试GET")
+        logging.debug(f"第{i}次尝试GET")
         returnValue = mimikko_realGet(
             url, app_id, app_Version, Authorization, params)
         if returnValue != False:
+            logging.debug("SUCCESS")
             break
         if i == _MAX_TRIES:
+            logging.warning("5次请求失败，已跳过")
             break
 
     return returnValue
@@ -96,12 +100,14 @@ def mimikko_post(url, app_id, app_Version, Authorization, params):      # 带尝
     returnValue = False
     i = 1
     while True:
-        logging.info(f"第{i}次尝试POST")
+        logging.debug(f"第{i}次尝试POST")
         returnValue = mimikko_realPost(
             url, app_id, app_Version, Authorization, params)
         if returnValue != False:
+            logging.debug("SUCCESS")
             break
         if i == _MAX_TRIES:
+            logging.warning("5次请求失败，已跳过")
             break
 
     return returnValue
