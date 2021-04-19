@@ -317,7 +317,7 @@ def fspost(fstoken, fssecret, title_post, post_text):  # 飞书推送
 
 
 def AllPush(DDTOKEN, DDSECRET, wxAgentId, wxSecret, wxCompanyId, SCKEY, dcwebhook, tgtoken, tgid, pptoken, fstoken, fssecret, title_post, post_text):  # 全推送
-    dddata = scdata = wxdata = dcdata = tgdata = ppdata = False
+    dddata = scdata = wxdata = dcdata = tgdata = ppdata = fsdata = False
     if SCKEY:
         logging.info("正在推送到Server酱")
         scdata = scpost(SCKEY, title_post, post_text)  # server酱推送
