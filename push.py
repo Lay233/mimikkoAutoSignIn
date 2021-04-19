@@ -16,8 +16,22 @@ from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
+_MAX_TRIES = 5
 
-def mimikko_login(url, app_id, app_Version, params):  # 登录post
+def mimikko_login(url, app_id, app_Version, params):      # 带尝试的登录post
+    returnValue = False
+    i = 1
+    while True:
+        logging.info(f"第{i}次尝试登录")
+        returnValue = mimikko_realLogin(url, app_id, app_Version, params)
+        if returnValue != False:
+            break
+        if i == _MAX_TRIES:
+            break
+
+    return returnValue
+
+def mimikko_realLogin(url, app_id, app_Version, params):  # 实际登录post
     headers = {
         'Accept': 'application/json',
         'Cache-Control': 'no-cache',
@@ -39,7 +53,21 @@ def mimikko_login(url, app_id, app_Version, params):  # 登录post
         return False
 
 
-def mimikko_get(url, app_id, app_Version, Authorization, params):  # get请求
+def mimikko_get(url, app_id, app_Version, Authorization, params):      # 带尝试的get
+    returnValue = False
+    i = 1
+    while True:
+        logging.info(f"第{i}次尝试GET")
+        returnValue = mimikko_realGet(url, app_id, app_Version, Authorization, params)
+        if returnValue != False:
+            break
+        if i == _MAX_TRIES:
+            break
+
+    return returnValue
+
+
+def mimikko_realGet(url, app_id, app_Version, Authorization, params):  # 实际get请求
     headers = {
         'Cache-Control': 'Cache-Control:public,no-cache',
         'Accept-Encoding': 'gzip',
@@ -59,8 +87,21 @@ def mimikko_get(url, app_id, app_Version, Authorization, params):  # get请求
         logging.error(exg, exc_info=True)
         return False
 
+def mimikko_post(url, app_id, app_Version, Authorization, params):      # 带尝试的post
+    returnValue = False
+    i = 1
+    while True:
+        logging.info(f"第{i}次尝试POST")
+        returnValue = mimikko_realPost(url, app_id, app_Version, Authorization, params)
+        if returnValue != False:
+            break
+        if i == _MAX_TRIES:
+            break
 
-def mimikko_post(url, app_id, app_Version, Authorization, params):  # post请求
+    return returnValue
+
+
+def mimikko_realPost(url, app_id, app_Version, Authorization, params):  # post请求
     headers = {
         'Accept': 'application/json',
         'Cache-Control': 'no-cache',
