@@ -390,7 +390,7 @@ def push_check(rs1, rs2, rs3, rs4, rs5, rs6, dddata, scdata, wxdata, dcdata, tgd
             logging.warning(f'飞书 error: {fsdata}')
 
 
-def rs_check(rs1, rs2, rs3, rs4, rs5, rs6):
+def rs_check(rs1, rs2, rs3, rs4, rs5, rs6, dddata, scdata, wxdata, dcdata, tgdata, ppdata, fsdata):
     if rs1 and str(scdata) == '0':
         rs1 = False
     if rs2 and str(dddata) == '0':

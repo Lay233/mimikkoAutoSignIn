@@ -457,7 +457,7 @@ try:
             DDTOKEN, DDSECRET, wxAgentId, wxSecret, wxCompanyId, SCKEY, dcwebhook, tgtoken, tgid, pptoken, fstoken, fssecret, title_post, post_text)
         push_check(rs1, rs2, rs3, rs4, rs5, rs6, dddata, scdata,
                    wxdata, dcdata, tgdata, ppdata, fsdata)
-        rs_check(rs1, rs2, rs3, rs4, rs5, rs6)
+        rs_check(rs1, rs2, rs3, rs4, rs5, rs6, dddata, scdata, wxdata, dcdata, tgdata, ppdata, fsdata)
         logging.info(f'All Finish!\n\n推送信息：\n\n{title_post}\n{post_text}')
     else:
         logging.warning("运行失败，正在推送")
@@ -466,7 +466,7 @@ try:
             DDTOKEN, DDSECRET, wxAgentId, wxSecret, wxCompanyId, SCKEY, dcwebhook, tgtoken, tgid, pptoken, fstoken, fssecret, "兽耳助手签到数据异常", f'兽耳助手签到数据异常，请访问GitHub检查：“{varErrText}”')
         push_check(rs1, rs2, rs3, rs4, rs5, rs6, dddata, scdata,
                    wxdata, dcdata, tgdata, ppdata, fsdata)
-        rs_check(rs1, rs2, rs3, rs4, rs5, rs6)
+        rs_check(rs1, rs2, rs3, rs4, rs5, rs6, dddata, scdata, wxdata, dcdata, tgdata, ppdata, fsdata)
 except Exception as es:
     logging.warning("数据异常，尝试推送")
     if not rs1:
@@ -485,7 +485,7 @@ except Exception as es:
         DDTOKEN, DDSECRET, wxAgentId, wxSecret, wxCompanyId, SCKEY, dcwebhook, tgtoken, tgid, pptoken, fstoken, fssecret, "兽耳助手签到数据异常", f"兽耳助手签到数据异常，请访问GitHub检查：{es}")
     push_check(rs1, rs2, rs3, rs4, rs5, rs6, dddata, scdata,
                wxdata, dcdata, tgdata, ppdata, fsdata)
-    rs_check(rs1, rs2, rs3, rs4, rs5, rs6)
+    rs_check(rs1, rs2, rs3, rs4, rs5, rs6, dddata, scdata, wxdata, dcdata, tgdata, ppdata, fsdata)
     logging.error(es, exc_info=True)
 
 if rs1 or rs2 or rs3 or rs4 or rs5 or rs6:
