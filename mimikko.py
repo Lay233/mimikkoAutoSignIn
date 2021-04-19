@@ -57,7 +57,7 @@ try:
     parser.add_argument('-g', default=False,
                         metavar='tgid', help='你的Telegram id')
     parser.add_argument('-k', default=False,
-                        metavar='pushplus', help='PushPlus推送Token')
+                        metavar='pptoken', help='PushPlus推送Token')
     parser.add_argument('-f', default=False,
                         metavar='fstoken', help='飞书机器人token')
     parser.add_argument('-j', default=False,
@@ -84,7 +84,7 @@ try:
     dcwebhook = args.b
     tgtoken = args.t
     tgid = args.g
-    pushplus = args.k
+    pptoken = args.k
     fstoken = args.f
     fssecret = args.j
 
@@ -189,12 +189,12 @@ try:
         logging.debug(tgid)
     else:
         tgid = False
-    if pushplus and pushplus.strip():
-        pushplus = pushplus.strip()
-        logging.info('pushplus 存在')
-        logging.debug(pushplus)
+    if pptoken and pptoken.strip():
+        pptoken = pptoken.strip()
+        logging.info('pptoken 存在')
+        logging.debug(pptoken)
     else:
-        pushplus = False
+        pptoken = False
     if fstoken and fstoken.strip():
         if fstoken and fstoken.find('/hook/') != -1:
             fstoken = fstoken[fstoken.find('/hook/')+6:]
@@ -226,8 +226,8 @@ try:
         rs4 = 'Discord, '
     else:
         rs4 = False
-    if pushplus:
-        rs5 = 'PushPlus, '
+    if pptoken:
+        rs5 = 'pptoken, '
     else:
         rs5 = False
     if fstoken and fssecret:
@@ -474,7 +474,7 @@ except Exception as es:
     if not rs4:
         dcwebhook = False
     if not rs5:
-        pushplus = False
+        pptoken = False
     if not rs6:
         fstoken = fssecret = False
     dddata, scdata, wxdata, dcdata, tgdata, ppdata, fsdata = AllPush(

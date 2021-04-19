@@ -344,7 +344,7 @@ def AllPush(DDTOKEN, DDSECRET, wxAgentId, wxSecret, wxCompanyId, SCKEY, dcwebhoo
         tgdata = tgpost(DDTOKEN, DDSECRET, title_post, post_text)  # 钉钉推送
     else:
         logging.info('tgtoken或tgid不存在')
-    if pushplus:
+    if pptoken:
         logging.info("正在推送到PushPlus")
         ppdata = pppost(pptoken, title_post, post_text)  # PushPlus推送
     else:
