@@ -357,7 +357,7 @@ def AllPush(DDTOKEN, DDSECRET, wxAgentId, wxSecret, wxCompanyId, SCKEY, dcwebhoo
     return dddata, scdata, wxdata, dcdata, tgdata, ppdata, fsdata
 
 
-def push_check():
+def push_check(rs1, rs2, rs3, rs4, rs5, rs6):
     if rs1:
         if str(scdata) == '0':
             logging.info(f'server酱 errcode: {scdata}')
