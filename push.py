@@ -11,6 +11,7 @@ import logging
 import time
 import urllib.parse
 import telebot
+import re
 import ast
 
 import requests
@@ -266,7 +267,7 @@ def tgpost(tgtoken, tgid, title_post, post_text):  # Telegram推送
         data = str(data)
         s = json.dumps(data)
         s0 = json.loads(s)
-        s1 = json.loads(s0)
+        s1 = json.loads(re.sub("'", '"', s0))
         logging.error(type(s1))
         logging.error(s1['id'])
         return s1['id']
