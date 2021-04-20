@@ -231,9 +231,9 @@ try:
     else:
         rs5 = False
     if fstoken and fssecret:
-        rs6, rs7 = '飞书, '
+        rs6 = '飞书, '
     else:
-        rs6, rs7 = False
+        rs6 = False
     if tgtoken and tgid:
         rs7 = 'Telegram, '
     else:
