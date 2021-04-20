@@ -261,8 +261,10 @@ def tgpost(tgtoken, tgid, title_post, post_text):  # Telegram推送
     try:
         # 发送消息
         bot = telebot.TeleBot(tgtoken)
-        bot.send_message(tgid, f'{title_post}\n\n{post_text}')
-        return 0
+        data = bot.send_message(tgid, f'{title_post}\n\n{post_text}')
+        data = str(data)
+        data = ast.literal_eval(data)
+        return data.get('id')
     except Exception as exp:
         logging.error(exp, exc_info=True)
         return exp
@@ -346,8 +348,8 @@ def AllPush(DDTOKEN, DDSECRET, wxAgentId, wxSecret, wxCompanyId, SCKEY, dcwebhoo
     else:
         logging.info('dcwebhook不存在')
     if tgtoken and tgid:
-        logging.info("正在推送到钉钉")
-        tgdata = tgpost(DDTOKEN, DDSECRET, title_post, post_text)  # 钉钉推送
+        logging.info("正在推送到Telegram")
+        tgdata = tgpost(tgtoken, tgid, title_post, post_text)  # Telegram推送
     else:
         logging.info('tgtoken或tgid不存在')
     if pptoken:
@@ -363,7 +365,7 @@ def AllPush(DDTOKEN, DDSECRET, wxAgentId, wxSecret, wxCompanyId, SCKEY, dcwebhoo
     return dddata, scdata, wxdata, dcdata, tgdata, ppdata, fsdata
 
 
-def push_check(rs1, rs2, rs3, rs4, rs5, rs6, dddata, scdata, wxdata, dcdata, tgdata, ppdata, fsdata):
+def push_check(rs1, rs2, rs3, rs4, rs5, rs6, rs7, dddata, scdata, wxdata, dcdata, tgdata, ppdata, fsdata):
     if rs1:
         if str(scdata) == '0':
             logging.info(f'server酱 errcode: {scdata}')
@@ -394,9 +396,14 @@ def push_check(rs1, rs2, rs3, rs4, rs5, rs6, dddata, scdata, wxdata, dcdata, tgd
             logging.info(f'飞书 errcode: {fsdata}')
         else:
             logging.warning(f'飞书 error: {fsdata}')
+    if rs7:
+        if tgdata > 0:
+            logging.info(f'Telegram msgcode: {fsdata}')
+        else:
+            logging.warning(f'Telegram error: {fsdata}')
 
 
-def rs_check(rs1, rs2, rs3, rs4, rs5, rs6, dddata, scdata, wxdata, dcdata, tgdata, ppdata, fsdata):
+def rs_check(rs1, rs2, rs3, rs4, rs5, rs6, rs7, dddata, scdata, wxdata, dcdata, tgdata, ppdata, fsdata):
     if rs1 and str(scdata) == '0':
         rs1 = False
     if rs2 and str(dddata) == '0':
@@ -409,4 +416,6 @@ def rs_check(rs1, rs2, rs3, rs4, rs5, rs6, dddata, scdata, wxdata, dcdata, tgdat
         rs5 = False
     if rs6 and str(fsdata) == '0':
         rs6 = False
-    return rs1, rs2, rs3, rs4, rs5, rs6
+    if rs7 and str(tgdata) == '0':
+        rs7 = False
+    return rs1, rs2, rs3, rs4, rs5, rs6, rs7
