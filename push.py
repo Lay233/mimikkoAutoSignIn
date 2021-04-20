@@ -265,8 +265,8 @@ def tgpost(tgtoken, tgid, title_post, post_text):  # Telegram推送
         data = bot.send_message(tgid, f'{title_post}\n\n{post_text}')
         data = str(data)
         s = json.dumps(data)
-        logging.error(s)
-        s1 = json.loads(json.loads(s))
+        s0 = json.loads(s)
+        s1 = json.loads(s0)
         logging.error(type(s1))
         logging.error(s1['id'])
         return s1['id']
