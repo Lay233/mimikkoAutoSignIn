@@ -8,7 +8,8 @@
   
 [本项目](https://github.com/cyb233/mimikkoAutoSignIn)使用GitHub Actions，用于[兽耳助手](https://www.mimikko.cn/)定时`每日签到/补签`/`兑换能量`/`VIP每日抽奖`，并可选`推送到多个平台`  
   
-- ## 完整的项目说明/简介等请访问[https://cyb233.github.io/mimikkoAutoSignIn](https://cyb233.github.io/mimikkoAutoSignIn)查看
+## 使用教程
+请访问[https://cyb233.github.io/mimikkoAutoSignIn](https://cyb233.github.io/mimikkoAutoSignIn)查看
   
 >[keylol帖子](https://keylol.com/t675496-1-1)  
   
