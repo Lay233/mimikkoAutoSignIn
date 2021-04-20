@@ -264,13 +264,9 @@ def tgpost(tgtoken, tgid, title_post, post_text):  # Telegram推送
         # 发送消息
         bot = telebot.TeleBot(tgtoken)
         data = bot.send_message(tgid, f'{title_post}\n\n{post_text}')
-        data = str(data)
-        s = json.dumps(data)
-        s0 = json.loads(s)
-        s1 = json.loads(re.sub("'", '"', s0))
-        logging.error(type(s1))
-        logging.error(s1['id'])
-        return s1['id']
+        data = data.__dict__
+        logging.error(type(data))
+        return data['id']
     except Exception as exp:
         logging.error(exp, exc_info=True)
         return exp
