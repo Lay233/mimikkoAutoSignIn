@@ -399,9 +399,9 @@ def push_check(rs1, rs2, rs3, rs4, rs5, rs6, rs7, dddata, scdata, wxdata, dcdata
             logging.warning(f'飞书 error: {fsdata}')
     if rs7:
         if type(tgdata) == int:
-            logging.info(f'Telegram msgcode: {fsdata}')
+            logging.info(f'Telegram msgcode: {tgdata}')
         else:
-            logging.warning(f'Telegram error: {fsdata}')
+            logging.warning(f'Telegram error: {tgdata}')
 
 
 def rs_check(rs1, rs2, rs3, rs4, rs5, rs6, rs7, dddata, scdata, wxdata, dcdata, tgdata, ppdata, fsdata):
