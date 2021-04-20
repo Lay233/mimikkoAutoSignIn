@@ -267,6 +267,7 @@ def tgpost(tgtoken, tgid, title_post, post_text):  # Telegram推送
         s = json.dumps(data)
         logging.error(s)
         s1 = json.loads(s)
+        logging.error(type(s1))
         logging.error(s1['id'])
         return s1['id']
     except Exception as exp:
