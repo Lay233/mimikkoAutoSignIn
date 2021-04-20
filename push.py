@@ -10,14 +10,35 @@ import json
 import logging
 import time
 import urllib.parse
+import telebot
+import re
+import ast
 
 import requests
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
+_MAX_TRIES = 5
 
-def mimikko_login(url, app_id, app_Version, params):  # 登录post
+
+def mimikko_login(url, app_id, app_Version, params):      # 带尝试的登录post
+    returnValue = False
+    i = 1
+    while True:
+        logging.debug(f"第{i}次尝试登录")
+        returnValue = mimikko_realLogin(url, app_id, app_Version, params)
+        if returnValue != False:
+            logging.debug("SUCCESS")
+            break
+        if i == _MAX_TRIES:
+            logging.warning("5次请求失败，已跳过")
+            break
+
+    return returnValue
+
+
+def mimikko_realLogin(url, app_id, app_Version, params):  # 实际登录post
     headers = {
         'Accept': 'application/json',
         'Cache-Control': 'no-cache',
@@ -39,7 +60,24 @@ def mimikko_login(url, app_id, app_Version, params):  # 登录post
         return False
 
 
-def mimikko_get(url, app_id, app_Version, Authorization, params):  # get请求
+def mimikko_get(url, app_id, app_Version, Authorization, params):      # 带尝试的get
+    returnValue = False
+    i = 1
+    while True:
+        logging.debug(f"第{i}次尝试GET")
+        returnValue = mimikko_realGet(
+            url, app_id, app_Version, Authorization, params)
+        if returnValue != False:
+            logging.debug("SUCCESS")
+            break
+        if i == _MAX_TRIES:
+            logging.warning("5次请求失败，已跳过")
+            break
+
+    return returnValue
+
+
+def mimikko_realGet(url, app_id, app_Version, Authorization, params):  # 实际get请求
     headers = {
         'Cache-Control': 'Cache-Control:public,no-cache',
         'Accept-Encoding': 'gzip',
@@ -60,7 +98,24 @@ def mimikko_get(url, app_id, app_Version, Authorization, params):  # get请求
         return False
 
 
-def mimikko_post(url, app_id, app_Version, Authorization, params):  # post请求
+def mimikko_post(url, app_id, app_Version, Authorization, params):      # 带尝试的post
+    returnValue = False
+    i = 1
+    while True:
+        logging.debug(f"第{i}次尝试POST")
+        returnValue = mimikko_realPost(
+            url, app_id, app_Version, Authorization, params)
+        if returnValue != False:
+            logging.debug("SUCCESS")
+            break
+        if i == _MAX_TRIES:
+            logging.warning("5次请求失败，已跳过")
+            break
+
+    return returnValue
+
+
+def mimikko_realPost(url, app_id, app_Version, Authorization, params):  # post请求
     headers = {
         'Accept': 'application/json',
         'Cache-Control': 'no-cache',
@@ -204,8 +259,74 @@ def dcpost(dcwebhook, title_post, post_text):  # Discord推送
         return exp
 
 
-def AllPush(DDTOKEN, DDSECRET, wxAgentId, wxSecret, wxCompanyId, SCKEY, dcwebhook, title_post, post_text):  # 全推送
-    dddata = scdata = wxdata = dcdata = False
+def tgpost(tgtoken, tgid, title_post, post_text):  # Telegram推送
+    try:
+        # 发送消息
+        bot = telebot.TeleBot(tgtoken)
+        data = bot.send_message(tgid, f'{title_post}\n\n{post_text}')
+        data = data.__dict__
+        return data.get('id')
+    except Exception as exp:
+        logging.error(exp, exc_info=True)
+        return exp
+
+
+def pppost(pptoken, title_post, post_text):  # PushPlus推送
+    url = f'http://pushplus.hxtrip.com/send/{pptoken}'
+    headers = {"Content-Type": "application/json"}
+    data = {"title": title_post, "content": post_text}
+    try:
+        # 发送消息
+        with requests.post(url, headers=headers, data=json.dumps(data), timeout=300) as post_data:
+            logging.debug(post_data.text)
+            if 'code' in post_data.json() and post_data.json()["code"] == 0:
+                return post_data.json()["code"]
+            else:
+                return post_data.text
+            return post_data
+    except Exception as exp:
+        logging.error(exp, exc_info=True)
+        return exp
+
+
+def fspost(fstoken, fssecret, title_post, post_text):  # 飞书推送
+    timestamp = str(round(time.time()))
+    secret = fssecret
+    key = f'{timestamp}\n{secret}'
+    key_enc = key.encode('utf-8')
+    msg = ""
+    msg_enc = msg.encode('utf-8')
+    hmac_code = hmac.new(key_enc, msg_enc, digestmod=sha256).digest()
+    sign = base64.b64encode(hmac_code).decode('utf-8')
+    print(timestamp)
+    print(sign)
+    headers_post = {
+        'Content-Type': 'application/json; charset=UTF-8',
+    }
+    url = f'https://open.feishu.cn/open-apis/bot/v2/hook/{fstoken}'
+    post_info = {
+        "timestamp": timestamp,
+        "sign": sign,
+        "msg_type": "text",
+        "content": {
+            "text": f'{title_post}\n\n{post_text}'
+        }
+    }
+    post_info = json.dumps(post_info)
+    try:
+        with requests.post(url, headers=headers_post, data=post_info, timeout=300) as post_data:
+            logging.debug(post_data.text)
+            if 'StatusCode' in post_data.json() and post_data.json()["StatusCode"] == 0:
+                return post_data.json()["StatusCode"]
+            else:
+                return post_data.text
+    except Exception as exp:
+        logging.error(exp, exc_info=True)
+        return exp
+
+
+def AllPush(DDTOKEN, DDSECRET, wxAgentId, wxSecret, wxCompanyId, SCKEY, dcwebhook, tgtoken, tgid, pptoken, fstoken, fssecret, title_post, post_text):  # 全推送
+    dddata = scdata = wxdata = dcdata = tgdata = ppdata = fsdata = False
     if SCKEY:
         logging.info("正在推送到Server酱")
         scdata = scpost(SCKEY, title_post, post_text)  # server酱推送
@@ -226,5 +347,76 @@ def AllPush(DDTOKEN, DDSECRET, wxAgentId, wxSecret, wxCompanyId, SCKEY, dcwebhoo
         logging.info("正在推送到Discord")
         dcdata = dcpost(dcwebhook, title_post, post_text)  # Discord推送
     else:
-        logging.info('dcappid或dckey不存在')
-    return dddata, scdata, wxdata, dcdata
+        logging.info('dcwebhook不存在')
+    if tgtoken and tgid:
+        logging.info("正在推送到Telegram")
+        tgdata = tgpost(tgtoken, tgid, title_post, post_text)  # Telegram推送
+    else:
+        logging.info('tgtoken或tgid不存在')
+    if pptoken:
+        logging.info("正在推送到PushPlus")
+        ppdata = pppost(pptoken, title_post, post_text)  # PushPlus推送
+    else:
+        logging.info('pptoken不存在')
+    if fstoken and fssecret:
+        logging.info("正在推送到飞书")
+        fsdata = pppost(pptoken, title_post, post_text)  # 飞书推送
+    else:
+        logging.info('fstoken或fssecret不存在')
+    return dddata, scdata, wxdata, dcdata, tgdata, ppdata, fsdata
+
+
+def push_check(rs1, rs2, rs3, rs4, rs5, rs6, rs7, dddata, scdata, wxdata, dcdata, tgdata, ppdata, fsdata):
+    if rs1:
+        if str(scdata) == '0':
+            logging.info(f'server酱 errcode: {scdata}')
+        else:
+            logging.warning(f'server酱 error: {scdata}')
+    if rs2:
+        if str(dddata) == '0':
+            logging.info(f'钉钉 errcode: {dddata}')
+        else:
+            logging.warning(f'钉钉 error: {dddata}')
+    if rs3:
+        if str(wxdata) == '0':
+            logging.info(f'企业微信 errcode: {wxdata}')
+        else:
+            logging.warning(f'企业微信 error: {wxdata}')
+    if rs4:
+        if not str(dcdata) == 'False':
+            logging.info(f'Discord: {dcdata}')
+        else:
+            logging.warning(f'Discord error: {dcdata}')
+    if rs5:
+        if ppdata == 200:
+            logging.info(f'PushPlus errcode: {ppdata}')
+        else:
+            logging.warning(f'PushPlus error: {ppdata}')
+    if rs6:
+        if str(fsdata) == '0':
+            logging.info(f'飞书 errcode: {fsdata}')
+        else:
+            logging.warning(f'飞书 error: {fsdata}')
+    if rs7:
+        if type(tgdata) == int:
+            logging.info(f'Telegram msgcode: {tgdata}')
+        else:
+            logging.warning(f'Telegram error: {tgdata}')
+
+
+def rs_check(rs1, rs2, rs3, rs4, rs5, rs6, rs7, dddata, scdata, wxdata, dcdata, tgdata, ppdata, fsdata):
+    if rs1 and str(scdata) == '0':
+        rs1 = False
+    if rs2 and str(dddata) == '0':
+        rs2 = False
+    if rs3 and str(wxdata) == '0':
+        rs3 = False
+    if rs4 and not str(dcdata) == 'False':
+        rs4 = False
+    if rs5 and ppdata == 200:
+        rs5 = False
+    if rs6 and str(fsdata) == '0':
+        rs6 = False
+    if rs7 and type(tgdata) == int:
+        rs7 = False
+    return rs1, rs2, rs3, rs4, rs5, rs6, rs7

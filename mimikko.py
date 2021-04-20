@@ -52,6 +52,16 @@ try:
                         metavar='AgentId', help='企业微信推送AgentId')
     parser.add_argument('-b', default=False,
                         metavar='dcWebhook', help='Discord推送WebHook')
+    parser.add_argument('-t', default=False,
+                        metavar='tgtoken', help='Telegram Bot Token')
+    parser.add_argument('-g', default=False,
+                        metavar='tgid', help='你的Telegram id')
+    parser.add_argument('-k', default=False,
+                        metavar='pptoken', help='PushPlus推送Token')
+    parser.add_argument('-f', default=False,
+                        metavar='fstoken', help='飞书机器人token')
+    parser.add_argument('-j', default=False,
+                        metavar='fssecret', help='飞书机器人安全设置加签的secret')
 
     args = parser.parse_args()
 
@@ -72,6 +82,11 @@ try:
     wxSecret = args.x
     wxCompanyId = args.i
     dcwebhook = args.b
+    tgtoken = args.t
+    tgid = args.g
+    pptoken = args.k
+    fstoken = args.f
+    fssecret = args.j
 
     if user_id and user_id.strip():
         user_id = user_id.strip()
@@ -137,7 +152,7 @@ try:
         logging.info('DDSECRET 存在')
         logging.debug(DDSECRET)
     else:
-        DSECRET = False
+        DDSECRET = False
     if wxAgentId and wxAgentId.strip():
         wxAgentId = wxAgentId.strip()
         logging.info('wxAgentId 存在')
@@ -162,6 +177,38 @@ try:
         logging.debug(dcwebhook)
     else:
         dcwebhook = False
+    if tgtoken and tgtoken.strip():
+        tgtoken = tgtoken.strip()
+        logging.info('tgtoken 存在')
+        logging.debug(tgtoken)
+    else:
+        tgtoken = False
+    if tgid and tgid.strip():
+        tgid = tgid.strip()
+        logging.info('tgid 存在')
+        logging.debug(tgid)
+    else:
+        tgid = False
+    if pptoken and pptoken.strip():
+        pptoken = pptoken.strip()
+        logging.info('pptoken 存在')
+        logging.debug(pptoken)
+    else:
+        pptoken = False
+    if fstoken and fstoken.strip():
+        if fstoken and fstoken.find('/hook/') != -1:
+            fstoken = fstoken[fstoken.find('/hook/')+6:]
+        fstoken = fstoken.strip()
+        logging.info('fstoken 存在')
+        logging.debug(fstoken)
+    else:
+        fstoken = False
+    if fssecret and fssecret.strip():
+        fssecret = fssecret.strip()
+        logging.info('fssecret 存在')
+        logging.debug(fssecret)
+    else:
+        fssecret = False
     logging.info('获取参数结束')
     if SCKEY:
         rs1 = 'Server酱, '
@@ -179,6 +226,18 @@ try:
         rs4 = 'Discord, '
     else:
         rs4 = False
+    if pptoken:
+        rs5 = 'pptoken, '
+    else:
+        rs5 = False
+    if fstoken and fssecret:
+        rs6 = '飞书, '
+    else:
+        rs6 = False
+    if tgtoken and tgid:
+        rs7 = 'Telegram, '
+    else:
+        rs7 = False
 except Exception as es:
     logging.critical(es, exc_info=True)
     parser.print_usage()
@@ -233,56 +292,20 @@ def mimikko():
             logging.info("登录成功！")
         else:
             logging.warning("登录错误")
-            dddata, scdata, wxdata, dcdata = AllPush(
-                DDTOKEN, DDSECRET, wxAgentId, wxSecret, wxCompanyId, SCKEY, dcwebhook, "兽耳助手签到登录错误", "兽耳助手登录错误，请访问GitHub检查")
-            if rs1:
-                if str(scdata) == '0':
-                    logging.info(f'server酱 errcode: {scdata}')
-                else:
-                    logging.warning(f'server酱 error: {scdata}')
-            if rs2:
-                if str(dddata) == '0':
-                    logging.info(f'钉钉 errcode: {dddata}')
-                else:
-                    logging.warning(f'钉钉 error: {dddata}')
-            if rs3:
-                if str(wxdata) == '0':
-                    logging.info(f'企业微信 errcode: {wxdata}')
-                else:
-                    logging.warning(f'企业微信 error: {wxdata}')
-            if rs4:
-                if not str(dcdata) == 'False':
-                    logging.info(f'Discord: {dcdata}')
-                else:
-                    logging.warning(f'Discord error: {dcdata}')
+            dddata, scdata, wxdata, dcdata, tgdata, ppdata, fsdata = AllPush(
+                DDTOKEN, DDSECRET, wxAgentId, wxSecret, wxCompanyId, SCKEY, dcwebhook, tgtoken, tgid, pptoken, fstoken, fssecret, "兽耳助手签到登录错误", "兽耳助手登录错误，请访问GitHub检查")
+            push_check(rs1, rs2, rs3, rs4, rs5, rs6, rs7, dddata, scdata,
+                       wxdata, dcdata, tgdata, ppdata, fsdata)
             logging.critical('兽耳助手登录错误！！！')
             sys.exit(1)
     else:
         if Authorization:
             logging.info("使用 Authorization 验证")
         else:
-            dddata, scdata, wxdata, dcdata = AllPush(
-                DDTOKEN, DDSECRET, wxAgentId, wxSecret, wxCompanyId, SCKEY, dcwebhook, "兽耳助手签到登录错误", "登录错误，未找到 Authorization ，请访问GitHub检查")
-            if rs1:
-                if str(scdata) == '0':
-                    logging.info(f'server酱 errcode: {scdata}')
-                else:
-                    logging.warning(f'server酱 error: {scdata}')
-            if rs2:
-                if str(dddata) == '0':
-                    logging.info(f'钉钉 errcode: {dddata}')
-                else:
-                    logging.warning(f'钉钉 error: {dddata}')
-            if rs3:
-                if str(wxdata) == '0':
-                    logging.info(f'企业微信 errcode: {wxdata}')
-                else:
-                    logging.warning(f'企业微信 error: {wxdata}')
-            if rs4:
-                if not str(dcdata) == 'False':
-                    logging.info(f'Discord: {dcdata}')
-                else:
-                    logging.warning(f'Discord error: {dcdata}')
+            dddata, scdata, wxdata, dcdata, tgdata, ppdata, fsdata = AllPush(
+                DDTOKEN, DDSECRET, wxAgentId, wxSecret, wxCompanyId, SCKEY, dcwebhook, tgtoken, tgid, pptoken, fstoken, fssecret, "兽耳助手签到登录错误", "登录错误，未找到 Authorization ，请访问GitHub检查")
+            push_check(rs1, rs2, rs3, rs4, rs5, rs6, rs7, dddata, scdata,
+                       wxdata, dcdata, tgdata, ppdata, fsdata)
             logging.critical('请在Secret中保存 登录ID和密码 或 Authorization ！！！')
             sys.exit(1)
     # 设置默认助手
@@ -339,7 +362,7 @@ def mimikko():
             times_resigned = cansign_after_time-cansign_before_time
         else:
             times_resigned = False
-        logging.info(times_resigned)
+        logging.info(f'消耗 {times_resigned} 张')
     else:
         times_resigned = False
     # 签到
@@ -434,62 +457,22 @@ except Exception as em:
 try:
     if varErr:
         logging.info("运行成功，正在推送")
-        dddata, scdata, wxdata, dcdata = AllPush(
-            DDTOKEN, DDSECRET, wxAgentId, wxSecret, wxCompanyId, SCKEY, dcwebhook, title_post, post_text)
-        if rs1:
-            if str(scdata) == '0':
-                rs1 = False
-                logging.info(f'server酱 errcode: {scdata}')
-            else:
-                logging.warning(f'server酱 error: {scdata}')
-        if rs2:
-            if str(dddata) == '0':
-                rs2 = False
-                logging.info(f'钉钉 errcode: {dddata}')
-            else:
-                logging.warning(f'钉钉 error: {dddata}')
-        if rs3:
-            if str(wxdata) == '0':
-                rs3 = False
-                logging.info(f'企业微信 errcode: {wxdata}')
-            else:
-                logging.warning(f'企业微信 error: {wxdata}')
-        if rs4:
-            if not str(dcdata) == 'False':
-                rs4 = False
-                logging.info(f'Discord: {dcdata}')
-            else:
-                logging.warning(f'Discord error: {dcdata}')
-        print(f'\n\n推送信息：\n\n{title_post}\n{post_text}')
+        dddata, scdata, wxdata, dcdata, tgdata, ppdata, fsdata = AllPush(
+            DDTOKEN, DDSECRET, wxAgentId, wxSecret, wxCompanyId, SCKEY, dcwebhook, tgtoken, tgid, pptoken, fstoken, fssecret, title_post, post_text)
+        push_check(rs1, rs2, rs3, rs4, rs5, rs6, rs7, dddata, scdata,
+                   wxdata, dcdata, tgdata, ppdata, fsdata)
+        rs1, rs2, rs3, rs4, rs5, rs6, rs7 = rs_check(
+            rs1, rs2, rs3, rs4, rs5, rs6, rs7, dddata, scdata, wxdata, dcdata, tgdata, ppdata, fsdata)
+        logging.info(f'All Finish!\n\n推送信息：\n\n{title_post}\n{post_text}')
     else:
         logging.warning("运行失败，正在推送")
         logging.warning(f"兽耳助手签到数据异常，请访问GitHub检查：“{varErrText}”")
-        dddata, scdata, wxdata, dcdata = AllPush(
-            DDTOKEN, DDSECRET, wxAgentId, wxSecret, wxCompanyId, SCKEY, dcwebhook, "兽耳助手签到数据异常", f'兽耳助手签到数据异常，请访问GitHub检查：“{varErrText}”')
-        if rs1:
-            if str(scdata) == '0':
-                rs1 = False
-                logging.info(f'server酱 errcode: {scdata}')
-            else:
-                logging.warning(f'server酱 error: {scdata}')
-        if rs2:
-            if str(dddata) == '0':
-                rs2 = False
-                logging.info(f'钉钉 errcode: {dddata}')
-            else:
-                logging.warning(f'钉钉 error: {dddata}')
-        if rs3:
-            if str(wxdata) == '0':
-                rs3 = False
-                logging.info(f'企业微信 errcode: {wxdata}')
-            else:
-                logging.warning(f'企业微信 error: {wxdata}')
-        if rs4:
-            if not str(dcdata) == 'False':
-                rs4 = False
-                logging.info(f'Discord: {dcdata}')
-            else:
-                logging.warning(f'Discord error: {dcdata}')
+        dddata, scdata, wxdata, dcdata, tgdata, ppdata, fsdata = AllPush(
+            DDTOKEN, DDSECRET, wxAgentId, wxSecret, wxCompanyId, SCKEY, dcwebhook, tgtoken, tgid, pptoken, fstoken, fssecret, "兽耳助手签到数据异常", f'兽耳助手签到数据异常，请访问GitHub检查：“{varErrText}”')
+        push_check(rs1, rs2, rs3, rs4, rs5, rs6, rs7, dddata, scdata,
+                   wxdata, dcdata, tgdata, ppdata, fsdata)
+        rs1, rs2, rs3, rs4, rs5, rs6, rs7 = rs_check(
+            rs1, rs2, rs3, rs4, rs5, rs6, rs7, dddata, scdata, wxdata, dcdata, tgdata, ppdata, fsdata)
 except Exception as es:
     logging.warning("数据异常，尝试推送")
     if not rs1:
@@ -500,35 +483,19 @@ except Exception as es:
         wxAgentId = wxSecret = wxCompanyId = False
     if not rs4:
         dcwebhook = False
-    dddata, scdata, wxdata, dcdata = AllPush(
-        DDTOKEN, DDSECRET, wxAgentId, wxSecret, wxCompanyId, SCKEY, dcwebhook, "兽耳助手签到数据异常", f"兽耳助手签到数据异常，请访问GitHub检查：{es}")
-    if rs1:
-        if str(scdata) == '0':
-            rs1 = False
-            logging.info(f'server酱 errcode: {scdata}')
-        else:
-            logging.warning(f'server酱 error: {scdata}')
-    if rs2:
-        if str(dddata) == '0':
-            rs2 = False
-            logging.info(f'钉钉 errcode: {dddata}')
-        else:
-            logging.warning(f'钉钉 error: {dddata}')
-    if rs3:
-        if str(wxdata) == '0':
-            rs3 = False
-            logging.info(f'企业微信 errcode: {wxdata}')
-        else:
-            logging.warning(f'企业微信 error: {wxdata}')
-    if rs4:
-        if not str(dcdata) == 'False':
-            rs4 = False
-            logging.info(f'Discord: {dcdata}')
-        else:
-            logging.warning(f'Discord error: {dcdata}')
+    if not rs5:
+        pptoken = False
+    if not rs6:
+        fstoken = fssecret = False
+    dddata, scdata, wxdata, dcdata, tgdata, ppdata, fsdata = AllPush(
+        DDTOKEN, DDSECRET, wxAgentId, wxSecret, wxCompanyId, SCKEY, dcwebhook, tgtoken, tgid, pptoken, fstoken, fssecret, "兽耳助手签到数据异常", f"兽耳助手签到数据异常，请访问GitHub检查：{es}")
+    push_check(rs1, rs2, rs3, rs4, rs5, rs6, rs7, dddata, scdata,
+               wxdata, dcdata, tgdata, ppdata, fsdata)
+    rs1, rs2, rs3, rs4, rs5, rs6, rs7 = rs_check(
+        rs1, rs2, rs3, rs4, rs5, rs6, rs7, dddata, scdata, wxdata, dcdata, tgdata, ppdata, fsdata)
     logging.error(es, exc_info=True)
 
-if rs1 or rs2 or rs3 or rs4:
+if rs1 or rs2 or rs3 or rs4 or rs5 or rs6 or rs7:
     logging.warning(re.sub(',  ', ' ', re.sub(
-        'False', '', f'{rs1}{rs2}{rs3}{rs4} 推送异常，请检查')))
+        'False', '', f'{rs1}{rs2}{rs3}{rs4}{rs5}{rs6}{rs7} 推送异常，请检查')))
     sys.exit(2)
