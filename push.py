@@ -8,13 +8,12 @@ import hashlib
 import hmac
 import json
 import logging
+import re
 import time
 import urllib.parse
-import telebot
-import re
-import ast
 
 import requests
+import telebot
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
@@ -264,8 +263,7 @@ def tgpost(tgtoken, tgid, title_post, post_text):  # Telegram推送
         # 发送消息
         bot = telebot.TeleBot(tgtoken)
         data = bot.send_message(tgid, f'{title_post}\n\n{post_text}')
-        data = data.__dict__
-        return data.get('id')
+        return data.id
     except Exception as exp:
         logging.error(exp, exc_info=True)
         return exp
