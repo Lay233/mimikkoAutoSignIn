@@ -340,7 +340,7 @@ def mimikko():
             if not i > resign:
                 logging.info(f'向前第 {i} 天')
                 resign_time = int(time.time())-86400*i
-                r_date = timeStamp1time(resign_time)
+                r_date = push.timeStamp1time(resign_time)
                 resign_data = push.mimikko_post(
                     resign_path, app_id, app_Version, Authorization, f'["{r_date}T15:59:59+0800"]')
                 if resign_data and resign_data["code"] == 0:
@@ -444,7 +444,7 @@ try:
             logging.warning(f'{i} 缺失')
             varErrText = f'{varErrText},{i}'
     if varErr:
-        now_time = timeStamp2time(time.time()+28800)
+        now_time = push.timeStamp2time(time.time()+28800)
         post_text = re.sub(
             '\\n', '  \n', f'现在是：{now_time}\n{sign_result_post}\n{vip_roll_post}\n{energy_reward_post}')
     else:
