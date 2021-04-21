@@ -284,7 +284,7 @@ def mimikko():
         logging.info("使用 ID密码 登录")
         user_password_sha = hashlib.sha256(
             user_password.encode('utf-8')).hexdigest()
-        login_data = mimikko_login(login_path, app_id, app_Version,
+        login_data = push.mimikko_login(login_path, app_id, app_Version,
                                    f'{{"password":"{user_password_sha}", "id":"{user_id}"}}')
         if login_data and login_data.get('body'):
             Authorization = login_data['body']['Token']
@@ -310,10 +310,10 @@ def mimikko():
             sys.exit(1)
     # 设置默认助手
     logging.info(f'设置默认助手{Energy_code}')
-    _ = mimikko_get(f'{defeat_set}?code={Energy_code}',
+    _ = push.mimikko_get(f'{defeat_set}?code={Energy_code}',
                     app_id, app_Version, Authorization, "")
     # 执行前的好感度
-    original_energy_data = mimikko_get(
+    original_energy_data = push.mimikko_get(
         f'{energy_info_path}?code={Energy_code}', app_id, app_Version, Authorization, "")
     if original_energy_data and original_energy_data.get('body'):
         original_energy_post = str(
@@ -323,13 +323,13 @@ def mimikko():
     logging.info(f'执行前的好感度{original_energy_post}')
     # 签到历史
     logging.info('正在获取签到历史')
-    sign_history = mimikko_get(
+    sign_history = push.mimikko_get(
         history_path, app_id, app_Version, Authorization, "")
     # 补签
     if resign:
         logging.info("正在尝试补签")
         # 补签前的补签卡
-        cansign_before = mimikko_get(
+        cansign_before = push.mimikko_get(
             can_resign, app_id, app_Version, Authorization, "")
         if cansign_before and cansign_before.get('body'):
             cansign_before_time = cansign_before['body']['Value']
@@ -341,7 +341,7 @@ def mimikko():
                 logging.info(f'向前第 {i} 天')
                 resign_time = int(time.time())-86400*i
                 r_date = timeStamp1time(resign_time)
-                resign_data = mimikko_post(
+                resign_data = push.mimikko_post(
                     resign_path, app_id, app_Version, Authorization, f'["{r_date}T15:59:59+0800"]')
                 if resign_data and resign_data["code"] == 0:
                     logging.info("补签成功")
@@ -350,7 +350,7 @@ def mimikko():
             else:
                 break
         # 补签后的补签卡
-        cansign_after = mimikko_get(
+        cansign_after = push.mimikko_get(
             can_resign, app_id, app_Version, Authorization, "")
         if cansign_after and cansign_after.get('body'):
             cansign_after_time = cansign_after['body']['Value']
@@ -367,9 +367,9 @@ def mimikko():
         times_resigned = False
     # 签到
     logging.info('正在尝试签到')
-    sign_data = mimikko_get(sign_path, app_id, app_Version, Authorization, "")
+    sign_data = push.mimikko_get(sign_path, app_id, app_Version, Authorization, "")
     if sign_data and sign_data.get('body'):
-        sign_info = mimikko_get(
+        sign_info = push.mimikko_get(
             is_sign, app_id, app_Version, Authorization, "")
         if sign_data['body']['GetExp']:
             if times_resigned:
@@ -386,11 +386,11 @@ def mimikko():
     logging.info(title_ahead)
     # VIP抽奖
     logging.info('正在尝试VIP抽奖')
-    vip_info_data = mimikko_get(
+    vip_info_data = push.mimikko_get(
         vip_info, app_id, app_Version, Authorization, "")
     if vip_info_data and vip_info_data.get('body'):
         if vip_info_data['body']['rollNum'] > 0:
-            vip_roll_data = mimikko_post(
+            vip_roll_data = push.mimikko_post(
                 vip_roll, app_id, app_Version, Authorization, "")
             vip_roll_post = f'''VIP抽奖成功：{vip_roll_data['body']['Value']['description']}'''
         else:
@@ -406,11 +406,11 @@ def mimikko():
     # 能量兑换好感度
     logging.info('正在尝试兑换能量')
     if not original_energy_data:
-        original_energy_data = mimikko_get(
+        original_energy_data = push.mimikko_get(
             f'{energy_info_path}?code={Energy_code}', app_id, app_Version, Authorization, "")
     if original_energy_data and original_energy_data.get('body'):
         if original_energy_data['body']['Energy'] > 0:
-            energy_reward_data = mimikko_get(
+            energy_reward_data = push.mimikko_get(
                 f'{energy_reward_path}?code={Energy_code}', app_id, app_Version, Authorization, "")
             title_post = f'''{title_ahead}{servant_name[energy_reward_data['body']['code']]}好感度{str(energy_reward_data['body']['Favorability'])}'''
             gethgd = int(
