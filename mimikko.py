@@ -62,6 +62,10 @@ try:
                         metavar='fstoken', help='飞书机器人token')
     parser.add_argument('-j', default=False,
                         metavar='fssecret', help='飞书机器人安全设置加签的secret')
+    parser.add_argument('-l', default=False,
+                        metavar='misaka20001position', help="MisakaNet服务器地址")
+    parser.add_argument('-m', default=False,
+                        metavar="misakakey", help="MisakaNet misakaKey")
 
     args = parser.parse_args()
 
@@ -87,6 +91,8 @@ try:
     pptoken = args.k
     fstoken = args.f
     fssecret = args.j
+    misaka20001position = args.l
+    misakaKey = args.m
 
     if user_id and user_id.strip():
         user_id = user_id.strip()
@@ -209,6 +215,18 @@ try:
         logging.debug(fssecret)
     else:
         fssecret = False
+    if misaka20001position and misaka20001position.strip():
+        misaka20001position = misaka20001position.strip()
+        logging.info("misaka20001position 存在")
+        logging.debug(misaka20001position)
+    else:
+        misaka20001position = False
+    if misakaKey and misakaKey.strip():
+        misakaKey = misakaKey.strip()
+        logging.info("misakakey 存在")
+        logging.debug(misakaKey)
+    else:
+        misakaKey = False
     logging.info('获取参数结束')
     if SCKEY:
         rs1 = 'Server酱, '
@@ -238,6 +256,10 @@ try:
         rs7 = 'Telegram, '
     else:
         rs7 = False
+    if misaka20001position and misakaKey:
+        rs8 = 'misakaNet, '
+    else:
+        rs8 = False
 except Exception as es:
     logging.critical(es, exc_info=True)
     parser.print_usage()
@@ -292,20 +314,20 @@ def mimikko():
             logging.info("登录成功！")
         else:
             logging.warning("登录错误")
-            dddata, scdata, wxdata, dcdata, tgdata, ppdata, fsdata = push.AllPush(
-                DDTOKEN, DDSECRET, wxAgentId, wxSecret, wxCompanyId, SCKEY, dcwebhook, tgtoken, tgid, pptoken, fstoken, fssecret, "兽耳助手签到登录错误", "兽耳助手登录错误，请访问GitHub检查")
-            push.push_check(rs1, rs2, rs3, rs4, rs5, rs6, rs7, dddata, scdata,
-                            wxdata, dcdata, tgdata, ppdata, fsdata)
+            dddata, scdata, wxdata, dcdata, tgdata, ppdata, fsdata, misakadata = push.AllPush(
+                DDTOKEN, DDSECRET, wxAgentId, wxSecret, wxCompanyId, SCKEY, dcwebhook, tgtoken, tgid, pptoken, fstoken, fssecret, misaka20001position, misakaKey, "兽耳助手签到登录错误", "兽耳助手登录错误，请访问GitHub检查")
+            push.push_check(rs1, rs2, rs3, rs4, rs5, rs6, rs7, rs8, dddata, scdata,
+                            wxdata, dcdata, tgdata, ppdata, fsdata, misakadata)
             logging.critical('兽耳助手登录错误！！！')
             sys.exit(1)
     else:
         if Authorization:
             logging.info("使用 Authorization 验证")
         else:
-            dddata, scdata, wxdata, dcdata, tgdata, ppdata, fsdata = push.AllPush(
-                DDTOKEN, DDSECRET, wxAgentId, wxSecret, wxCompanyId, SCKEY, dcwebhook, tgtoken, tgid, pptoken, fstoken, fssecret, "兽耳助手签到登录错误", "登录错误，未找到 Authorization ，请访问GitHub检查")
-            push.push_check(rs1, rs2, rs3, rs4, rs5, rs6, rs7, dddata, scdata,
-                            wxdata, dcdata, tgdata, ppdata, fsdata)
+            dddata, scdata, wxdata, dcdata, tgdata, ppdata, fsdata, misakadata = push.AllPush(
+                DDTOKEN, DDSECRET, wxAgentId, wxSecret, wxCompanyId, SCKEY, dcwebhook, tgtoken, tgid, pptoken, fstoken, fssecret, misaka20001position, misakaKey, "兽耳助手签到登录错误", "登录错误，未找到 Authorization ，请访问GitHub检查")
+            push.push_check(rs1, rs2, rs3, rs4, rs5, rs6, rs7, rs8, dddata, scdata,
+                            wxdata, dcdata, tgdata, ppdata, fsdata, misakadata)
             logging.critical('请在Secret中保存 登录ID和密码 或 Authorization ！！！')
             sys.exit(1)
     # 设置默认助手
@@ -457,22 +479,22 @@ except Exception as em:
 try:
     if varErr:
         logging.info("运行成功，正在推送")
-        dddata, scdata, wxdata, dcdata, tgdata, ppdata, fsdata = push.AllPush(
-            DDTOKEN, DDSECRET, wxAgentId, wxSecret, wxCompanyId, SCKEY, dcwebhook, tgtoken, tgid, pptoken, fstoken, fssecret, title_post, post_text)
-        push.push_check(rs1, rs2, rs3, rs4, rs5, rs6, rs7, dddata, scdata,
-                        wxdata, dcdata, tgdata, ppdata, fsdata)
-        rs1, rs2, rs3, rs4, rs5, rs6, rs7 = push.rs_check(
-            rs1, rs2, rs3, rs4, rs5, rs6, rs7, dddata, scdata, wxdata, dcdata, tgdata, ppdata, fsdata)
+        dddata, scdata, wxdata, dcdata, tgdata, ppdata, fsdata, misakadata = push.AllPush(
+            DDTOKEN, DDSECRET, wxAgentId, wxSecret, wxCompanyId, SCKEY, dcwebhook, tgtoken, tgid, pptoken, fstoken, fssecret, misaka20001position, misakaKey, title_post, post_text)
+        push.push_check(rs1, rs2, rs3, rs4, rs5, rs6, rs7, rs8, dddata, scdata,
+                        wxdata, dcdata, tgdata, ppdata, fsdata, misakadata)
+        rs1, rs2, rs3, rs4, rs5, rs6, rs7, rs8 = push.rs_check(
+            rs1, rs2, rs3, rs4, rs5, rs6, rs7, rs8, dddata, scdata, wxdata, dcdata, tgdata, ppdata, fsdata, misakadata)
         logging.info(f'All Finish!\n\n推送信息：\n\n{title_post}\n{post_text}')
     else:
         logging.warning("运行失败，正在推送")
         logging.warning(f"兽耳助手签到数据异常，请访问GitHub检查：“{varErrText}”")
-        dddata, scdata, wxdata, dcdata, tgdata, ppdata, fsdata = push.AllPush(
-            DDTOKEN, DDSECRET, wxAgentId, wxSecret, wxCompanyId, SCKEY, dcwebhook, tgtoken, tgid, pptoken, fstoken, fssecret, "兽耳助手签到数据异常", f'兽耳助手签到数据异常，请访问GitHub检查：“{varErrText}”')
-        push.push_check(rs1, rs2, rs3, rs4, rs5, rs6, rs7, dddata, scdata,
-                        wxdata, dcdata, tgdata, ppdata, fsdata)
-        rs1, rs2, rs3, rs4, rs5, rs6, rs7 = push.rs_check(
-            rs1, rs2, rs3, rs4, rs5, rs6, rs7, dddata, scdata, wxdata, dcdata, tgdata, ppdata, fsdata)
+        dddata, scdata, wxdata, dcdata, tgdata, ppdata, fsdata, misakadata = push.AllPush(
+            DDTOKEN, DDSECRET, wxAgentId, wxSecret, wxCompanyId, SCKEY, dcwebhook, tgtoken, tgid, pptoken, fstoken, fssecret, misaka20001position, misakaKey, title_post, "兽耳助手签到数据异常", f'兽耳助手签到数据异常，请访问GitHub检查：“{varErrText}”')
+        push.push_check(rs1, rs2, rs3, rs4, rs5, rs6, rs7, rs8, dddata, scdata,
+                        wxdata, dcdata, tgdata, ppdata, fsdata, misakadata)
+        rs1, rs2, rs3, rs4, rs5, rs6, rs7, rs8 = push.rs_check(
+            rs1, rs2, rs3, rs4, rs5, rs6, rs7, rs8, dddata, scdata, wxdata, dcdata, tgdata, ppdata, fsdata, misakadata)
 except Exception as es:
     logging.warning("数据异常，尝试推送")
     if not rs1:
@@ -487,15 +509,15 @@ except Exception as es:
         pptoken = False
     if not rs6:
         fstoken = fssecret = False
-    dddata, scdata, wxdata, dcdata, tgdata, ppdata, fsdata = push.AllPush(
-        DDTOKEN, DDSECRET, wxAgentId, wxSecret, wxCompanyId, SCKEY, dcwebhook, tgtoken, tgid, pptoken, fstoken, fssecret, "兽耳助手签到数据异常", f"兽耳助手签到数据异常，请访问GitHub检查：{es}")
-    push.push_check(rs1, rs2, rs3, rs4, rs5, rs6, rs7, dddata, scdata,
-                    wxdata, dcdata, tgdata, ppdata, fsdata)
-    rs1, rs2, rs3, rs4, rs5, rs6, rs7 = push.rs_check(
-        rs1, rs2, rs3, rs4, rs5, rs6, rs7, dddata, scdata, wxdata, dcdata, tgdata, ppdata, fsdata)
+    dddata, scdata, wxdata, dcdata, tgdata, ppdata, fsdata, misakadata = push.AllPush(
+        DDTOKEN, DDSECRET, wxAgentId, wxSecret, wxCompanyId, SCKEY, dcwebhook, tgtoken, tgid, pptoken, fstoken, fssecret, misaka20001position, misakaKey, "兽耳助手签到数据异常", f"兽耳助手签到数据异常，请访问GitHub检查：{es}")
+    push.push_check(rs1, rs2, rs3, rs4, rs5, rs6, rs7, rs8, dddata, scdata,
+                    wxdata, dcdata, tgdata, ppdata, fsdata, misakadata)
+    rs1, rs2, rs3, rs4, rs5, rs6, rs7, rs8 = push.rs_check(
+        rs1, rs2, rs3, rs4, rs5, rs6, rs7, rs8, dddata, scdata, wxdata, dcdata, tgdata, ppdata, fsdata, misakadata)
     logging.error(es, exc_info=True)
 
-if rs1 or rs2 or rs3 or rs4 or rs5 or rs6 or rs7:
+if rs1 or rs2 or rs3 or rs4 or rs5 or rs6 or rs7 or rs8:
     logging.warning(re.sub(',  ', ' ', re.sub(
-        'False', '', f'{rs1}{rs2}{rs3}{rs4}{rs5}{rs6}{rs7} 推送异常，请检查')))
+        'False', '', f'{rs1}{rs2}{rs3}{rs4}{rs5}{rs6}{rs7}{rs8} 推送异常，请检查')))
     sys.exit(2)
