@@ -490,7 +490,7 @@ try:
         logging.warning("运行失败，正在推送")
         logging.warning(f"兽耳助手签到数据异常，请访问GitHub检查：“{varErrText}”")
         dddata, scdata, wxdata, dcdata, tgdata, ppdata, fsdata, misakadata = push.AllPush(
-            DDTOKEN, DDSECRET, wxAgentId, wxSecret, wxCompanyId, SCKEY, dcwebhook, tgtoken, tgid, pptoken, fstoken, fssecret, misaka20001position, misakaKey, title_post, "兽耳助手签到数据异常", f'兽耳助手签到数据异常，请访问GitHub检查：“{varErrText}”')
+            DDTOKEN, DDSECRET, wxAgentId, wxSecret, wxCompanyId, SCKEY, dcwebhook, tgtoken, tgid, pptoken, fstoken, fssecret, misaka20001position, misakaKey, "兽耳助手签到数据异常", f'兽耳助手签到数据异常，请访问GitHub检查：“{varErrText}”')
         push.push_check(rs1, rs2, rs3, rs4, rs5, rs6, rs7, rs8, dddata, scdata,
                         wxdata, dcdata, tgdata, ppdata, fsdata, misakadata)
         rs1, rs2, rs3, rs4, rs5, rs6, rs7, rs8 = push.rs_check(
