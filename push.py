@@ -31,7 +31,7 @@ def mimikko_login(url, app_id, app_Version, params):      # 带尝试的登录po
             logging.debug("SUCCESS")
             break
         if i == _MAX_TRIES:
-            logging.warning("5次请求失败，已跳过")
+            logging.warning(f"{_MAX_TRIES}次请求失败，已跳过")
             break
 
     return returnValue
@@ -70,7 +70,7 @@ def mimikko_get(url, app_id, app_Version, Authorization, params):      # 带尝�
             logging.debug("SUCCESS")
             break
         if i == _MAX_TRIES:
-            logging.warning("5次请求失败，已跳过")
+            logging.warning(f"{_MAX_TRIES}次请求失败，已跳过")
             break
 
     return returnValue
@@ -108,7 +108,7 @@ def mimikko_post(url, app_id, app_Version, Authorization, params):      # 带尝
             logging.debug("SUCCESS")
             break
         if i == _MAX_TRIES:
-            logging.warning("5次请求失败，已跳过")
+            logging.warning(f"{_MAX_TRIES}次请求失败，已跳过")
             break
 
     return returnValue
@@ -322,8 +322,20 @@ def fspost(fstoken, fssecret, title_post, post_text):  # 飞书推送
         logging.error(exp, exc_info=True)
         return exp
 
+def misakapost(misaka20001position, misakaKey, title_post, post_text):  #MisakaNet推送
+    headers_post = {
+        "misaka-key": misakaKey
+    }
+    try:
+        with requests.post(misaka20001position, headers=headers_post, data=f'{title_post}\n\n{post_text}'.encode('utf-8'), timeout=300) as post_data:
+            logging.debug(post_data)
+            return post_data.json()["OK"]
 
-def AllPush(DDTOKEN, DDSECRET, wxAgentId, wxSecret, wxCompanyId, SCKEY, dcwebhook, tgtoken, tgid, pptoken, fstoken, fssecret, title_post, post_text):  # 全推送
+    except Exception as exp:
+        logging.error(exp, exc_info=True)
+        return exp
+
+def AllPush(DDTOKEN, DDSECRET, wxAgentId, wxSecret, wxCompanyId, SCKEY, dcwebhook, tgtoken, tgid, pptoken, fstoken, fssecret, misaka20001position, misakaKey, title_post, post_text):  # 全推送
     dddata = scdata = wxdata = dcdata = tgdata = ppdata = fsdata = False
     if SCKEY:
         logging.info("正在推送到Server酱")
@@ -361,10 +373,15 @@ def AllPush(DDTOKEN, DDSECRET, wxAgentId, wxSecret, wxCompanyId, SCKEY, dcwebhoo
         fsdata = pppost(pptoken, title_post, post_text)  # 飞书推送
     else:
         logging.info('fstoken或fssecret不存在')
-    return dddata, scdata, wxdata, dcdata, tgdata, ppdata, fsdata
+    if misaka20001position and misakaKey:
+        logging.info("正在推送到misakaNet")
+        misakadata = misakapost(misaka20001position, misakaKey, title_post, post_text)
+    else:
+        logging.info("misaka20001position或misakaKey不存在")
+    return dddata, scdata, wxdata, dcdata, tgdata, ppdata, fsdata, misakadata
 
 
-def push_check(rs1, rs2, rs3, rs4, rs5, rs6, rs7, dddata, scdata, wxdata, dcdata, tgdata, ppdata, fsdata):
+def push_check(rs1, rs2, rs3, rs4, rs5, rs6, rs7, rs8, dddata, scdata, wxdata, dcdata, tgdata, ppdata, fsdata, misakadata):
     if rs1:
         if str(scdata) == '0':
             logging.info(f'server酱 errcode: {scdata}')
@@ -400,9 +417,14 @@ def push_check(rs1, rs2, rs3, rs4, rs5, rs6, rs7, dddata, scdata, wxdata, dcdata
             logging.info(f'Telegram msgcode: {tgdata}')
         else:
             logging.warning(f'Telegram error: {tgdata}')
+    if rs8:
+        if misakadata:
+            logging.info("MisakaNet done")
+        else:
+            logging.info("MisakaNet error")
 
 
-def rs_check(rs1, rs2, rs3, rs4, rs5, rs6, rs7, dddata, scdata, wxdata, dcdata, tgdata, ppdata, fsdata):
+def rs_check(rs1, rs2, rs3, rs4, rs5, rs6, rs7, rs8, dddata, scdata, wxdata, dcdata, tgdata, ppdata, fsdata, misakadata):
     if rs1 and str(scdata) == '0':
         rs1 = False
     if rs2 and str(dddata) == '0':
@@ -417,4 +439,6 @@ def rs_check(rs1, rs2, rs3, rs4, rs5, rs6, rs7, dddata, scdata, wxdata, dcdata, 
         rs6 = False
     if rs7 and type(tgdata) == int:
         rs7 = False
-    return rs1, rs2, rs3, rs4, rs5, rs6, rs7
+    if rs8 and misakadata:
+        rs8 = False
+    return rs1, rs2, rs3, rs4, rs5, rs6, rs7, rs8
