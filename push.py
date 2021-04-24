@@ -329,7 +329,7 @@ def misakapost(misaka20001position, misakaKey, title_post, post_text):  #MisakaN
     try:
         with requests.post(misaka20001position, headers=headers_post, data=f'{title_post}\n\n{post_text}'.encode('utf-8'), timeout=300) as post_data:
             logging.debug(post_data)
-            return post_data.json()["OK"]
+            return post_data.json()
 
     except Exception as exp:
         logging.error(exp, exc_info=True)
@@ -418,10 +418,10 @@ def push_check(rs1, rs2, rs3, rs4, rs5, rs6, rs7, rs8, dddata, scdata, wxdata, d
         else:
             logging.warning(f'Telegram error: {tgdata}')
     if rs8:
-        if misakadata:
+        if misakadata["OK"]:
             logging.info("MisakaNet done")
         else:
-            logging.info("MisakaNet error")
+            logging.info(f"MisakaNet error: {misakadata['error']}")
 
 
 def rs_check(rs1, rs2, rs3, rs4, rs5, rs6, rs7, rs8, dddata, scdata, wxdata, dcdata, tgdata, ppdata, fsdata, misakadata):
@@ -439,6 +439,6 @@ def rs_check(rs1, rs2, rs3, rs4, rs5, rs6, rs7, rs8, dddata, scdata, wxdata, dcd
         rs6 = False
     if rs7 and type(tgdata) == int:
         rs7 = False
-    if rs8 and misakadata:
+    if rs8 and misakadata["OK"]:
         rs8 = False
     return rs1, rs2, rs3, rs4, rs5, rs6, rs7, rs8
