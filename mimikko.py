@@ -128,21 +128,21 @@ def main():
         if user_id and user_id.strip():
             user_id = user_id.strip()
             logging.info('user_id 存在')
-            logging.debug(user_id)
+            # logging.debug(user_id)
         else:
             user_id = False
             logging.info('user_id 不存在')
         if user_password and user_password.strip():
             user_password = user_password.strip()
             logging.info('user_password 存在')
-            logging.debug(user_password)
+            # logging.debug(user_password)
         else:
             user_password = False
             logging.info('user_password 不存在')
         if Authorization and Authorization.strip():
             Authorization = Authorization.strip()
             logging.info('Authorization 存在')
-            logging.debug(Authorization)
+            # logging.debug(Authorization)
         elif (user_id and user_password):
             Authorization = False
         else:
@@ -173,7 +173,7 @@ def main():
         if SCKEY and SCKEY.strip():
             SCKEY = SCKEY.strip()
             logging.info('SCKEY 存在')
-            logging.debug(SCKEY)
+            # logging.debug(SCKEY)
         else:
             SCKEY = False
         if DDTOKEN and DDTOKEN.strip():
@@ -181,55 +181,55 @@ def main():
                 DDTOKEN = DDTOKEN[DDTOKEN.find('access_token=')+13:]
             DDTOKEN = DDTOKEN.strip()
             logging.info('DDTOKEN 存在')
-            logging.debug(DDTOKEN)
+            # logging.debug(DDTOKEN)
         else:
             DDTOKEN = False
         if DDSECRET and DDSECRET.strip():
             DDSECRET = DDSECRET.strip()
             logging.info('DDSECRET 存在')
-            logging.debug(DDSECRET)
+            # logging.debug(DDSECRET)
         else:
             DDSECRET = False
         if wxAgentId and wxAgentId.strip():
             wxAgentId = wxAgentId.strip()
             logging.info('wxAgentId 存在')
-            logging.debug(wxAgentId)
+            # logging.debug(wxAgentId)
         else:
             wxAgentId = False
         if wxSecret and wxSecret.strip():
             wxSecret = wxSecret.strip()
             logging.info('wxSecret 存在')
-            logging.debug(wxSecret)
+            # logging.debug(wxSecret)
         else:
             wxSecret = False
         if wxCompanyId and wxCompanyId.strip():
             wxCompanyId = wxCompanyId.strip()
             logging.info('wxCompanyId 存在')
-            logging.debug(wxCompanyId)
+            # logging.debug(wxCompanyId)
         else:
             wxCompanyId = False
         if dcwebhook and dcwebhook.strip():
             dcwebhook = dcwebhook.strip()
             logging.info('dcwebhook 存在')
-            logging.debug(dcwebhook)
+            # logging.debug(dcwebhook)
         else:
             dcwebhook = False
         if tgtoken and tgtoken.strip():
             tgtoken = tgtoken.strip()
             logging.info('tgtoken 存在')
-            logging.debug(tgtoken)
+            # logging.debug(tgtoken)
         else:
             tgtoken = False
         if tgid and tgid.strip():
             tgid = tgid.strip()
             logging.info('tgid 存在')
-            logging.debug(tgid)
+            # logging.debug(tgid)
         else:
             tgid = False
         if pptoken and pptoken.strip():
             pptoken = pptoken.strip()
             logging.info('pptoken 存在')
-            logging.debug(pptoken)
+            # logging.debug(pptoken)
         else:
             pptoken = False
         if fstoken and fstoken.strip():
@@ -237,25 +237,25 @@ def main():
                 fstoken = fstoken[fstoken.find('/hook/')+6:]
             fstoken = fstoken.strip()
             logging.info('fstoken 存在')
-            logging.debug(fstoken)
+            # logging.debug(fstoken)
         else:
             fstoken = False
         if fssecret and fssecret.strip():
             fssecret = fssecret.strip()
             logging.info('fssecret 存在')
-            logging.debug(fssecret)
+            # logging.debug(fssecret)
         else:
             fssecret = False
         if misaka20001position and misaka20001position.strip():
             misaka20001position = misaka20001position.strip()
             logging.info("misaka20001position 存在")
-            logging.debug(misaka20001position)
+            # logging.debug(misaka20001position)
         else:
             misaka20001position = False
         if misakaKey and misakaKey.strip():
             misakaKey = misakaKey.strip()
             logging.info("misakakey 存在")
-            logging.debug(misakaKey)
+            # logging.debug(misakaKey)
         else:
             misakaKey = False
         logging.info('获取参数结束')
