@@ -14,9 +14,9 @@ import urllib.parse
 
 import requests
 import telebot
-from requests.packages.urllib3.exceptions import InsecureRequestWarning
+from urllib3.exceptions import InsecureRequestWarning
 
-requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
+requests.urllib3.disable_warnings(InsecureRequestWarning)
 
 _MAX_TRIES = 5
 
@@ -185,7 +185,7 @@ def scpost(SCKEY, title_post, post_text):  # server酱推送
         'Content-Type': 'application/x-www-form-urlencoded',
     }
     post_info = {'text': title_post, 'desp': post_text}
-    url = f'https://sc.ftqq.com/{SCKEY}.send'
+    url = f'https://sctapi.ftqq.com/{SCKEY}.send'
     try:
         with requests.post(url, headers=headers_post, data=post_info, timeout=300) as post_data:
             logging.debug(post_data.text)
@@ -294,7 +294,7 @@ def fspost(fstoken, fssecret, title_post, post_text):  # 飞书推送
     key_enc = key.encode('utf-8')
     msg = ""
     msg_enc = msg.encode('utf-8')
-    hmac_code = hmac.new(key_enc, msg_enc, digestmod=sha256).digest()
+    hmac_code = hmac.new(key_enc, msg_enc, digestmod=hashlib.sha256).digest()
     sign = base64.b64encode(hmac_code).decode('utf-8')
     print(timestamp)
     print(sign)
