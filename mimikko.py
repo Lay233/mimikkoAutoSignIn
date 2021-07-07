@@ -308,10 +308,11 @@ def main():
     energy_reward_path = 'https://api1.mimikko.cn/client/love/ExchangeReward'  # 兑换助手能量
     vip_info = 'https://api1.mimikko.cn/client/user/GetUserVipInfo'  # 获取会员状态
     vip_roll = 'https://api1.mimikko.cn/client/roll/RollReward'  # 会员抽奖(post)
+    vip_energy = 'https://api1.mimikko.cn/client/mission/ReceiveMemberLevelWelfare'  # 会员每日领取(post)
     # sc_api = 'https://sc.ftqq.com/' #Server酱推送
     # sct_api = 'https://sctapi.ftqq.com/' #Server酱推送Turbo版
     # ding_api = 'https://oapi.dingtalk.com/robot/send?' # 钉钉推送
-    app_Version = '3.1.7'
+    app_Version = '3.2.0'
     app_id = 'wjB7LOP2sYkaMGLC'
     servant_name = {
         'nonona': '诺诺纳',
@@ -445,7 +446,17 @@ def main():
             if vip_info_data['body']['rollNum'] > 0:
                 vip_roll_data = push.mimikko_post(
                     vip_roll, app_id, app_Version, Authorization, "")
-                vip_roll_post = f'''VIP抽奖成功：{vip_roll_data['body']['Value']['description']}'''
+                vip_energy_data = push.mimikko_post(
+                    vip_energy, app_id, app_Version, Authorization, "")
+                if vip_roll_data['body']['Value']['message']=='null':
+                    vip_roll_msg = f'''VIP抽奖成功：{vip_roll_data['body']['Value']['description']}'''
+                else:
+                    vip_roll_msg = f'''VIP抽奖成功：{vip_roll_data['body']['Value']['message']}'''
+                if vip_energy_data['code']==0:
+                    vip_energy_msg = f'''VIP领取成功：{vip_energy_data['body']['Value']['message']}'''
+                else:
+                    vip_energy_msg = f'''VIP领取成功：{vip_energy_data['msg']}'''
+                vip_roll_post = f'''{vip_roll_msg}\n{vip_energy_msg}'''
             else:
                 vip_roll_data = "抽奖次数不足"
                 if vip_info_data['body']['isValid']:
