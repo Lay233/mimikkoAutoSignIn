@@ -451,21 +451,26 @@ def main():
                 if vip_roll_data['body']['Value']['message']=='null':
                     vip_roll_msg = f'''VIP抽奖成功：{vip_roll_data['body']['Value']['description']}'''
                 else:
-                    vip_roll_msg = f'''VIP抽奖成功：{vip_roll_data['body']['Value']['message']}'''
-                if vip_energy_data['code']==0:
-                    vip_energy_msg = f'''VIP领取成功：{vip_energy_data['body']['Value']['message']}'''
-                else:
-                    vip_energy_msg = f'''VIP领取成功：{vip_energy_data['msg']}'''
-                vip_roll_post = f'''{vip_roll_msg}\n{vip_energy_msg}'''
+                    vip_roll_msg = f'''VIP抽奖失败：{vip_roll_data['body']['Value']['message']}'''
             else:
                 vip_roll_data = "抽奖次数不足"
                 if vip_info_data['body']['isValid']:
-                    vip_roll_post = "今天已经抽过奖了"
+                    vip_roll_msg = "VIP抽奖失败：今天已经抽过奖了"
                 else:
-                    vip_roll_post = "VIP抽奖失败：您还不是VIP"
+                    vip_roll_msg = "VIP抽奖失败：您还不是VIP"
+            if vip_info_data['body']['isValid']:
+                vip_energy_data = push.mimikko_post(
+                    vip_energy, app_id, app_Version, Authorization, "")
+                if vip_energy_data['code']==0:
+                    vip_energy_msg = f'''VIP能量领取成功：{vip_energy_data['body']['Value']['message']}'''
+                else:
+                    vip_energy_msg = f'''VIP能量领取失败：{vip_energy_data['msg']}'''
+            else:
+                vip_energy_msg = "VIP能量领取失败：您还不是VIP"
+            vip_roll_post = f'''{vip_roll_msg}\n{vip_energy_msg}'''
         else:
-            vip_roll_data = "VIP抽奖失败"
-            vip_roll_post = "VIP抽奖失败"
+            vip_roll_data = "VIP信息获取失败"
+            vip_roll_post = "VIP信息获取失败，未抽奖和领取能量"
         logging.info(vip_roll_post)
         # 能量兑换好感度
         logging.info('正在尝试兑换能量')
