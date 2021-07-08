@@ -448,7 +448,7 @@ def main():
                     vip_roll, app_id, app_Version, Authorization, "")
                 vip_energy_data = push.mimikko_post(
                     vip_energy, app_id, app_Version, Authorization, "")
-                if vip_roll_data['body']['Value']['message']=='null':
+                if vip_roll_data['body']['Value']['message']==None:
                     vip_roll_msg = f'''VIP抽奖成功：{vip_roll_data['body']['Value']['description']}'''
                 else:
                     vip_roll_msg = f'''VIP抽奖失败：{vip_roll_data['body']['Value']['message']}'''
@@ -461,7 +461,7 @@ def main():
             if vip_info_data['body']['isValid']:
                 vip_energy_data = push.mimikko_post(
                     vip_energy, app_id, app_Version, Authorization, "")
-                if vip_energy_data['code']==0:
+                if vip_energy_data['ok']:
                     vip_energy_msg = f'''VIP能量领取成功：{vip_energy_data['body']['Value']['message']}'''
                 else:
                     vip_energy_msg = f'''VIP能量领取失败：{vip_energy_data['msg']}'''
