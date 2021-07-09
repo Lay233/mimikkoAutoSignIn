@@ -340,6 +340,7 @@ def main():
                 user_password.encode('utf-8')).hexdigest()
             login_data = push.mimikko_login(login_path, app_id, app_Version,
                                     f'{{"password":"{user_password_sha}", "id":"{user_id}"}}')
+            logging.debug(login_data)
             if login_data and login_data.get('body'):
                 Authorization = login_data['body']['Token']
             if Authorization:
@@ -364,11 +365,13 @@ def main():
                 sys.exit(1)
         # 设置默认助手
         logging.info(f'设置默认助手{Energy_code}')
-        _ = push.mimikko_get(f'{defeat_set}?code={Energy_code}',
+        defeat_servant = push.mimikko_get(f'{defeat_set}?code={Energy_code}',
                         app_id, app_Version, Authorization, "")
+        logging.debug(defeat_servant)
         # 执行前的好感度
         original_energy_data = push.mimikko_get(
             f'{energy_info_path}?code={Energy_code}', app_id, app_Version, Authorization, "")
+        logging.debug(original_energy_data)
         if original_energy_data and original_energy_data.get('body'):
             original_energy_post = str(
                 original_energy_data['body']['Favorability'])
@@ -376,15 +379,17 @@ def main():
             original_energy_post = "Error"
         logging.info(f'执行前的好感度{original_energy_post}')
         # 签到历史
-        logging.info('正在获取签到历史')
-        sign_history = push.mimikko_get(
-            history_path, app_id, app_Version, Authorization, "")
+        #logging.info('正在获取签到历史')
+        #sign_history = push.mimikko_get(
+        #    history_path, app_id, app_Version, Authorization, "")
+        #logging.debug(sign_history)
         # 补签
         if resign:
             logging.info("正在尝试补签")
             # 补签前的补签卡
             cansign_before = push.mimikko_get(
                 can_resign, app_id, app_Version, Authorization, "")
+            logging.debug(cansign_before)
             if cansign_before and cansign_before.get('body'):
                 cansign_before_time = cansign_before['body']['Value']
             else:
@@ -397,6 +402,7 @@ def main():
                     r_date = push.timeStamp1time(resign_time)
                     resign_data = push.mimikko_post(
                         resign_path, app_id, app_Version, Authorization, f'["{r_date}T15:59:59+0800"]')
+                    logging.debug(resign_data)
                     if resign_data and resign_data["code"] == 0:
                         logging.info("补签成功")
                     else:
@@ -406,6 +412,7 @@ def main():
             # 补签后的补签卡
             cansign_after = push.mimikko_get(
                 can_resign, app_id, app_Version, Authorization, "")
+            logging.debug(cansign_after)
             if cansign_after and cansign_after.get('body'):
                 cansign_after_time = cansign_after['body']['Value']
             else:
@@ -422,9 +429,11 @@ def main():
         # 签到
         logging.info('正在尝试签到')
         sign_data = push.mimikko_get(sign_path, app_id, app_Version, Authorization, "")
+        logging.debug(sign_data)
         if sign_data and sign_data.get('body'):
             sign_info = push.mimikko_get(
                 is_sign, app_id, app_Version, Authorization, "")
+            logging.debug(sign_info)
             if sign_data['body']['GetExp']:
                 if times_resigned:
                     sign_result_post = f'''补签成功{str(times_resigned)}/{str(resign)}天\n签到成功：{str(sign_info['body']['ContinuousSignDays'])}天\n好感度：{str(sign_data['body']['Reward'])}\n硬币：{str(sign_data['body']['GetCoin'])}\n经验值：{str(sign_data['body']['GetExp'])}\n签到卡片：{sign_data['body']['Description']}{sign_data['body']['Name']}\n{sign_data['body']['PictureUrl']}'''
@@ -442,12 +451,12 @@ def main():
         logging.info('正在尝试VIP抽奖')
         vip_info_data = push.mimikko_get(
             vip_info, app_id, app_Version, Authorization, "")
+        logging.debug(vip_info_data)
         if vip_info_data and vip_info_data.get('body'):
             if vip_info_data['body']['rollNum'] > 0:
                 vip_roll_data = push.mimikko_post(
                     vip_roll, app_id, app_Version, Authorization, "")
-                vip_energy_data = push.mimikko_post(
-                    vip_energy, app_id, app_Version, Authorization, "")
+                logging.debug(vip_roll_data)
                 if vip_roll_data['body']['Value']['message']==None:
                     vip_roll_msg = f'''VIP抽奖成功：{vip_roll_data['body']['Value']['description']}'''
                 else:
@@ -461,6 +470,7 @@ def main():
             if vip_info_data['body']['isValid']:
                 vip_energy_data = push.mimikko_post(
                     vip_energy, app_id, app_Version, Authorization, "")
+                logging.debug(vip_energy_data)
                 if vip_energy_data['ok']:
                     vip_energy_msg = f'''VIP能量领取成功：{vip_energy_data['body']['Value']['message']}'''
                 else:
@@ -477,10 +487,12 @@ def main():
         if not original_energy_data:
             original_energy_data = push.mimikko_get(
                 f'{energy_info_path}?code={Energy_code}', app_id, app_Version, Authorization, "")
+            logging.debug(original_energy_data)
         if original_energy_data and original_energy_data.get('body'):
             if original_energy_data['body']['Energy'] > 0:
                 energy_reward_data = push.mimikko_get(
                     f'{energy_reward_path}?code={Energy_code}', app_id, app_Version, Authorization, "")
+                logging.debug(energy_reward_data)
                 title_post = f'''{title_ahead}{servant_name[energy_reward_data['body']['code']]}好感度{str(energy_reward_data['body']['Favorability'])}'''
                 gethgd = int(
                     energy_reward_data['body']['Favorability'])-int(original_energy_post)
@@ -500,14 +512,14 @@ def main():
             energy_reward_post = "能量兑换失败"
             logging.info(energy_reward_data)
         logging.info('脚本结束')
-        return sign_data, vip_info_data, vip_roll_data, original_energy_data, energy_reward_data, sign_info, sign_history, sign_result_post, title_post, vip_roll_post, energy_reward_post
+        return sign_data, vip_info_data, vip_roll_data, original_energy_data, energy_reward_data, sign_info, sign_result_post, title_post, vip_roll_post, energy_reward_post
 
 
     try:
-        sign_data, vip_info_data, vip_roll_data, original_energy_data, energy_reward_data, sign_info, sign_history, sign_result_post, title_post, vip_roll_post, energy_reward_post = mimikko()
+        sign_data, vip_info_data, vip_roll_data, original_energy_data, energy_reward_data, sign_info, sign_result_post, title_post, vip_roll_post, energy_reward_post = mimikko()
         varErr = True
         varErrText = ''
-        for i in ['sign_data', 'vip_info_data', 'vip_roll_data', 'original_energy_data', 'energy_reward_data', 'sign_info', 'sign_history', 'sign_result_post', 'title_post', 'vip_roll_post', 'energy_reward_post']:
+        for i in ['sign_data', 'vip_info_data', 'vip_roll_data', 'original_energy_data', 'energy_reward_data', 'sign_info', 'sign_result_post', 'title_post', 'vip_roll_post', 'energy_reward_post']:
             if not i in locals():
                 varErr = False
                 logging.warning(f'{i} 缺失')
