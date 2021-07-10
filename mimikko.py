@@ -493,7 +493,8 @@ def main():
         else:
             vip_roll_data = "VIP信息获取失败"
             vip_roll_post = "VIP信息获取失败，未抽奖和领取能量"
-        logging.info(vip_roll_post)
+        logging.info(vip_roll_msg)
+        logging.info(vip_energy_msg)
         # 能量兑换好感度
         logging.info('正在尝试兑换能量')
         if not original_energy_data:
