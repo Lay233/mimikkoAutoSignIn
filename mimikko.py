@@ -365,13 +365,13 @@ def main():
                 logging.critical('请在Secret中保存 登录ID和密码 或 Authorization ！！！')
                 sys.exit(1)
         # 设置默认助手
-        time.sleep(random.randint(5,10))
+        #time.sleep(random.randint(5,10))
         logging.info(f'设置默认助手{Energy_code}')
         defeat_servant = push.mimikko_get(f'{defeat_set}?code={Energy_code}',
                         app_id, app_Version, Authorization, "")
         logging.debug(defeat_servant)
         # 执行前的好感度
-        time.sleep(random.randint(5,10))
+        #time.sleep(random.randint(5,10))
         original_energy_data = push.mimikko_get(
             f'{energy_info_path}?code={Energy_code}', app_id, app_Version, Authorization, "")
         logging.debug(original_energy_data)
@@ -382,7 +382,7 @@ def main():
             original_energy_post = "Error"
         logging.info(f'执行前的好感度{original_energy_post}')
         # 签到历史
-        time.sleep(random.randint(5,10))
+        #time.sleep(random.randint(5,10))
         #logging.info('正在获取签到历史')
         #sign_history = push.mimikko_get(
         #    history_path, app_id, app_Version, Authorization, "")
@@ -391,7 +391,7 @@ def main():
         if resign:
             logging.info("正在尝试补签")
             # 补签前的补签卡
-            time.sleep(random.randint(5,10))
+            #time.sleep(random.randint(5,10))
             cansign_before = push.mimikko_get(
                 can_resign, app_id, app_Version, Authorization, "")
             logging.debug(cansign_before)
@@ -405,7 +405,7 @@ def main():
                     logging.info(f'向前第 {i} 天')
                     resign_time = int(time.time())-86400*i
                     r_date = push.timeStamp1time(resign_time)
-                    time.sleep(random.randint(5,10))
+                    #time.sleep(random.randint(5,10))
                     resign_data = push.mimikko_post(
                         resign_path, app_id, app_Version, Authorization, f'["{r_date}T15:59:59+0800"]')
                     logging.debug(resign_data)
@@ -416,7 +416,7 @@ def main():
                 else:
                     break
             # 补签后的补签卡
-            time.sleep(random.randint(5,10))
+            #time.sleep(random.randint(5,10))
             cansign_after = push.mimikko_get(
                 can_resign, app_id, app_Version, Authorization, "")
             logging.debug(cansign_after)
@@ -434,12 +434,12 @@ def main():
         else:
             times_resigned = False
         # 签到
-        time.sleep(random.randint(5,10))
+        #time.sleep(random.randint(5,10))
         logging.info('正在尝试签到')
         sign_data = push.mimikko_get(sign_path, app_id, app_Version, Authorization, "")
         logging.debug(sign_data)
         if sign_data and sign_data.get('body'):
-            time.sleep(random.randint(5,10))
+            #time.sleep(random.randint(5,10))
             sign_info = push.mimikko_get(
                 is_sign, app_id, app_Version, Authorization, "")
             logging.debug(sign_info)
@@ -457,14 +457,14 @@ def main():
             title_ahead = '兽耳助手签到'
         logging.info(title_ahead)
         # VIP抽奖
-        time.sleep(random.randint(5,10))
+        #time.sleep(random.randint(5,10))
         logging.info('正在尝试VIP抽奖')
         vip_info_data = push.mimikko_get(
             vip_info, app_id, app_Version, Authorization, "")
         logging.debug(vip_info_data)
         if vip_info_data and vip_info_data.get('body'):
             if vip_info_data['body']['rollNum'] > 0:
-                time.sleep(random.randint(5,10))
+                #time.sleep(random.randint(5,10))
                 vip_roll_data = push.mimikko_post(
                     vip_roll, app_id, app_Version, Authorization, "")
                 logging.debug(vip_roll_data)
@@ -479,7 +479,7 @@ def main():
                 else:
                     vip_roll_msg = "VIP抽奖失败：您还不是VIP"
             if vip_info_data['body']['isValid']:
-                time.sleep(random.randint(5,10))
+                #time.sleep(random.randint(5,10))
                 vip_energy_data = push.mimikko_post(
                     vip_energy, app_id, app_Version, Authorization, "")
                 logging.debug(vip_energy_data)
@@ -497,13 +497,13 @@ def main():
         # 能量兑换好感度
         logging.info('正在尝试兑换能量')
         if not original_energy_data:
-            time.sleep(random.randint(5,10))
+            #time.sleep(random.randint(5,10))
             original_energy_data = push.mimikko_get(
                 f'{energy_info_path}?code={Energy_code}', app_id, app_Version, Authorization, "")
             logging.debug(original_energy_data)
         if original_energy_data and original_energy_data.get('body'):
             if original_energy_data['body']['Energy'] > 0:
-                time.sleep(random.randint(5,10))
+                #time.sleep(random.randint(5,10))
                 energy_reward_data = push.mimikko_get(
                     f'{energy_reward_path}?code={Energy_code}', app_id, app_Version, Authorization, "")
                 logging.debug(energy_reward_data)
