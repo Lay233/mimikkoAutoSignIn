@@ -45,7 +45,6 @@ def mimikko_realLogin(url, app_id, app_Version, params):  # 实际登录post
         'Version': app_Version,
         'Content-Type': 'application/json',
         'Host': 'api1.mimikko.cn',
-        'Connection': 'Keep-Alive',
         'Accept-Encoding': 'gzip',
         'User-Agent': 'okhttp/3.12.1',
     }
@@ -84,7 +83,6 @@ def mimikko_realGet(url, app_id, app_Version, Authorization, params):  # 实际g
         'AppID': app_id,
         'Version': app_Version,
         'Authorization': Authorization,
-        'Connection': 'Keep-Alive',
         'Host': 'api1.mimikko.cn'
     }
     try:
@@ -123,7 +121,6 @@ def mimikko_realPost(url, app_id, app_Version, Authorization, params):  # post�
         'Authorization': Authorization,
         'Content-Type': 'application/json',
         'Host': 'api1.mimikko.cn',
-        'Connection': 'Keep-Alive',
         'Accept-Encoding': 'gzip',
         'User-Agent': 'okhttp/3.12.1',
     }
